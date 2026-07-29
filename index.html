@@ -6,8 +6,8 @@
 
 <title>Founders Speak — Entrepreneurs Panel Discussion | Nirma University</title>
 <meta name="description" content="An entrepreneurs panel discussion at Nirma University, Ahmedabad — 21 August 2026. Four founders on fintech, EV &amp; green energy, and the consulting-to-founder leap." />
-<meta name="theme-color" content="#FAFAFA" />
-<meta name="color-scheme" content="light" />
+<meta name="theme-color" content="#120E1F" />
+<meta name="color-scheme" content="dark" />
 
 <!-- Social share cards (WhatsApp / LinkedIn / X). Replace og:image once you have a poster. -->
 <meta property="og:type" content="website" />
@@ -16,13 +16,13 @@
 <meta property="og:image" content="assets/share-card.jpg" />
 <meta name="twitter:card" content="summary_large_image" />
 
-<!-- Inline SVG favicon: navy chevron monogram. No external file needed. -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D3557'/%3E%3Cpath d='M11 8l7 8-7 8' fill='none' stroke='%23FAFAFA' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M20 24h3' stroke='%23FAFAFA' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E" />
+<!-- Inline SVG favicon: a small four-pointed sparkle on the nebula base -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23120E1F'/%3E%3Cpath d='M16 6l2.4 7.6L26 16l-7.6 2.4L16 26l-2.4-7.6L6 16l7.6-2.4z' fill='%23D98CAE'/%3E%3C/svg%3E" />
 
-<!-- Fonts: Fraunces (display serif) + Inter (body/UI), per spec -->
+<!-- Fonts: Playfair Display (display serif) + Inter (body/UI), per spec -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <script>document.documentElement.className = 'js';</script>
 
@@ -33,50 +33,47 @@
   ----------------------------------------------------------------------------
   HOW TO EDIT THIS FILE
   ----------------------------------------------------------------------------
-  Everything you need to change is marked. Two ways to find them:
-
     1. Search this file for the string  TODO   -> every placeholder.
-    2. On the live page, unfilled placeholders render with a dotted navy
-       underline so you can spot them at a glance. They disappear
-       automatically once you replace the text (just delete the
-       class="ph" wrapper).
+    2. On the live page, unfilled placeholders render with a dotted rose
+       underline so you can spot them at a glance. Delete the class="ph"
+       wrapper once real copy is in.
 
-  THE THREE THINGS TO SET FIRST (all in the <script> at the bottom):
+  THE THREE THINGS TO SET FIRST (in the <script> near the bottom):
     - REGISTRATION_URL  -> your Google Form / Luma link
     - EVENT_STARTS_AT   -> exact date+time, drives the countdown
-    - Everything else is plain text in the HTML below.
 
   ADDING SPEAKER HEADSHOTS:
     Find the .avatar block in each speaker card. Replace the monogram
     <div> with:  <img class="avatar-img" src="assets/name.jpg" alt="..." />
-    A commented-out example sits inside the first card.
 
   DEPLOYING:
-    This is one self-contained file (fonts load from Google Fonts CDN,
-    everything else is inline). No build step, no dependencies.
-    Drop it on Vercel / GitHub Pages / Netlify as-is.
+    Self-contained file (fonts load from Google Fonts CDN, everything
+    else is inline). No build step. Drop it on Vercel / GitHub Pages /
+    Netlify as-is.
   ============================================================================
 -->
 
 <style>
 /* ---------------------------------------------------------------------------
-   1. TOKENS — exact palette as specified, no substitutions
+   1. TOKENS — exact cosmic/nebula palette as specified
    --------------------------------------------------------------------------- */
 :root{
-  --bg:#FAFAFA;            /* background base */
-  --surface:#FFFFFF;       /* cards / panels */
-  --primary:#1D3557;       /* headings, buttons, nav */
-  --secondary:#5C7FA3;     /* links, icons, secondary buttons */
-  --tint:#E4EBF2;          /* section backgrounds, tags, dividers */
-  --text:#1A2233;          /* body text */
-  --text-muted:#5A6B7B;    /* secondary/muted text */
+  --bg:#120E1F;              /* background base */
+  --bg-deep:#0A0812;         /* background corners / depth */
+  --nebula-core:#8B1E4F;     /* nebula core glow */
+  --nebula-hi:#B23A6B;       /* nebula inner ring highlight */
+  --accent:#D98CAE;          /* links, tags, dividers, small UI */
+  --star:#F5F0F2;            /* star / sparkle color */
+  --text:#F3EDF2;            /* primary text */
+  --text-muted:#B9A8B8;      /* secondary / muted text */
 
-  --primary-hi:#264670;    /* lighter navy, for hovers only — derived, not new hue */
-  --shadow-sm:0 1px 2px rgba(29,53,87,.05), 0 2px 10px rgba(29,53,87,.05);
-  --shadow-md:0 4px 14px rgba(29,53,87,.07), 0 14px 36px -12px rgba(29,53,87,.14);
-  --shadow-lg:0 10px 30px -8px rgba(29,53,87,.16), 0 30px 60px -24px rgba(29,53,87,.18);
+  --glass:rgba(255,255,255,.04);
+  --glass-hi:rgba(255,255,255,.065);
+  --glass-line:rgba(217,140,174,.16);
+  --glass-line-hi:rgba(217,140,174,.34);
+  --glow-hover:0 0 2px rgba(217,140,174,.25), 0 0 60px -8px rgba(139,30,79,.55);
 
-  --font-display:"Fraunces","Iowan Old Style","Georgia",serif;
+  --font-display:"Playfair Display","Iowan Old Style","Georgia",serif;
   --font-sans:"Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
 
   --shell:1180px;
@@ -103,9 +100,11 @@ body{
   font-family:var(--font-sans);
   font-size:clamp(15.5px,.3vw + 14.8px,17px);
   line-height:1.65;
+  letter-spacing:.005em;
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
   overflow-x:hidden;
+  position:relative;
 }
 
 img,svg{display:block;max-width:100%}
@@ -113,12 +112,12 @@ a{color:inherit}
 button{font:inherit;color:inherit;background:none;border:0}
 
 :focus-visible{
-  outline:2px solid var(--primary);
+  outline:2px solid var(--accent);
   outline-offset:3px;
   border-radius:4px;
 }
 
-::selection{background:var(--tint);color:var(--primary)}
+::selection{background:var(--nebula-core);color:var(--star)}
 
 section[id],footer[id]{scroll-margin-top:84px}
 
@@ -127,101 +126,136 @@ section[id],footer[id]{scroll-margin-top:84px}
   max-width:var(--shell);
   margin-inline:auto;
   padding-inline:var(--pad);
+  position:relative;
+  z-index:2;
 }
 
 .skip{
   position:absolute;left:-9999px;
   top:12px;z-index:200;
   padding:12px 20px;border-radius:10px;
-  background:var(--primary);color:#fff;
+  background:var(--accent);color:var(--bg-deep);
   font-weight:600;
 }
 .skip:focus{left:16px}
 
 /* ---------------------------------------------------------------------------
-   3. TYPE SYSTEM — Fraunces display / Inter body, generous line-height
+   3. TYPE SYSTEM — Playfair Display / Inter, airy letter-spacing
    --------------------------------------------------------------------------- */
 .eyebrow{
   font-family:var(--font-sans);
-  font-size:12.5px;
+  font-size:12px;
   font-weight:600;
-  letter-spacing:.16em;
+  letter-spacing:.24em;
   text-transform:uppercase;
-  color:var(--secondary);
+  color:var(--accent);
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:14px;
 }
 .eyebrow::before{
   content:"";
-  width:26px;height:1.5px;
-  background:var(--secondary);
+  width:26px;height:1px;
+  background:var(--accent);
   flex:none;
-  border-radius:2px;
+  opacity:.7;
 }
 .eyebrow.is-center{justify-content:center}
 
 h1,h2,h3{
   font-family:var(--font-display);
-  font-weight:600;
-  line-height:1.08;
-  letter-spacing:-.01em;
-  color:var(--primary);
+  font-weight:500;
+  line-height:1.12;
+  letter-spacing:.008em;
+  color:var(--text);
   text-wrap:balance;
-  font-variation-settings:"opsz" 40;
 }
 
-h1{font-size:clamp(2.5rem,7vw,4.6rem);font-weight:700;font-variation-settings:"opsz" 144}
+h1{font-size:clamp(2.5rem,7vw,4.6rem);font-weight:500;letter-spacing:.01em}
 h2{font-size:clamp(1.9rem,4.2vw,2.9rem)}
-h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
+h3{font-size:1.32rem;font-weight:500;letter-spacing:.012em}
 
 .lede{
   font-size:clamp(1.02rem,1.1vw,1.2rem);
-  line-height:1.75;
+  line-height:1.8;
+  letter-spacing:.01em;
   color:var(--text-muted);
   text-wrap:pretty;
 }
 
-.mono{
-  font-family:var(--font-sans);
-  font-variant-numeric:tabular-nums;
-}
-
-/* Placeholder marker — dotted navy underline + faint tint.
-   Delete the wrapping <span class="ph"> once real copy is in. */
+/* Placeholder marker — dotted rose underline + faint tint */
 .ph{
-  color:var(--primary);
-  background:var(--tint);
-  border-bottom:1.5px dotted var(--secondary);
+  color:var(--accent);
+  background:rgba(217,140,174,.08);
+  border-bottom:1.5px dotted var(--accent);
   padding:1px 6px;
   border-radius:4px;
   font-style:normal;
 }
 
 /* ---------------------------------------------------------------------------
-   4. DECOR — CSS/SVG only, zero image requests. Restrained: no gradients/neon.
+   4. COSMIC DECOR — nebula glow, film grain, sparkle stars
+      All generated with CSS/SVG — no image assets.
    --------------------------------------------------------------------------- */
-.tint-band{background:var(--tint)}
 
-.rule{
-  height:1px;
-  background:var(--tint);
-  border:0;
-}
-
-/* Soft corner mark used in hero + band — quiet geometric motif, not a gradient blob */
-.motif{
-  position:absolute;
+/* Page-wide corner vignette toward the deeper background tone */
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  z-index:0;
   pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 50% -10%, transparent 40%, var(--bg-deep) 100%),
+    radial-gradient(140% 100% at 50% 110%, transparent 45%, var(--bg-deep) 100%);
 }
-.motif svg{width:100%;height:100%}
 
-/* Fine paper-like texture, extremely subtle, keeps large flat surfaces from looking flat-flat */
+/* Film grain — SVG turbulence, tiled, low opacity, blend-mode overlay so it
+   reads as texture rather than a visible pattern. Essential to the look. */
 .grain{
-  position:fixed;inset:0;z-index:1;
-  pointer-events:none;opacity:.025;
-  mix-blend-mode:multiply;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  position:fixed;inset:0;
+  z-index:3;
+  pointer-events:none;
+  opacity:.09;
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Nebula glow — layered radial gradients forming a soft vortex, positioned
+   behind the hero. Given a slow scroll-parallax drift via JS (transform),
+   with a static fallback for reduced-motion / no-JS. */
+.nebula{
+  position:absolute;
+  top:-18%;left:50%;
+  width:min(1400px,180vw);
+  height:min(1100px,140vw);
+  transform:translateX(-50%);
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(38% 42% at 50% 38%, var(--nebula-hi) 0%, rgba(178,58,107,.55) 26%, transparent 62%),
+    radial-gradient(58% 58% at 50% 42%, var(--nebula-core) 0%, rgba(139,30,79,.4) 38%, transparent 68%),
+    radial-gradient(75% 70% at 50% 46%, rgba(139,30,79,.22) 0%, transparent 70%);
+  filter:blur(6px);
+  will-change:transform;
+}
+
+/* Sparkle stars — inline SVG four-pointed shapes, scattered as decoration.
+   Positions are per-instance via inline style; base rules just set common
+   behaviour. A subset twinkles via opacity pulse (respects reduced motion). */
+.sparkle{
+  position:absolute;
+  z-index:1;
+  pointer-events:none;
+  color:var(--star);
+}
+.sparkle svg{width:100%;height:100%;display:block}
+
+.js .sparkle--twinkle{
+  animation:twinkle var(--tw-dur,4.5s) ease-in-out var(--tw-delay,0s) infinite;
+}
+@keyframes twinkle{
+  0%,100%{opacity:var(--tw-lo,.25)}
+  50%{opacity:var(--tw-hi,.95)}
 }
 
 /* ---------------------------------------------------------------------------
@@ -232,66 +266,59 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
   align-items:center;
   justify-content:center;
   gap:10px;
-  padding:16px 28px;
+  padding:16px 30px;
   border-radius:999px;
   font-family:var(--font-sans);
   font-weight:600;
-  font-size:.95rem;
-  letter-spacing:-.005em;
+  font-size:.94rem;
+  letter-spacing:.02em;
   text-decoration:none;
   white-space:nowrap;
   cursor:pointer;
-  transition:transform .22s var(--ease),box-shadow .22s var(--ease),background .22s var(--ease),border-color .22s var(--ease),color .22s var(--ease);
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s var(--ease),border-color .25s var(--ease),color .25s var(--ease);
 }
 
 .btn--primary{
-  background:var(--primary);
-  color:#fff;
-  box-shadow:var(--shadow-md);
+  background:linear-gradient(180deg,var(--nebula-hi),var(--nebula-core));
+  color:var(--star);
+  box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 12px 34px -10px rgba(139,30,79,.7);
 }
 .btn--primary:hover{
-  background:var(--primary-hi);
   transform:translateY(-2px);
-  box-shadow:var(--shadow-lg);
+  box-shadow:0 1px 0 rgba(255,255,255,.16) inset,0 18px 44px -10px rgba(139,30,79,.85);
 }
 
 .btn--ghost{
-  border:1.5px solid var(--tint);
-  color:var(--primary);
-  background:var(--surface);
+  border:1.5px solid var(--glass-line);
+  color:var(--text);
+  background:var(--glass);
 }
 .btn--ghost:hover{
-  border-color:var(--secondary);
-  background:var(--tint);
+  border-color:var(--glass-line-hi);
+  background:var(--glass-hi);
   transform:translateY(-2px);
 }
 
-.btn--sm{padding:11px 20px;font-size:.86rem}
+.btn--sm{padding:11px 20px;font-size:.85rem}
 
 .btn .arw{transition:transform .22s var(--ease)}
 .btn:hover .arw{transform:translateX(3px)}
 
-.btn[aria-disabled="true"]{
-  opacity:.55;
-  cursor:default;
-}
-.btn[aria-disabled="true"]:hover{transform:none;box-shadow:var(--shadow-md)}
+.btn[aria-disabled="true"]{opacity:.5;cursor:default}
+.btn[aria-disabled="true"]:hover{transform:none;box-shadow:none}
 
 /* ---------------------------------------------------------------------------
    6. NAV
    --------------------------------------------------------------------------- */
 .nav{
   position:sticky;top:0;z-index:60;
-  background:rgba(250,250,250,.86);
-  backdrop-filter:blur(10px) saturate(1.2);
-  -webkit-backdrop-filter:blur(10px) saturate(1.2);
+  background:rgba(18,14,31,.72);
+  backdrop-filter:blur(14px) saturate(1.3);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3);
   border-bottom:1px solid transparent;
-  transition:border-color .3s var(--ease),box-shadow .3s var(--ease);
+  transition:border-color .3s var(--ease);
 }
-.nav.is-stuck{
-  border-bottom-color:var(--tint);
-  box-shadow:0 1px 0 rgba(29,53,87,.02);
-}
+.nav.is-stuck{border-bottom-color:var(--glass-line)}
 .nav__in{
   display:flex;align-items:center;gap:20px;
   height:72px;
@@ -301,25 +328,19 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
   display:flex;align-items:center;gap:12px;
   text-decoration:none;
   font-family:var(--font-display);
-  font-weight:600;
-  letter-spacing:-.01em;
-  font-size:1.08rem;
-  color:var(--primary);
+  font-weight:500;
+  letter-spacing:.015em;
+  font-size:1.1rem;
+  color:var(--text);
   margin-right:auto;
 }
-.brand__mark{
-  width:32px;height:32px;flex:none;
-  border-radius:9px;
-  background:var(--primary);
-  display:grid;place-items:center;
-}
-.brand__mark svg{width:16px;height:16px}
+.brand__mark{width:20px;height:20px;flex:none;color:var(--accent)}
 .brand__sub{
   font-family:var(--font-sans);
   color:var(--text-muted);
   font-weight:500;
-  font-size:.76rem;
-  letter-spacing:.01em;
+  font-size:.74rem;
+  letter-spacing:.06em;
   display:block;
 }
 
@@ -331,8 +352,9 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
 }
 .nav__links a{
   text-decoration:none;
-  font-size:.92rem;
+  font-size:.9rem;
   font-weight:500;
+  letter-spacing:.02em;
   color:var(--text-muted);
   transition:color .2s var(--ease);
   position:relative;
@@ -340,18 +362,16 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
 .nav__links a::after{
   content:"";
   position:absolute;left:0;bottom:-6px;
-  width:100%;height:1.5px;
-  background:var(--secondary);
+  width:100%;height:1px;
+  background:var(--accent);
   transform:scaleX(0);
   transform-origin:left;
   transition:transform .26s var(--ease);
 }
-.nav__links a:hover{color:var(--primary)}
+.nav__links a:hover{color:var(--text)}
 .nav__links a:hover::after{transform:scaleX(1)}
 
-@media (min-width:900px){
-  .nav__links{display:flex}
-}
+@media (min-width:900px){.nav__links{display:flex}}
 
 /* ---------------------------------------------------------------------------
    7. HERO
@@ -359,156 +379,82 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
 .hero{
   position:relative;
   overflow:hidden;
-  padding-block:clamp(60px,9vw,108px) 0;
+  padding-block:clamp(64px,9vw,112px) 0;
 }
-
-.motif--hero{
-  top:-40px;right:-60px;
-  width:min(520px,68vw);height:min(520px,68vw);
-  opacity:.9;
-}
-@media (max-width:640px){
-  .motif--hero{
-    top:-10px;right:-95px;
-    width:170px;height:170px;
-    opacity:.5;
-  }
-}
-
 .hero__in{position:relative;z-index:2}
 
-/* Coordinate dateline — recurring device (hero + footer): places the event
-   like a dispatch from a specific point on the map, ties to the route/
-   journey motif that threads the whole page. */
 .dateline{
   display:flex;
   flex-wrap:wrap;
   align-items:baseline;
   justify-content:space-between;
   gap:8px 16px;
-  margin-bottom:30px;
+  margin-bottom:32px;
 }
 .dateline__coord{
   font-family:var(--font-sans);
-  font-size:.74rem;
-  font-weight:600;
-  letter-spacing:.1em;
+  font-size:.72rem;
+  font-weight:500;
+  letter-spacing:.14em;
   color:var(--text-muted);
   font-variant-numeric:tabular-nums;
   white-space:nowrap;
 }
-.dateline__coord b{color:var(--secondary);font-weight:600}
+.dateline__coord b{color:var(--accent);font-weight:600;letter-spacing:.18em}
 
-/* Waypoint divider — replaces plain <hr> between major sections. A route
-   marker: two dashed rails meeting at a numbered stop, echoing the agenda
-   rail and tying every section together as one continuous journey. */
-.waypoint-gap{padding-block:8px}
-.waypoint{
-  display:flex;
-  align-items:center;
-  gap:18px;
-}
-.waypoint__line{
-  flex:1;
-  height:0;
-  border-top:1.5px dashed var(--tint);
-}
-.waypoint__mark{
-  flex:none;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:9px 18px;
-  border-radius:999px;
-  background:var(--surface);
-  box-shadow:var(--shadow-sm);
-}
-.waypoint__dot{
-  width:7px;height:7px;
-  border-radius:50%;
-  background:var(--secondary);
-  flex:none;
-}
-.waypoint__txt{
-  font-family:var(--font-sans);
-  font-size:.7rem;
-  font-weight:600;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--text-muted);
-  white-space:nowrap;
-}
-
-.hero h1{margin-block:24px 0}
+.hero h1{margin-block:22px 0}
 .hero h1 em{
   font-style:italic;
-  color:var(--secondary);
+  color:var(--nebula-hi);
+  background:linear-gradient(96deg,var(--nebula-hi),var(--accent));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
 
-.hero__lede{
-  max-width:58ch;
-  margin-top:26px;
-}
+.hero__lede{max-width:58ch;margin-top:28px}
 
-.hero__cta{
-  display:flex;
-  flex-wrap:wrap;
-  gap:14px;
-  margin-top:36px;
-}
+.hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
 
-.hero__note{
-  font-size:.84rem;
-  color:var(--text-muted);
-  margin-top:14px;
-}
+.hero__note{font-size:.84rem;color:var(--text-muted);margin-top:14px}
 
-/* Spec strip — the four event facts */
+/* Spec strip — the four event facts, glass panel */
 .spec{
   display:grid;
   grid-template-columns:1fr;
   gap:1px;
   margin-top:clamp(44px,6vw,68px);
-  background:var(--tint);
+  background:var(--glass-line);
   border-radius:var(--radius);
   overflow:hidden;
-  box-shadow:var(--shadow-sm);
+  border:1px solid var(--glass-line);
 }
 .spec__cell{
   position:relative;
-  background:var(--surface);
+  background:rgba(18,14,31,.72);
+  backdrop-filter:blur(6px);
   padding:22px 24px;
 }
-/* Crop-mark corner — small blueprint/passport-stamp tick, recurring detail
-   tying spec cells and speaker cards to the coordinate/route concept. */
-.crop::before,.crop::after{
-  content:"";
-  position:absolute;top:10px;left:10px;
-  background:var(--tint);
-}
-.crop::before{width:11px;height:1.5px}
-.crop::after{width:1.5px;height:11px}
 .spec__k{
-  font-family:var(--font-sans);
   font-size:11px;
   font-weight:600;
-  letter-spacing:.14em;
+  letter-spacing:.16em;
   text-transform:uppercase;
-  color:var(--secondary);
+  color:var(--accent);
   display:block;
   margin-bottom:9px;
 }
 .spec__v{
   font-family:var(--font-display);
   font-size:1.15rem;
-  font-weight:600;
-  color:var(--primary);
+  font-weight:500;
+  color:var(--text);
   line-height:1.3;
 }
 .spec__v small{
   display:block;
   font-family:var(--font-sans);
-  font-size:.8rem;
+  font-size:.78rem;
   font-weight:500;
   color:var(--text-muted);
   margin-top:4px;
@@ -517,124 +463,63 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
 @media (min-width:960px){.spec{grid-template-columns:repeat(4,1fr)}}
 
 /* Countdown */
-.count{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:30px;
-}
+.count{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:30px}
 .count__label{
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--text-muted);
-  width:100%;
+  font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);width:100%;
 }
 .count__u{
-  min-width:66px;
-  padding:11px 12px;
-  border-radius:12px;
-  background:var(--tint);
+  min-width:66px;padding:11px 12px;border-radius:12px;
+  background:var(--glass);
+  border:1px solid var(--glass-line);
   text-align:center;
 }
 .count__n{
-  display:block;
-  font-family:var(--font-display);
-  font-size:1.4rem;
-  font-weight:700;
-  font-variant-numeric:tabular-nums;
-  color:var(--primary);
+  display:block;font-family:var(--font-display);font-size:1.4rem;font-weight:600;
+  font-variant-numeric:tabular-nums;color:var(--accent);
 }
 .count__t{
-  display:block;
-  font-size:9.5px;
-  font-weight:600;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:var(--text-muted);
-  margin-top:3px;
+  display:block;font-size:9.5px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-muted);margin-top:3px;
 }
 
-/* Theme ticker — quiet text row, no motion-heavy marquee to keep it calm */
-.ticker{
-  margin-top:clamp(52px,7vw,84px);
-  border-top:1px solid var(--tint);
-  padding-block:20px;
-  position:relative;z-index:2;
-}
-.ticker__row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px 28px;
-  justify-content:center;
-}
-.ticker__row span{
-  font-size:.82rem;
-  font-weight:500;
-  color:var(--text-muted);
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.ticker__row span::before{
-  content:"";
-  width:4px;height:4px;
-  border-radius:50%;
-  background:var(--secondary);
-}
+/* Quiet theme ticker */
+.ticker{margin-top:clamp(52px,7vw,84px);border-top:1px solid var(--glass-line);padding-block:20px;position:relative;z-index:2}
+.ticker__row{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center}
+.ticker__row span{font-size:.8rem;font-weight:500;letter-spacing:.02em;color:var(--text-muted);display:flex;align-items:center;gap:10px}
+.ticker__row span::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--accent)}
 .ticker__row span:first-child::before{display:none}
 
 /* ---------------------------------------------------------------------------
    8. SECTION SHELL
    --------------------------------------------------------------------------- */
-.sec{
-  position:relative;
-  padding-block:clamp(76px,10vw,128px);
-}
+.sec{position:relative;padding-block:clamp(76px,10vw,128px)}
 .sec__head{max-width:60ch}
 .sec__head h2{margin-top:22px}
 .sec__head .lede{margin-top:22px}
-.sec--center .sec__head{margin-inline:auto;text-align:center}
+
+/* Constellation divider — replaces a plain <hr> between major sections */
+.waypoint-gap{padding-block:8px}
+.waypoint{display:flex;align-items:center;gap:18px}
+.waypoint__line{flex:1;height:0;border-top:1px dashed var(--glass-line)}
+.waypoint__mark{
+  flex:none;display:flex;align-items:center;gap:10px;
+  padding:9px 18px;border-radius:999px;
+  background:var(--glass);
+  border:1px solid var(--glass-line);
+}
+.waypoint__star{width:11px;height:11px;flex:none;color:var(--accent)}
+.waypoint__txt{
+  font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-muted);white-space:nowrap;
+}
 
 /* ---------------------------------------------------------------------------
    9. ABOUT
    --------------------------------------------------------------------------- */
-.about{
-  display:grid;
-  gap:clamp(40px,5vw,68px);
-  align-items:start;
-}
-@media (min-width:900px){
-  .about{grid-template-columns:1.1fr .9fr}
-}
+.about{display:grid;gap:clamp(40px,5vw,68px);align-items:start}
+@media (min-width:900px){.about{grid-template-columns:1.1fr .9fr}}
 
-.themes{
-  display:grid;
-  gap:14px;
-}
-.theme{
-  display:flex;
-  gap:16px;
-  align-items:flex-start;
-  padding:22px;
-  border-radius:16px;
-  background:var(--surface);
-  box-shadow:var(--shadow-sm);
-}
-.theme__ico{
-  width:40px;height:40px;flex:none;
-  border-radius:11px;
-  display:grid;place-items:center;
-  background:var(--tint);
-  color:var(--primary);
-}
-.theme__ico svg{width:19px;height:19px}
-.theme h3{font-size:1.06rem;margin-bottom:5px}
-.theme p{font-size:.9rem;color:var(--text-muted);line-height:1.6}
-
-/* Drop cap — editorial magazine device on the framing paragraph */
 .dropcap::first-letter{
   font-family:var(--font-display);
   font-weight:600;
@@ -642,13 +527,30 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
   line-height:.78;
   float:left;
   padding:5px 10px 0 0;
-  color:var(--primary);
+  color:var(--nebula-hi);
 }
 
+.themes{display:grid;gap:14px}
+.theme{
+  display:flex;gap:16px;align-items:flex-start;
+  padding:22px;border-radius:16px;
+  background:var(--glass);
+  border:1px solid var(--glass-line);
+  transition:border-color .3s var(--ease),background .3s var(--ease);
+}
+.theme:hover{border-color:var(--glass-line-hi);background:var(--glass-hi)}
+.theme__ico{
+  width:40px;height:40px;flex:none;border-radius:11px;
+  display:grid;place-items:center;
+  background:rgba(139,30,79,.28);
+  color:var(--accent);
+}
+.theme__ico svg{width:19px;height:19px}
+.theme h3{font-size:1.08rem;margin-bottom:6px}
+.theme p{font-size:.9rem;color:var(--text-muted);line-height:1.65}
+
 /* ---------------------------------------------------------------------------
-   10. SPEAKERS — styled as "route stops": a stamp badge instead of a plain
-   index number, a dashed tear-line under the header, a faint oversized "04"
-   watermark behind the section (the panel's headline fact, made a device).
+   10. SPEAKERS
    --------------------------------------------------------------------------- */
 .speakers-wrap{position:relative}
 .speakers-wrap > .sec__head{position:relative;z-index:1}
@@ -656,437 +558,258 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
   position:absolute;
   top:-6vw;right:calc(var(--pad) * -0.4);
   font-family:var(--font-display);
-  font-weight:700;
+  font-weight:600;
   font-size:clamp(140px,24vw,300px);
   line-height:1;
-  color:var(--surface);
+  color:rgba(217,140,174,.07);
   z-index:0;
   user-select:none;
   pointer-events:none;
 }
 
-.speakers{
-  position:relative;
-  z-index:1;
-  display:grid;
-  gap:22px;
-  margin-top:clamp(44px,5vw,64px);
-}
+.speakers{position:relative;z-index:1;display:grid;gap:22px;margin-top:clamp(44px,5vw,64px)}
 @media (min-width:680px){.speakers{grid-template-columns:repeat(2,1fr)}}
 @media (min-width:1080px){.speakers{grid-template-columns:repeat(4,1fr)}}
 
 .card{
   position:relative;
-  display:flex;
-  flex-direction:column;
+  display:flex;flex-direction:column;
   padding:28px 26px 26px;
   border-radius:var(--radius);
-  background:var(--surface);
-  box-shadow:var(--shadow-sm);
-  transition:transform .32s var(--ease),box-shadow .32s var(--ease);
+  background:var(--glass);
+  border:1px solid var(--glass-line);
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease),background .35s var(--ease);
 }
 .card:hover{
-  transform:translateY(-5px) rotate(-1deg);
-  box-shadow:var(--shadow-md);
+  transform:translateY(-5px);
+  border-color:var(--glass-line-hi);
+  background:var(--glass-hi);
+  box-shadow:var(--glow-hover);
 }
 
 .card__no{
   position:absolute;
   top:20px;right:20px;
-  display:flex;
-  align-items:center;
-  gap:5px;
-  padding:5px 10px 5px 9px;
+  display:flex;align-items:center;gap:5px;
+  padding:5px 10px;
   border-radius:999px;
-  background:var(--tint);
-  color:var(--secondary);
-  font-family:var(--font-sans);
-  font-size:.62rem;
-  font-weight:700;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  transform:rotate(-3deg);
+  background:rgba(139,30,79,.22);
+  border:1px solid var(--glass-line);
+  color:var(--accent);
+  font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
 }
 .card__no svg{width:9px;height:9px}
 
 /* Avatar: monogram tile now, <img class="avatar-img"> later */
 .avatar{
-  width:80px;height:80px;
-  border-radius:50%;
-  background:var(--tint);
-  margin-bottom:22px;
-  flex:none;
+  width:80px;height:80px;border-radius:50%;
+  background:rgba(139,30,79,.22);
+  border:1px solid var(--glass-line);
+  margin-bottom:22px;flex:none;
   display:grid;place-items:center;
 }
 .avatar__in{
   font-family:var(--font-display);
-  font-size:1.35rem;
-  font-weight:600;
-  letter-spacing:.01em;
-  color:var(--primary);
+  font-size:1.35rem;font-weight:600;letter-spacing:.02em;
+  color:var(--accent);
 }
-.avatar-img{
-  width:100%;height:100%;
-  border-radius:50%;
-  object-fit:cover;
-  background:var(--tint);
-}
+.avatar-img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:rgba(139,30,79,.22)}
 
 .card h3{margin-bottom:8px}
 
 .card__role{
   font-family:var(--font-sans);
-  font-size:.82rem;
-  font-weight:600;
-  letter-spacing:.01em;
-  line-height:1.5;
-  color:var(--secondary);
-  padding-bottom:16px;
-  margin-bottom:16px;
-  border-bottom:1.5px dashed var(--tint);
+  font-size:.82rem;font-weight:600;letter-spacing:.02em;line-height:1.5;
+  color:var(--accent);
+  padding-bottom:16px;margin-bottom:16px;
+  border-bottom:1px dashed var(--glass-line);
 }
 
-.card__bio{
-  font-size:.92rem;
-  line-height:1.7;
-  color:var(--text-muted);
-  margin-bottom:20px;
-}
+.card__bio{font-size:.92rem;line-height:1.75;color:var(--text-muted);margin-bottom:20px}
 
 .card__foot{
-  margin-top:auto;
-  padding-top:18px;
-  border-top:1px solid var(--tint);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
+  margin-top:auto;padding-top:18px;
+  border-top:1px solid var(--glass-line);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
 }
 
 .tag{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:5px 12px;
-  border-radius:999px;
-  background:var(--tint);
-  font-family:var(--font-sans);
-  font-size:10.5px;
-  font-weight:600;
-  letter-spacing:.05em;
-  text-transform:uppercase;
-  color:var(--primary);
-  white-space:nowrap;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:999px;
+  background:rgba(139,30,79,.22);
+  border:1px solid var(--glass-line);
+  font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--accent);white-space:nowrap;
 }
 
 .li-link{
   width:36px;height:36px;flex:none;
-  display:grid;place-items:center;
-  border-radius:10px;
-  background:var(--tint);
-  color:var(--primary);
+  display:grid;place-items:center;border-radius:10px;
+  background:var(--glass);
+  border:1px solid var(--glass-line);
+  color:var(--text-muted);
   transition:all .22s var(--ease);
 }
 .li-link svg{width:16px;height:16px}
 .li-link:hover{
-  background:var(--primary);
-  color:#fff;
+  background:var(--nebula-core);
+  border-color:var(--nebula-hi);
+  color:var(--star);
   transform:translateY(-2px);
 }
 
 /* ---------------------------------------------------------------------------
    11. AGENDA
    --------------------------------------------------------------------------- */
-.agenda{
-  margin-top:clamp(44px,5vw,64px);
-  position:relative;
-  padding-left:32px;
-}
+.agenda{margin-top:clamp(44px,5vw,64px);position:relative;padding-left:32px}
 .agenda::before{
-  content:"";
-  position:absolute;
-  left:5px;top:8px;bottom:8px;
-  width:1.5px;
-  background:var(--tint);
+  content:"";position:absolute;left:5px;top:8px;bottom:8px;width:1px;
+  background:linear-gradient(180deg,var(--accent),rgba(217,140,174,.15) 60%,transparent);
 }
 
-.slot{
-  position:relative;
-  padding-block:22px;
-  border-bottom:1px solid var(--tint);
-  display:grid;
-  gap:5px 28px;
-}
+.slot{position:relative;padding-block:22px;border-bottom:1px solid var(--glass-line);display:grid;gap:5px 28px}
 .slot:last-child{border-bottom:0}
 .slot::before{
-  content:"";
-  position:absolute;
-  left:-32px;top:29px;
-  width:12px;height:12px;
-  border-radius:50%;
-  background:var(--surface);
-  border:2px solid var(--secondary);
+  content:"";position:absolute;left:-32px;top:29px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--accent);
+  box-shadow:0 0 0 4px rgba(217,140,174,.1);
 }
-.slot__t{
-  font-family:var(--font-sans);
-  font-size:.85rem;
-  font-weight:600;
-  color:var(--secondary);
-}
-.slot h3{font-size:1.12rem}
-.slot p{
-  font-size:.9rem;
-  color:var(--text-muted);
-  line-height:1.65;
-}
+.slot__t{font-size:.85rem;font-weight:600;letter-spacing:.02em;color:var(--accent)}
+.slot h3{font-size:1.14rem}
+.slot p{font-size:.9rem;color:var(--text-muted);line-height:1.7}
 @media (min-width:760px){
   .slot{grid-template-columns:150px 1fr}
   .slot__t{grid-row:span 2;padding-top:3px}
 }
 
-.slot--key::before{background:var(--primary);border-color:var(--primary)}
-.slot--key h3{color:var(--primary)}
+.slot--key::before{background:var(--nebula-core);border-color:var(--nebula-hi)}
+.slot--key h3{color:var(--nebula-hi)}
 
 /* ---------------------------------------------------------------------------
    12. VENUE
    --------------------------------------------------------------------------- */
-.venue{
-  display:grid;
-  gap:clamp(30px,4vw,46px);
-  align-items:start;
-}
-@media (min-width:900px){
-  .venue{grid-template-columns:1fr 1fr}
-}
+.venue{display:grid;gap:clamp(30px,4vw,46px);align-items:start}
+@media (min-width:900px){.venue{grid-template-columns:1fr 1fr}}
 
-/* Map slot — swap the whole .map block for your Google Maps <iframe> */
 .map{
-  position:relative;
-  aspect-ratio:4/3;
-  border-radius:var(--radius);
-  overflow:hidden;
-  background:var(--tint);
-  display:grid;
-  place-items:center;
-  box-shadow:var(--shadow-sm);
+  position:relative;aspect-ratio:4/3;
+  border-radius:var(--radius);overflow:hidden;
+  background:var(--glass);
+  border:1px solid var(--glass-line);
+  display:grid;place-items:center;
 }
 .map iframe{width:100%;height:100%;border:0;display:block}
 .map__art{position:absolute;inset:0;width:100%;height:100%}
 .map__tag{
-  position:relative;
-  text-align:center;
-  padding:20px 24px;
-  border-radius:14px;
-  background:var(--surface);
-  box-shadow:var(--shadow-md);
+  position:relative;text-align:center;padding:20px 24px;border-radius:14px;
+  background:rgba(18,14,31,.85);
+  border:1px solid var(--glass-line);
   max-width:82%;
 }
-.map__tag b{
-  display:block;
-  font-family:var(--font-display);
-  font-size:.95rem;
-  font-weight:600;
-  color:var(--primary);
-  margin-bottom:7px;
-}
+.map__tag b{display:block;font-family:var(--font-display);font-size:.95rem;font-weight:500;color:var(--text);margin-bottom:7px}
 .map__tag span{font-size:.85rem;color:var(--text-muted);line-height:1.6}
 
 .dl{display:grid;gap:0;margin-top:8px}
-.dl__row{
-  padding:18px 0;
-  border-bottom:1px solid var(--tint);
-  display:grid;
-  gap:5px 20px;
-}
+.dl__row{padding:18px 0;border-bottom:1px solid var(--glass-line);display:grid;gap:5px 20px}
 .dl__row:first-child{padding-top:0}
 .dl__row:last-child{border-bottom:0}
-.dl__k{
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--secondary);
-}
-.dl__v{font-size:.95rem;color:var(--text-muted);line-height:1.7}
-.dl__v strong{color:var(--primary);font-weight:600}
-@media (min-width:560px){
-  .dl__row{grid-template-columns:140px 1fr}
-}
+.dl__k{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.dl__v{font-size:.95rem;color:var(--text-muted);line-height:1.75}
+.dl__v strong{color:var(--text);font-weight:600}
+@media (min-width:560px){.dl__row{grid-template-columns:140px 1fr}}
 
 /* ---------------------------------------------------------------------------
    13. CTA BAND
    --------------------------------------------------------------------------- */
-.band{
-  position:relative;
-  overflow:hidden;
-  background:var(--bg);
-}
-.band__in{
-  position:relative;z-index:2;
-  padding-block:clamp(68px,9vw,108px);
-}
+.band{position:relative;overflow:hidden}
+.band__in{position:relative;z-index:2;padding-block:clamp(68px,9vw,108px)}
 
-/* The registration CTA as a literal event ticket: a main panel plus a
-   die-cut stub, joined by a perforated seam with notch "holes" that match
-   the page background behind the ticket. This is the single boldest
-   signature moment on the page — everything else stays quiet around it. */
-.ticket{
-  position:relative;
-  max-width:860px;
-  margin-inline:auto;
-  display:grid;
-  grid-template-columns:1fr;
-  background:var(--surface);
-  border-radius:22px;
-  box-shadow:var(--shadow-lg);
-  overflow:hidden;
+.launch{
+  position:relative;max-width:900px;margin-inline:auto;
+  display:grid;grid-template-columns:1fr;
+  border-radius:24px;overflow:hidden;
+  background:var(--glass);
+  border:1px solid var(--glass-line);
+  box-shadow:0 30px 80px -30px rgba(139,30,79,.4);
 }
-@media (min-width:760px){
-  .ticket{grid-template-columns:1fr 224px}
-}
+@media (min-width:760px){.launch{grid-template-columns:1fr 240px}}
 
-.ticket__main{
-  padding:clamp(40px,6vw,60px);
-  text-align:left;
-}
-.ticket__main h2{margin-block:16px 16px}
-.ticket__main h2 em{font-style:italic;color:var(--secondary)}
-.ticket__main .btn{margin-top:28px}
+.launch__main{padding:clamp(40px,6vw,60px);text-align:left}
+.launch__main h2{margin-block:16px 16px}
+.launch__main .btn{margin-top:28px}
 
-.ticket__stub{
+.launch__facts{
   position:relative;
-  background:var(--tint);
+  background:rgba(139,30,79,.14);
   padding:clamp(28px,4vw,36px) clamp(28px,4vw,32px);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-  justify-content:center;
-  border-top:1.5px dashed rgba(29,53,87,.28);
+  display:flex;flex-direction:column;gap:18px;justify-content:center;
+  border-top:1px solid var(--glass-line);
 }
 @media (min-width:760px){
-  .ticket__stub{
-    border-top:0;
-    border-left:1.5px dashed rgba(29,53,87,.28);
-  }
-  /* Die-cut notches along the seam, colored to match the band behind the ticket */
-  .ticket__stub::before,.ticket__stub::after{
-    content:"";
-    position:absolute;left:-11px;
-    width:22px;height:22px;
-    border-radius:50%;
-    background:var(--bg);
-  }
-  .ticket__stub::before{top:-11px}
-  .ticket__stub::after{bottom:-11px}
+  .launch__facts{border-top:0;border-left:1px solid var(--glass-line)}
 }
-
-.stub__row{display:flex;flex-direction:column;gap:3px}
-.stub__k{
-  font-size:.66rem;
-  font-weight:600;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--secondary);
+.fact__row{display:flex;flex-direction:column;gap:4px}
+.fact__k{
+  font-size:.66rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);display:flex;align-items:center;gap:7px;
 }
-.stub__v{
-  font-family:var(--font-display);
-  font-size:1.02rem;
-  font-weight:600;
-  color:var(--primary);
-  line-height:1.3;
-}
-.dot{
-  width:5px;height:5px;
-  border-radius:50%;
-  background:var(--secondary);
-  flex:none;
-}
+.fact__k svg{width:9px;height:9px;flex:none}
+.fact__v{font-family:var(--font-display);font-size:1.05rem;font-weight:500;color:var(--text);line-height:1.3}
 
 /* ---------------------------------------------------------------------------
    14. FOOTER
    --------------------------------------------------------------------------- */
-.foot{
-  padding-block:clamp(56px,7vw,80px) 32px;
-  background:var(--bg);
-}
+.foot{padding-block:clamp(56px,7vw,80px) 32px}
 .foot__top{
-  display:grid;
-  gap:38px;
-  padding-bottom:38px;
-  border-bottom:1px solid var(--tint);
+  display:grid;gap:38px;padding-bottom:38px;
+  border-bottom:1px solid var(--glass-line);
 }
-@media (min-width:820px){
-  .foot__top{grid-template-columns:1.6fr 1fr 1fr}
-}
+@media (min-width:820px){.foot__top{grid-template-columns:1.6fr 1fr 1fr}}
 .foot h4{
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--secondary);
-  margin-bottom:18px;
+  font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:18px;
 }
-.foot__blurb{
-  font-size:.9rem;
-  color:var(--text-muted);
-  max-width:42ch;
-  margin-top:16px;
-  line-height:1.7;
-}
+.foot__blurb{font-size:.9rem;color:var(--text-muted);max-width:42ch;margin-top:16px;line-height:1.75}
 .foot ul{list-style:none;padding:0;display:grid;gap:12px}
 .foot ul a,.foot address a{
-  font-size:.9rem;
-  color:var(--text-muted);
-  text-decoration:none;
+  font-size:.9rem;color:var(--text-muted);text-decoration:none;
   transition:color .2s var(--ease);
 }
-.foot ul a:hover,.foot address a:hover{color:var(--primary)}
-.foot address{font-style:normal;font-size:.9rem;color:var(--text-muted);line-height:1.75}
+.foot ul a:hover,.foot address a:hover{color:var(--accent)}
+.foot address{font-style:normal;font-size:.9rem;color:var(--text-muted);line-height:1.8}
 
 .socials{display:flex;gap:10px;margin-top:20px}
 .socials a{
-  width:38px;height:38px;
-  display:grid;place-items:center;
-  border-radius:11px;
-  background:var(--tint);
-  color:var(--primary);
+  width:38px;height:38px;display:grid;place-items:center;border-radius:11px;
+  background:var(--glass);border:1px solid var(--glass-line);color:var(--text-muted);
   transition:all .22s var(--ease);
 }
 .socials svg{width:16px;height:16px}
-.socials a:hover{
-  background:var(--primary);
-  color:#fff;
-  transform:translateY(-2px);
-}
+.socials a:hover{background:var(--nebula-core);border-color:var(--nebula-hi);color:var(--star);transform:translateY(-2px)}
 
 .foot__base{
-  padding-top:28px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px 24px;
-  justify-content:space-between;
-  align-items:center;
-  font-size:.8rem;
-  color:var(--text-muted);
+  padding-top:28px;display:flex;flex-wrap:wrap;gap:12px 24px;
+  justify-content:space-between;align-items:center;
+  font-size:.8rem;color:var(--text-muted);
 }
 
 /* ---------------------------------------------------------------------------
-   15. SCROLL REVEAL — subtle fade/slide only, per "calm not flashy" direction
+   15. SCROLL REVEAL — calm fade-up, no bounce
    --------------------------------------------------------------------------- */
 .js .reveal{
   opacity:0;
-  transform:translateY(18px);
-  transition:opacity .7s var(--ease),transform .7s var(--ease);
+  transform:translateY(20px);
+  transition:opacity .9s var(--ease),transform .9s var(--ease);
   transition-delay:var(--d,0ms);
 }
-.js .reveal.is-in{
-  opacity:1;
-  transform:none;
-}
+.js .reveal.is-in{opacity:1;transform:none}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .js .reveal{opacity:1;transform:none;transition:none}
+  .js .sparkle--twinkle{animation:none;opacity:.6}
+  .nebula{transform:translateX(-50%) !important}
   *,*::before,*::after{
     animation-duration:.001ms !important;
     animation-iteration-count:1 !important;
@@ -1095,13 +818,39 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
 }
 
 @media print{
-  .grain,.motif,.nav{display:none}
+  .grain,.nebula,.sparkle,.nav{display:none}
+  body{background:#fff;color:#000}
 }
 </style>
 </head>
 
 <body>
+<div class="nebula" id="nebula" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
+
+<!-- Scattered sparkle stars — inline SVG four-pointed shapes, a few twinkling -->
+<div class="sparkle sparkle--twinkle" style="top:9%;left:8%;width:14px;height:14px;--tw-dur:5.2s;--tw-delay:.2s;--tw-lo:.2;--tw-hi:.9" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
+</div>
+<div class="sparkle" style="top:16%;left:22%;width:6px;height:6px;opacity:.5" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+</div>
+<div class="sparkle sparkle--twinkle" style="top:6%;right:14%;width:10px;height:10px;--tw-dur:4.1s;--tw-delay:1.1s;--tw-lo:.25;--tw-hi:1" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+</div>
+<div class="sparkle" style="top:28%;right:6%;width:18px;height:18px;opacity:.3" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
+</div>
+<div class="sparkle sparkle--twinkle" style="top:38%;left:4%;width:8px;height:8px;--tw-dur:6s;--tw-delay:.6s;--tw-lo:.2;--tw-hi:.85" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+</div>
+<div class="sparkle" style="top:65%;right:10%;width:9px;height:9px;opacity:.4" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+</div>
+<div class="sparkle sparkle--twinkle" style="top:82%;left:12%;width:12px;height:12px;--tw-dur:5.6s;--tw-delay:1.6s;--tw-lo:.2;--tw-hi:.9" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
+</div>
+
 <a class="skip" href="#main">Skip to content</a>
 
 <!-- ══════════════════════════════ NAV ══════════════════════════════ -->
@@ -1109,9 +858,7 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
   <div class="shell nav__in">
     <a class="brand" href="#top">
       <span class="brand__mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M8 5l7 7-7 7" />
-        </svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
       </span>
       <span>
         Founders Speak
@@ -1136,19 +883,6 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
 
 <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
 <section class="hero" id="top">
-  <!-- Bespoke route/compass motif — a founder's route plotted like a chart,
-       replacing the generic concentric-circle hero decoration. -->
-  <div class="motif motif--hero" aria-hidden="true">
-    <svg viewBox="0 0 220 220" fill="none">
-      <circle cx="110" cy="110" r="90" stroke="#E4EBF2" stroke-width="1.2"/>
-      <path d="M110 20v18M110 182v18M20 110h18M182 110h18" stroke="#5C7FA3" stroke-width="1.3" stroke-linecap="round"/>
-      <path d="M40 150c22-38 30-58 55-70s45 4 70-18" stroke="#5C7FA3" stroke-width="1.4" stroke-dasharray="1 9" stroke-linecap="round"/>
-      <circle cx="40" cy="150" r="4.5" fill="#FAFAFA" stroke="#1D3557" stroke-width="1.6"/>
-      <circle cx="95" cy="80" r="4.5" fill="#FAFAFA" stroke="#5C7FA3" stroke-width="1.6"/>
-      <circle cx="165" cy="62" r="6" fill="#1D3557"/>
-    </svg>
-  </div>
-
   <div class="shell hero__in">
     <div class="dateline reveal">
       <!-- TODO: organizing body -->
@@ -1181,19 +915,19 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
 
     <!-- ── Event facts. TODO: time, venue, mode ── -->
     <dl class="spec reveal" style="--d:240ms">
-      <div class="spec__cell crop">
+      <div class="spec__cell">
         <dt class="spec__k">Date</dt>
         <dd class="spec__v">21 August 2026<small>Friday</small></dd>
       </div>
-      <div class="spec__cell crop">
+      <div class="spec__cell">
         <dt class="spec__k">Time</dt>
         <dd class="spec__v"><span class="ph">TODO</span><small>Add IST start / end</small></dd>
       </div>
-      <div class="spec__cell crop">
+      <div class="spec__cell">
         <dt class="spec__k">Venue</dt>
         <dd class="spec__v"><span class="ph">TODO</span><small>Nirma University, Ahmedabad</small></dd>
       </div>
-      <div class="spec__cell crop">
+      <div class="spec__cell">
         <dt class="spec__k">Mode</dt>
         <dd class="spec__v"><span class="ph">TODO</span><small>Confirm livestream</small></dd>
       </div>
@@ -1220,7 +954,7 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
   </div>
 </section>
 
-<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><span class="waypoint__dot"></span><span class="waypoint__txt">Why this panel</span></span><span class="waypoint__line"></span></div></div>
+<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Why this panel</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ ABOUT ══════════════════════════════ -->
 <section class="sec" id="about">
@@ -1285,10 +1019,10 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
   </div>
 </section>
 
-<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><span class="waypoint__dot"></span><span class="waypoint__txt">Meet the panel</span></span><span class="waypoint__line"></span></div></div>
+<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Meet the panel</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ SPEAKERS ══════════════════════════════ -->
-<section class="sec tint-band" id="speakers">
+<section class="sec" id="speakers">
   <div class="shell speakers-wrap">
     <span class="ghost-num" aria-hidden="true">04</span>
 
@@ -1304,10 +1038,10 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
     <div class="speakers">
 
       <!-- ── 01 · Jasmin Gupta ── -->
-      <article class="card crop reveal">
+      <article class="card reveal">
         <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M5 10l7-7 7 7"/></svg>
-          Stop 01
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+          01
         </span>
 
         <div class="avatar">
@@ -1338,10 +1072,10 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
       </article>
 
       <!-- ── 02 · Dhairya Shah ── -->
-      <article class="card crop reveal" style="--d:90ms">
+      <article class="card reveal" style="--d:90ms">
         <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M5 10l7-7 7 7"/></svg>
-          Stop 02
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+          02
         </span>
 
         <div class="avatar">
@@ -1368,10 +1102,10 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
       </article>
 
       <!-- ── 03 · Devansh Rana ── -->
-      <article class="card crop reveal" style="--d:180ms">
+      <article class="card reveal" style="--d:180ms">
         <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M5 10l7-7 7 7"/></svg>
-          Stop 03
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+          03
         </span>
 
         <div class="avatar">
@@ -1397,10 +1131,10 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
       </article>
 
       <!-- ── 04 · Nikita Lalwani ── -->
-      <article class="card crop reveal" style="--d:270ms">
+      <article class="card reveal" style="--d:270ms">
         <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M5 10l7-7 7 7"/></svg>
-          Stop 04
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+          04
         </span>
 
         <div class="avatar">
@@ -1428,7 +1162,7 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
   </div>
 </section>
 
-<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><span class="waypoint__dot"></span><span class="waypoint__txt">Run of show</span></span><span class="waypoint__line"></span></div></div>
+<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Run of show</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ AGENDA ══════════════════════════════ -->
 <section class="sec" id="agenda">
@@ -1479,10 +1213,10 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
   </div>
 </section>
 
-<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><span class="waypoint__dot"></span><span class="waypoint__txt">Getting there</span></span><span class="waypoint__line"></span></div></div>
+<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Getting there</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ VENUE ══════════════════════════════ -->
-<section class="sec tint-band" id="venue">
+<section class="sec" id="venue">
   <div class="shell">
     <div class="sec__head reveal" style="margin-bottom:clamp(36px,5vw,52px)">
       <p class="eyebrow">Getting there</p>
@@ -1500,17 +1234,17 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
         <svg class="map__art" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <pattern id="mgrid" width="34" height="34" patternUnits="userSpaceOnUse">
-              <path d="M34 0H0v34" fill="none" stroke="rgba(29,53,87,.08)" stroke-width="1"/>
+              <path d="M34 0H0v34" fill="none" stroke="rgba(217,140,174,.12)" stroke-width="1"/>
             </pattern>
           </defs>
           <rect width="400" height="300" fill="url(#mgrid)"/>
-          <path d="M-10 210 L150 150 L260 190 L410 130" fill="none" stroke="rgba(29,53,87,.1)" stroke-width="11" stroke-linecap="round"/>
-          <path d="M70 -10 L110 120 L90 310" fill="none" stroke="rgba(29,53,87,.08)" stroke-width="8" stroke-linecap="round"/>
-          <path d="M300 -10 L285 140 L330 310" fill="none" stroke="rgba(29,53,87,.08)" stroke-width="8" stroke-linecap="round"/>
-          <circle cx="200" cy="128" r="46" fill="rgba(92,127,163,.12)"/>
-          <circle cx="200" cy="128" r="46" fill="none" stroke="rgba(92,127,163,.35)" stroke-width="1" stroke-dasharray="4 5"/>
-          <path d="M200 108a11 11 0 0 1 11 11c0 8-11 21-11 21s-11-13-11-21a11 11 0 0 1 11-11z" fill="#1D3557"/>
-          <circle cx="200" cy="119" r="4" fill="#FAFAFA"/>
+          <path d="M-10 210 L150 150 L260 190 L410 130" fill="none" stroke="rgba(217,140,174,.18)" stroke-width="11" stroke-linecap="round"/>
+          <path d="M70 -10 L110 120 L90 310" fill="none" stroke="rgba(217,140,174,.14)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M300 -10 L285 140 L330 310" fill="none" stroke="rgba(217,140,174,.14)" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="200" cy="128" r="46" fill="rgba(139,30,79,.22)"/>
+          <circle cx="200" cy="128" r="46" fill="none" stroke="rgba(217,140,174,.4)" stroke-width="1" stroke-dasharray="4 5"/>
+          <path d="M200 108a11 11 0 0 1 11 11c0 8-11 21-11 21s-11-13-11-21a11 11 0 0 1 11-11z" fill="#D98CAE"/>
+          <circle cx="200" cy="119" r="4" fill="#120E1F"/>
         </svg>
         <div class="map__tag">
           <b>Map embed placeholder</b>
@@ -1551,13 +1285,10 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
 </section>
 
 <!-- ══════════════════════════════ CTA BAND ══════════════════════════════ -->
-<!-- The registration ask, staged as a literal event ticket — main stub +
-     tear-off details column. The one deliberately bold visual beat on the
-     page; everything around it stays quiet so this reads as the moment. -->
 <section class="band" id="register">
   <div class="shell">
-    <div class="ticket reveal">
-      <div class="ticket__main">
+    <div class="launch reveal">
+      <div class="launch__main">
         <p class="eyebrow">Registration</p>
         <h2>Seats are limited.<br /><em>Claim yours.</em></h2>
         <p class="lede">
@@ -1571,18 +1302,18 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
         </a>
       </div>
 
-      <div class="ticket__stub">
-        <div class="stub__row">
-          <span class="stub__k">Date</span>
-          <span class="stub__v">21 Aug 2026</span>
+      <div class="launch__facts">
+        <div class="fact__row">
+          <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Date</span>
+          <span class="fact__v">21 Aug 2026</span>
         </div>
-        <div class="stub__row">
-          <span class="stub__k">Time</span>
-          <span class="stub__v"><span class="ph">TODO</span></span>
+        <div class="fact__row">
+          <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Time</span>
+          <span class="fact__v"><span class="ph">TODO</span></span>
         </div>
-        <div class="stub__row">
-          <span class="stub__k">Access</span>
-          <span class="stub__v">General &middot; Free</span>
+        <div class="fact__row">
+          <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Access</span>
+          <span class="fact__v">General &middot; Free</span>
         </div>
       </div>
     </div>
@@ -1598,7 +1329,7 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
       <div>
         <a class="brand" href="#top">
           <span class="brand__mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l7 7-7 7"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
           </span>
           <span>Founders Speak<span class="brand__sub">Entrepreneurs Panel Discussion</span></span>
         </a>
@@ -1660,12 +1391,9 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
      ═══════════════════════════════════════════════════════════════════ */
 
   // TODO: paste the Google Form / Luma / registration link between the quotes.
-  // Leave it empty ("") and every Register button politely reads
-  // "Registration opening soon" instead of leading nowhere.
   var REGISTRATION_URL = '';
 
   // TODO: exact start time. Format: YYYY-MM-DDTHH:MM:SS+05:30  (IST)
-  // Currently a placeholder 10:00 AM start — drives the hero countdown.
   var EVENT_STARTS_AT = '2026-08-21T10:00:00+05:30';
 
   /* ═══════════════════════════════════════════════════════════════════
@@ -1683,12 +1411,8 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
       el.rel = 'noopener noreferrer';
     });
   } else {
-    // No link yet: keep the buttons as in-page anchors to the CTA band,
-    // and say so plainly rather than pretending they work.
     regLinks.forEach(function (el) {
-      if (el.classList.contains('btn')) {
-        el.setAttribute('aria-disabled', 'true');
-      }
+      if (el.classList.contains('btn')) el.setAttribute('aria-disabled', 'true');
     });
     if (regNote) {
       regNote.textContent = 'Registration link coming soon.';
@@ -1702,10 +1426,29 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
     nav.classList.toggle('is-stuck', window.scrollY > 12);
   };
   onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ---- Nebula parallax drift (calm, slow — disabled if reduced motion) */
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var nebula = document.getElementById('nebula');
+  var ticking = false;
+
+  var applyParallax = function () {
+    ticking = false;
+    if (!nebula) return;
+    var y = window.scrollY * 0.08;
+    nebula.style.transform = 'translate(-50%,' + y + 'px)';
+  };
+
+  var onScrollAll = function () {
+    onScroll();
+    if (!reduced && !ticking) {
+      ticking = true;
+      requestAnimationFrame(applyParallax);
+    }
+  };
+  window.addEventListener('scroll', onScrollAll, { passive: true });
 
   /* ---- Scroll reveal --------------------------------------------- */
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var items = document.querySelectorAll('.reveal');
 
   if (reduced || !('IntersectionObserver' in window)) {
@@ -1739,7 +1482,7 @@ h3{font-size:1.28rem;font-weight:600;font-variation-settings:"opsz" 28}
     var tick = function () {
       var gap = target - Date.now();
       if (gap <= 0) {
-        cdBox.hidden = true;          // event has started — stop counting
+        cdBox.hidden = true;
         clearInterval(timer);
         return;
       }
