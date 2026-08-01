@@ -1765,37 +1765,16 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   <div class="shell">
     <div class="sec__head reveal" style="margin-bottom:clamp(36px,5vw,52px)">
       <p class="eyebrow">Getting there</p>
-      <h2>Venue &amp; logistics.</h2>
+      <h2>Venue.</h2>
     </div>
 
     <div class="venue">
-      <!--
-        TODO: replace this entire .map block with your embed —
-        <div class="map"><iframe src="https://www.google.com/maps/embed?pb=..."
-             title="Map to Nirma University" loading="lazy"
-             referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
-      -->
-      <div class="map reveal" role="img" aria-label="Placeholder for an embedded map of the venue">
-        <svg class="map__art" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <defs>
-            <pattern id="mgrid" width="34" height="34" patternUnits="userSpaceOnUse">
-              <path d="M34 0H0v34" fill="none" stroke="rgba(245,240,228,.07)" stroke-width="1"/>
-            </pattern>
-          </defs>
-          <rect width="400" height="300" fill="url(#mgrid)"/>
-          <path d="M-10 210 L150 150 L260 190 L410 130" fill="none" stroke="rgba(108,140,255,.22)" stroke-width="11" stroke-linecap="round"/>
-          <path d="M70 -10 L110 120 L90 310" fill="none" stroke="rgba(108,140,255,.16)" stroke-width="8" stroke-linecap="round"/>
-          <path d="M300 -10 L285 140 L330 310" fill="none" stroke="rgba(108,140,255,.16)" stroke-width="8" stroke-linecap="round"/>
-          <circle cx="200" cy="128" r="46" fill="rgba(231,184,96,.12)"/>
-          <circle cx="200" cy="128" r="46" fill="none" stroke="rgba(231,184,96,.45)" stroke-width="1" stroke-dasharray="4 5"/>
-          <path d="M200 108a11 11 0 0 1 11 11c0 8-11 21-11 21s-11-13-11-21a11 11 0 0 1 11-11z" fill="#E7B860"/>
-          <circle cx="200" cy="119" r="4" fill="#07070F"/>
-        </svg>
+      <div class="map reveal">
+        <iframe
+          src="https://www.google.com/maps?q=Nirma+University,+S.G.+Highway,+Ahmedabad&output=embed"
+          title="Map to Nirma University" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
         <span class="map__frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-        <div class="map__tag">
-          <b>Map embed placeholder</b>
-          <span>Paste the Google Maps <code>&lt;iframe&gt;</code> here &mdash; see the comment just above this block in the HTML.</span>
-        </div>
       </div>
 
       <div class="reveal" style="--d:110ms">
@@ -1925,7 +1904,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         <ul>
           <li><a href="#speakers">Panelists</a></li>
           <li><a href="#agenda">Agenda</a></li>
-          <li><a href="#venue">Venue &amp; logistics</a></li>
+          <li><a href="#venue">Venue</a></li>
           <li><a href="#register" data-register>Register</a></li>
         </ul>
       </div>
