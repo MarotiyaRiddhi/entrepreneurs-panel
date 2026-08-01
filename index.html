@@ -1324,6 +1324,37 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 
 @media (prefers-reduced-motion:reduce){.ticket{transition:none}}
 
+/* ---- Ticket name modal ------------------------------------------------ */
+.ticket-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
+.ticket-modal[hidden]{display:none}
+.ticket-modal__backdrop{position:absolute;inset:0;background:rgba(2,2,5,.72);backdrop-filter:blur(4px)}
+.ticket-modal__dialog{
+  position:relative;width:100%;max-width:440px;
+  background:var(--panel);border:1px solid var(--glass-line);border-radius:14px;
+  padding:clamp(28px,4vw,40px);
+  box-shadow:0 30px 80px -20px rgba(0,0,0,.6);
+  animation:ticketModalIn .28s var(--ease);
+}
+@keyframes ticketModalIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.ticket-modal__dialog h3{margin:12px 0 8px;color:var(--paper);font-family:var(--font-display);font-size:1.5rem}
+.ticket-modal__dialog .lede{color:rgba(245,240,228,.62);margin-bottom:24px}
+.ticket-modal__close{
+  position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:999px;
+  border:1px solid var(--glass-line);background:var(--glass);color:var(--text);
+  font-size:1.3rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .2s,border-color .2s;
+}
+.ticket-modal__close:hover{background:var(--glass-hi);border-color:var(--glass-line-hi)}
+.ticket-modal__label{display:block;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.ticket-modal__input{
+  width:100%;padding:14px 16px;border-radius:8px;margin-bottom:20px;
+  background:rgba(255,255,255,.04);border:1.5px solid var(--glass-line);
+  color:var(--paper);font-family:var(--font-sans);font-size:1rem;
+  transition:border-color .2s,background .2s;
+}
+.ticket-modal__input:focus{outline:none;border-color:var(--accent);background:rgba(255,255,255,.06)}
+.ticket-modal__dialog .btn{width:100%}
+
 /* ---------------------------------------------------------------------------
    14. FOOTER — bookends the nav's dark bar at the top of the page.
    --------------------------------------------------------------------------- */
@@ -1815,10 +1846,10 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
           the day is subject to seats remaining.
         </p>
 
-        <a class="btn btn--paper" href="#register" data-register data-magnetic>
-          <span>Register now</span>
-          <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
+        <button type="button" class="btn btn--paper" data-ticket-open data-magnetic>
+          <span>Download ticket</span>
+          <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+        </button>
       </div>
 
       <div class="ticket__stub">
@@ -1839,6 +1870,25 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     </div>
   </div>
 </section>
+
+<!-- ══════════════════════════ TICKET NAME MODAL ══════════════════════════ -->
+<div class="ticket-modal" id="ticketModal" hidden>
+  <div class="ticket-modal__backdrop" data-ticket-close></div>
+  <div class="ticket-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="ticketModalTitle">
+    <button type="button" class="ticket-modal__close" data-ticket-close aria-label="Close">&times;</button>
+    <p class="eyebrow">Registration &middot; Admit one</p>
+    <h3 id="ticketModalTitle">Who&rsquo;s this ticket for?</h3>
+    <p class="lede">Enter the name to print on your ticket, then download it.</p>
+    <form data-ticket-form novalidate>
+      <label class="ticket-modal__label" for="ticketName">Full name</label>
+      <input class="ticket-modal__input" type="text" id="ticketName" name="ticketName" placeholder="e.g. Ada Lovelace" maxlength="40" autocomplete="name" required />
+      <button type="submit" class="btn btn--primary">
+        <span>Generate &amp; download</span>
+        <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+      </button>
+    </form>
+  </div>
+</div>
 
 </main>
 
@@ -2029,6 +2079,219 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       regNote.textContent = 'Registration link coming soon.';
       regNote.hidden = false;
     }
+  }
+
+  /* ---- Ticket download modal -------------------------------------- */
+  var ticketOpenBtn  = document.querySelector('[data-ticket-open]');
+  var ticketModal    = document.getElementById('ticketModal');
+  var ticketForm     = document.querySelector('[data-ticket-form]');
+  var ticketNameInput = document.getElementById('ticketName');
+
+  function openTicketModal() {
+    if (!ticketModal) return;
+    ticketModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    if (ticketNameInput) setTimeout(function () { ticketNameInput.focus(); }, 10);
+  }
+
+  function closeTicketModal() {
+    if (!ticketModal) return;
+    ticketModal.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  if (ticketOpenBtn) ticketOpenBtn.addEventListener('click', openTicketModal);
+  if (ticketModal) {
+    ticketModal.querySelectorAll('[data-ticket-close]').forEach(function (el) {
+      el.addEventListener('click', closeTicketModal);
+    });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && ticketModal && !ticketModal.hidden) closeTicketModal();
+  });
+
+  /* Mirrors the live .ticket card: rounded panel, punched circular
+     notches at the perforation seam (real transparent cut-outs via
+     destination-out, so the PNG works on any background), a dashed
+     seam line, and a barcode built from the same repeating bar
+     pattern used by .ticket__barcode's CSS gradient. */
+  function drawTicket(name) {
+    var SCALE = 2;
+    var gold = '#E7B860', paper = '#F5F0E4', panelBg = '#12111F';
+    var muted = 'rgba(245,240,228,.65)';
+
+    var outerPad = 30;
+    var ticketW = 1180, ticketH = 420;
+    var stubW = 260, mainW = ticketW - stubW;
+    var radius = 10;
+
+    var W = ticketW + outerPad * 2, H = ticketH + outerPad * 2;
+    var canvas = document.createElement('canvas');
+    canvas.width = W * SCALE;
+    canvas.height = H * SCALE;
+    var ctx = canvas.getContext('2d');
+    ctx.scale(SCALE, SCALE);
+
+    var ticketX = outerPad, ticketY = outerPad;
+    var seamX = ticketX + mainW;
+
+    function roundRectPath(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function wrapLines(text, maxWidth) {
+      var words = text.split(' ');
+      var line = '', lines = [];
+      words.forEach(function (word) {
+        var test = line ? line + ' ' + word : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = word;
+        } else {
+          line = test;
+        }
+      });
+      lines.push(line);
+      return lines;
+    }
+
+    function drawBarcode(x, y, w, h) {
+      var unit = 25, bars = [[0, 2], [5, 6], [12, 15], [19, 20]];
+      ctx.fillStyle = paper;
+      for (var offset = 0; offset < w; offset += unit) {
+        bars.forEach(function (b) {
+          var bx = x + offset + b[0];
+          if (bx >= x + w) return;
+          ctx.fillRect(bx, y, Math.min(b[1] - b[0], x + w - bx), h);
+        });
+      }
+    }
+
+    /* 1. Elevated panel — filled + bordered, with the ticket's drop shadow */
+    ctx.shadowColor = 'rgba(0,0,0,.55)';
+    ctx.shadowBlur = 50;
+    ctx.shadowOffsetY = 22;
+    roundRectPath(ticketX, ticketY, ticketW, ticketH, radius);
+    ctx.fillStyle = panelBg;
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(245,240,228,.14)';
+    ctx.stroke();
+
+    /* 2. Stub tint, dashed seam, and all text content — clipped to the panel */
+    ctx.save();
+    roundRectPath(ticketX, ticketY, ticketW, ticketH, radius);
+    ctx.clip();
+
+    ctx.fillStyle = 'rgba(243,238,226,.045)';
+    ctx.fillRect(seamX, ticketY, stubW, ticketH);
+
+    ctx.setLineDash([8, 8]);
+    ctx.strokeStyle = 'rgba(245,240,228,.3)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(seamX, ticketY);
+    ctx.lineTo(seamX, ticketY + ticketH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    var mainX = ticketX + 50;
+    var mainContentW = mainW - 100;
+    var cy = ticketY + 62;
+
+    ctx.fillStyle = gold;
+    ctx.font = '700 14px "Space Mono", monospace';
+    ctx.fillText('REGISTRATION  ·  ADMIT ONE', mainX, cy);
+    cy += 50;
+
+    ctx.fillStyle = paper;
+    ctx.font = 'italic 500 40px "Fraunces", Georgia, serif';
+    wrapLines('Stellar Panel: Voices of Change', mainContentW).forEach(function (l) {
+      ctx.fillText(l, mainX, cy);
+      cy += 46;
+    });
+    cy += 14;
+
+    ctx.fillStyle = muted;
+    ctx.font = '400 19px system-ui, sans-serif';
+    ctx.fillText('Nirma University', mainX, cy);
+    cy += 66;
+
+    ctx.fillStyle = gold;
+    ctx.font = '700 13px "Space Mono", monospace';
+    ctx.fillText('ATTENDEE', mainX, cy);
+    cy += 38;
+
+    var nameFont = 36;
+    ctx.fillStyle = paper;
+    do {
+      ctx.font = '600 ' + nameFont + 'px "Fraunces", Georgia, serif';
+      nameFont -= 2;
+    } while (ctx.measureText(name).width > mainContentW && nameFont > 18);
+    ctx.fillText(name, mainX, cy);
+
+    var stubX = seamX + 40;
+    var sy = ticketY + 74;
+    [['DATE', '21 Aug 2026'], ['TIME', 'TBA'], ['ACCESS', 'General · Free']].forEach(function (item) {
+      ctx.fillStyle = gold;
+      ctx.font = '700 12px "Space Mono", monospace';
+      ctx.fillText(item[0], stubX, sy);
+      ctx.fillStyle = paper;
+      ctx.font = '500 21px "Fraunces", Georgia, serif';
+      ctx.fillText(item[1], stubX, sy + 28);
+      sy += 76;
+    });
+
+    drawBarcode(stubX, ticketY + ticketH - 70, ticketX + ticketW - 40 - stubX, 30);
+
+    ctx.restore();
+
+    /* 3. Punch the perforation notches — real transparent cut-outs so the
+       PNG reads correctly against any background it's dropped onto */
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    var notchR = 14;
+    ctx.beginPath();
+    ctx.arc(seamX, ticketY, notchR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(seamX, ticketY + ticketH, notchR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    return canvas;
+  }
+
+  if (ticketForm) {
+    ticketForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = (ticketNameInput.value || '').trim();
+      if (!name) {
+        ticketNameInput.focus();
+        return;
+      }
+      var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+      ready.then(function () {
+        var canvas = drawTicket(name);
+        var link = document.createElement('a');
+        link.download = 'ticket-' + name.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '.png';
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+      closeTicketModal();
+      ticketForm.reset();
+    });
   }
 
   /* ---- Sticky nav shadow ----------------------------------------- */
