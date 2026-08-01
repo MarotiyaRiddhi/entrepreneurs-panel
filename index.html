@@ -6,7 +6,7 @@
 
 <title>Founders Speak — Entrepreneurs Panel Discussion | Nirma University</title>
 <meta name="description" content="An entrepreneurs panel discussion at Nirma University, Ahmedabad — 21 August 2026. Four founders on fintech, EV &amp; green energy, and the consulting-to-founder leap." />
-<meta name="theme-color" content="#120E1F" />
+<meta name="theme-color" content="#07070F" />
 <meta name="color-scheme" content="dark" />
 
 <!-- Social share cards (WhatsApp / LinkedIn / X). Replace og:image once you have a poster. -->
@@ -17,11 +17,15 @@
 <meta name="twitter:card" content="summary_large_image" />
 
 <!-- Inline SVG favicon: a small four-pointed sparkle on the nebula base -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23120E1F'/%3E%3Cpath d='M16 6l2.4 7.6L26 16l-7.6 2.4L16 26l-2.4-7.6L6 16l7.6-2.4z' fill='%23D98CAE'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307070F'/%3E%3Cpath d='M16 6l2.4 7.6L26 16l-7.6 2.4L16 26l-2.4-7.6L6 16l7.6-2.4z' fill='%23E7B860'/%3E%3C/svg%3E" />
 
-<!-- Fonts: Clash Display (monumental headline serif-alternative) + General Sans (body/UI) -->
+<!-- Fonts: Fraunces (serif display — the "Technodyssey" headline register) +
+     General Sans (body/UI) + Space Mono (technical labels, countdown, coordinates) -->
 <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
-<link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,500,400&f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
 <script>document.documentElement.className = 'js';</script>
 
@@ -48,8 +52,8 @@
                             a headshot.
 
   DEPLOYING:
-    Self-contained file (fonts load from Fontshare CDN, everything else
-    is inline). No build step. Drop it on Vercel / GitHub Pages /
+    Self-contained file (fonts load from Fontshare + Google Fonts CDNs,
+    everything else is inline). No build step. Drop it on Vercel / GitHub Pages /
     Netlify as-is.
   ============================================================================
 -->
@@ -59,35 +63,42 @@
    1. TOKENS — exact cosmic/nebula palette as specified
    --------------------------------------------------------------------------- */
 :root{
-  --bg:#120E1F;              /* background base */
-  --bg-deep:#0A0812;         /* background corners / depth */
-  --nebula-core:#8B1E4F;     /* nebula core glow */
-  --nebula-hi:#B23A6B;       /* nebula inner ring highlight */
-  --accent:#D98CAE;          /* links, tags, dividers, small UI */
-  --star:#F5F0F2;            /* star / sparkle color */
-  --text:#F3EDF2;            /* primary text */
-  --text-muted:#B9A8B8;      /* secondary / muted text */
+  /* Cosmos register — one dark void throughout the page (no more light
+     "paper" scenes). --ink/--paper/--ink-soft/--line-ink are kept as the
+     working names from the editorial pass but now both point into the
+     dark end of the scale; --panel is the one new addition, an elevated
+     card tone used wherever something needs to sit visibly on top of the
+     void (portraits, the ticket, the marquee strip). */
+  --bg:#07070F;              /* background base */
+  --bg-deep:#020205;         /* background corners / depth */
+  --nebula-core:#B8863C;     /* nav "Register" gradient — warm gold core */
+  --nebula-hi:#F0C878;       /* nav "Register" gradient — gold highlight */
+  --accent:#E7B860;          /* links, tags, dividers, small UI — gold */
+  --star:#F5F0E4;            /* star / sparkle / bright text */
+  --text:#EDEAF5;            /* primary text */
+  --text-muted:#9C9CC4;      /* secondary / muted text */
 
-  --glass:rgba(255,255,255,.04);
-  --glass-hi:rgba(255,255,255,.065);
-  --glass-line:rgba(217,140,174,.16);
-  --glass-line-hi:rgba(217,140,174,.34);
-  --glow-hover:0 0 2px rgba(217,140,174,.25), 0 0 60px -8px rgba(139,30,79,.55);
+  --glass:rgba(255,255,255,.035);
+  --glass-hi:rgba(255,255,255,.06);
+  --glass-line:rgba(231,184,96,.18);
+  --glass-line-hi:rgba(231,184,96,.36);
+  --glow-hover:0 0 2px rgba(231,184,96,.25), 0 0 60px -8px rgba(124,92,255,.45);
 
-  --font-display:"Clash Display","Playfair Display","Iowan Old Style","Georgia",serif;
+  --font-display:"Fraunces","Playfair Display","Iowan Old Style","Georgia",serif;
   --font-sans:"General Sans","Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --font-mono:"Space Mono","SFMono-Regular","Consolas",monospace;
 
-  /* Hero "scene" tokens — an editorial paper-and-ink register, deliberately
-     distinct from the cosmic register used further down the page. Each
-     section is its own scene; this is scene one. */
-  --paper:#F3EEE2;
-  --paper-deep:#E9E1CE;
-  --ink:#16130D;
-  --ink-soft:#5B5546;
-  --rust:#AE3B24;
-  --rust-hi:#C94E30;
-  --line-ink:rgba(22,19,13,.16);
-  --line-ink-hi:rgba(22,19,13,.36);
+  --ink:#07070F;             /* darkest — void, all section backgrounds */
+  --panel:#12111F;           /* elevated card tone — ticket, portraits, marquee */
+  --paper:#F5F0E4;           /* lightest — starlight, all primary text */
+  --paper-deep:#181733;      /* dark plate tone (venue map) */
+  --ink-soft:rgba(245,240,228,.6);   /* muted text, light-on-dark */
+  --rust:#E7B860;            /* accent — gold (kept the name to limit churn) */
+  --rust-hi:#F6D48A;
+  --blue:#6C8CFF;            /* secondary accent — links/underlines */
+  --blue-hi:#8FA6FF;
+  --line-ink:rgba(245,240,228,.14);
+  --line-ink-hi:rgba(245,240,228,.28);
 
   --shell:1180px;
   --pad:clamp(20px,5vw,48px);
@@ -118,6 +129,7 @@ body{
   text-rendering:optimizeLegibility;
   overflow-x:hidden;
   position:relative;
+  padding-bottom:52px;
 }
 
 img,svg{display:block;max-width:100%}
@@ -223,8 +235,7 @@ body::before{
 }
 
 /* Film grain — SVG turbulence, tiled, low opacity, blend-mode overlay so it
-   reads as texture rather than a visible pattern. Runs the full page,
-   over both the paper and ink registers. */
+   reads as texture rather than a visible pattern. Runs the full page. */
 .grain{
   position:fixed;inset:0;
   z-index:3;
@@ -256,8 +267,8 @@ body::before{
 
 .btn--primary{
   background:linear-gradient(180deg,var(--nebula-hi),var(--nebula-core));
-  color:var(--star);
-  box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 12px 34px -10px rgba(139,30,79,.7);
+  color:#1A1508;
+  box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 12px 34px -10px rgba(184,134,60,.6);
 }
 .btn--primary:hover{
   transform:translateY(-2px);
@@ -348,15 +359,16 @@ body::before{
 @media (min-width:900px){.nav__links{display:flex}}
 
 /* ---------------------------------------------------------------------------
-   7. HERO — scene one. Paper &amp; ink register, deliberately apart from the
-      cosmic register used below. Asymmetric, not centred; the marquee and
-      the kinetic headline carry the section rather than any glass or glow.
+   7. HERO — the cosmos register: deep void, gold + blue accents, brand
+      reference ieeenirma.org / the Technodyssey orientation site.
+      Asymmetric, not centred; the marquee and the kinetic headline carry
+      the section, alongside a CSS nebula glow and starfield (no WebGL).
    --------------------------------------------------------------------------- */
 .hero{
   position:relative;
   overflow:hidden;
-  background:var(--paper);
-  color:var(--ink);
+  background:var(--ink);
+  color:var(--paper);
 }
 .hero::before{
   /* two faint registration lines — a printer's crop mark, not a "grid bg" */
@@ -407,7 +419,7 @@ body::before{
   font-size:clamp(2.9rem,10vw,6.6rem);
   line-height:.98;
   letter-spacing:-.01em;
-  color:var(--ink);
+  color:var(--paper);
   transform:translateY(112%);
   transition:transform .95s var(--ease);
   will-change:transform;
@@ -420,7 +432,7 @@ body::before{
   font-size:clamp(2.9rem,10vw,6.6rem);
 }
 .title-line--rule .rule{
-  height:2px;flex:1 1 auto;background:var(--ink);
+  height:2px;flex:1 1 auto;background:var(--paper);
   transform-origin:left;transform:scaleX(0);
   transition:transform 1.1s var(--ease);
   transition-delay:.5s;
@@ -441,9 +453,10 @@ body::before{
 .hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
 .hero__note{font-size:.84rem;color:var(--ink-soft);margin-top:14px}
 
-/* Architectural buttons for the paper scene — no gradient, no pill glow */
+/* Architectural buttons — light-filled / light-outlined, for use on the
+   dark cosmic register (there is no light scene left to contrast against). */
 .btn--ink{
-  background:var(--ink);color:var(--paper);
+  background:var(--paper);color:var(--ink);
   border-radius:2px;
   position:relative;overflow:hidden;
 }
@@ -456,20 +469,21 @@ body::before{
 }
 .btn--ink:hover::before{transform:translateY(0)}
 .btn--ink:hover{transform:none;box-shadow:none}
+.btn--ink:hover{color:var(--ink)}
 
 .btn--outline{
-  border:1.5px solid var(--ink);
-  color:var(--ink);
+  border:1.5px solid var(--paper);
+  color:var(--paper);
   border-radius:2px;
   background:transparent;
 }
 .btn--outline:hover{
-  background:var(--ink);color:var(--paper);
+  background:var(--paper);color:var(--ink);
   transform:none;box-shadow:none;
 }
 
 /* Ledger — the four event facts, as a printed spec sheet, not a glass panel */
-.ledger{border-top:1px solid var(--ink)}
+.ledger{border-top:1px solid var(--paper)}
 .ledger__row{
   display:flex;align-items:baseline;justify-content:space-between;
   gap:14px;padding:13px 0;border-bottom:1px solid var(--line-ink);
@@ -480,22 +494,25 @@ body::before{
 }
 .ledger__v{
   font-family:var(--font-display);font-size:1rem;font-weight:500;
-  color:var(--ink);text-align:right;line-height:1.3;
+  color:var(--paper);text-align:right;line-height:1.3;
 }
 .ledger__v small{display:block;font-family:var(--font-sans);font-size:.72rem;font-weight:500;color:var(--ink-soft);margin-top:2px}
 
-/* Countdown — plain ink digits, no chips */
-.count{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-top:22px}
-.count__label{font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);width:100%}
-.count__u{text-align:left}
-.count__n{display:block;font-family:var(--font-display);font-size:1.7rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
-.count__t{display:block;font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px}
+/* Countdown — mission-clock tiles: dark plates, tabular gold digits */
+.count{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;margin-top:22px}
+.count__label{font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);width:100%;font-family:var(--font-mono)}
+.count__u{
+  text-align:center;min-width:56px;padding:10px 8px;
+  background:var(--panel);border:1px solid var(--line-ink);border-radius:6px;
+}
+.count__n{display:block;font-family:var(--font-mono);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--rust)}
+.count__t{display:block;font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-top:3px;font-family:var(--font-mono)}
 
 /* Marquee — continuous, ink-on-paper, the one "always moving" element in
    the hero. Pure CSS loop; paused under reduced motion. */
 .marquee{
   position:relative;z-index:2;
-  background:var(--ink);color:var(--paper);
+  background:var(--panel);color:var(--paper);
   overflow:hidden;
   border-top:1px solid var(--rust);
 }
@@ -521,7 +538,7 @@ body::before{
   .title-line,.title-line--rule .rule{transition:none}
 }
 
-.hero .ph{color:var(--rust);background:rgba(174,59,36,.08);border-bottom-color:var(--rust)}
+.hero .ph{color:var(--rust);background:rgba(231,184,96,.08);border-bottom-color:var(--rust)}
 
 /* ---------------------------------------------------------------------------
    8. SECTION SHELL
@@ -548,14 +565,14 @@ body::before{
 }
 
 /* Rust variant — signals the next scene is the ink/paper register, not cosmic */
-.waypoint--rust .waypoint__line{border-top-color:rgba(174,59,36,.4)}
-.waypoint--rust .waypoint__mark{border-color:rgba(174,59,36,.4)}
+.waypoint--rust .waypoint__line{border-top-color:rgba(231,184,96,.4)}
+.waypoint--rust .waypoint__mark{border-color:rgba(231,184,96,.4)}
 .waypoint--rust .waypoint__star{color:var(--rust-hi)}
 
 /* ---------------------------------------------------------------------------
-   9. ABOUT — scene two. Ink, reversed out of the hero's paper: the page's
-      first chapter break. A numbered index replaces the theme cards; no
-      boxes, no grid of icons — just rule lines and a serif ghost numeral.
+   9. ABOUT — same void as the hero. A numbered index replaces the theme
+      cards; no boxes, no grid of icons — just rule lines and a serif
+      ghost numeral.
    --------------------------------------------------------------------------- */
 #about{
   background:var(--ink);
@@ -608,7 +625,7 @@ body::before{
 .theme::before{
   content:"";
   position:absolute;inset:0 100% 0 0;
-  background:rgba(174,59,36,.08);
+  background:rgba(231,184,96,.08);
   transition:right .4s var(--ease);
 }
 .theme:hover::before{right:0}
@@ -631,18 +648,18 @@ body::before{
 }
 
 /* ---------------------------------------------------------------------------
-   10. SPEAKERS — scene three. Back to paper (the rhythm: paper / ink /
-      paper), but each portrait is its own ink duotone panel, so the
-      contrast lives inside the row instead of between sections. Rows
-      alternate image side and stagger vertically — a spread, not a grid —
-      and every portrait unmasks gradually as it enters view.
+   10. SPEAKERS — each portrait is its own elevated duotone panel against
+      the void, so the contrast lives inside the row instead of between
+      sections. Rows alternate image side and stagger vertically — a
+      spread, not a grid — and every portrait unmasks gradually as it
+      enters view.
    --------------------------------------------------------------------------- */
-#speakers{background:var(--paper);color:var(--ink)}
+#speakers{background:var(--ink);color:var(--paper)}
 #speakers .eyebrow{color:var(--rust)}
 #speakers .eyebrow::before{background:var(--rust);opacity:1}
-#speakers h2{color:var(--ink)}
+#speakers h2{color:var(--paper)}
 #speakers .lede{color:var(--ink-soft)}
-#speakers .ph{color:var(--rust);background:rgba(174,59,36,.08);border-bottom-color:var(--rust)}
+#speakers .ph{color:var(--rust);background:rgba(231,184,96,.1);border-bottom-color:var(--rust)}
 
 .speakers-wrap{position:relative}
 .speakers-wrap > .sec__head{position:relative;z-index:1}
@@ -653,7 +670,7 @@ body::before{
   font-weight:600;
   font-size:clamp(140px,24vw,300px);
   line-height:1;
-  color:rgba(22,19,13,.055);
+  color:rgba(245,240,228,.045);
   z-index:0;
   user-select:none;
   pointer-events:none;
@@ -681,7 +698,7 @@ body::before{
   top:clamp(4px,1vw,14px);right:0;
   font-family:var(--font-display);font-weight:600;
   font-size:clamp(2.8rem,6vw,4.6rem);
-  color:rgba(22,19,13,.08);
+  color:rgba(245,240,228,.07);
   line-height:1;z-index:0;
   user-select:none;pointer-events:none;
 }
@@ -692,7 +709,8 @@ body::before{
   position:relative;
   aspect-ratio:4/5;
   overflow:hidden;
-  background:var(--ink);
+  background:var(--panel);
+  border:1px solid var(--line-ink);
   border-radius:2px;
   z-index:1;
 }
@@ -702,8 +720,8 @@ body::before{
 .portrait__inner{
   width:100%;height:100%;
   display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(158deg,var(--ink) 0%,#2b2116 100%);
-  color:rgba(243,238,226,.92);
+  background:linear-gradient(158deg,var(--panel) 0%,#241f3d 100%);
+  color:rgba(245,240,228,.92);
   font-family:var(--font-display);font-weight:600;
   font-size:clamp(2.6rem,5vw,3.6rem);letter-spacing:.02em;
 }
@@ -721,7 +739,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 }
 
 .speaker__body{position:relative;z-index:1}
-.speaker__name{margin-bottom:8px;color:var(--ink)}
+.speaker__name{margin-bottom:8px;color:var(--paper)}
 .speaker__role{
   font-family:var(--font-sans);font-size:.86rem;font-weight:600;letter-spacing:.02em;
   color:var(--rust);margin-bottom:16px;
@@ -741,14 +759,14 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   width:38px;height:38px;flex:none;
   display:grid;place-items:center;border-radius:999px;
   border:1px solid var(--line-ink-hi);
-  color:var(--ink);
+  color:var(--paper);
   transition:all .22s var(--ease);
 }
 .li-link svg{width:16px;height:16px}
 .li-link:hover{
-  background:var(--ink);
-  border-color:var(--ink);
-  color:var(--paper);
+  background:var(--rust);
+  border-color:var(--rust);
+  color:var(--ink);
   transform:translateY(-2px);
 }
 
@@ -757,7 +775,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 }
 
 /* ---------------------------------------------------------------------------
-   11. AGENDA — scene four. Ink again, with a scroll-linked progress rail
+   11. AGENDA — a scroll-linked progress rail
       as the section's one directional device: it fills left-to-right as
       you move through the schedule, rather than a dotted vertical line.
       Oversized ghost numerals replace the timeline dots.
@@ -767,7 +785,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 #agenda .eyebrow::before{background:var(--rust-hi);opacity:1}
 #agenda h2{color:var(--paper)}
 #agenda .lede{color:rgba(243,238,226,.62)}
-#agenda .ph{color:var(--rust-hi);background:rgba(174,59,36,.14);border-bottom-color:var(--rust-hi)}
+#agenda .ph{color:var(--rust-hi);background:rgba(231,184,96,.14);border-bottom-color:var(--rust-hi)}
 
 .agenda-rail{
   position:relative;height:2px;border-radius:2px;
@@ -783,7 +801,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   width:9px;height:9px;border-radius:50%;
   background:var(--rust-hi);
   transform:translate(-50%,-50%);
-  box-shadow:0 0 0 5px rgba(174,59,36,.2);
+  box-shadow:0 0 0 5px rgba(231,184,96,.2);
 }
 @media (prefers-reduced-motion:reduce){.agenda-rail__fill,.agenda-rail__dot{transition:none}}
 
@@ -818,20 +836,20 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   .slot p{grid-column:2 / -1}
 }
 
-.slot--key{background:linear-gradient(90deg,rgba(174,59,36,.12),transparent 70%)}
+.slot--key{background:linear-gradient(90deg,rgba(231,184,96,.12),transparent 70%)}
 .slot--key .slot__no{color:var(--rust-hi)}
 .slot--key h3{color:var(--rust-hi)}
 
 /* ---------------------------------------------------------------------------
-   12. VENUE — scene six. Paper, with the map treated as a surveyor's
-      plate (corner ticks, blueprint linework in ink) rather than a
-      rounded glass tile, and logistics as a plain printed schedule.
+   12. VENUE — the map is a star-chart plate (gold corner ticks, blue
+      blueprint linework) rather than a rounded glass tile, and logistics
+      are a plain printed schedule.
    --------------------------------------------------------------------------- */
-#venue{background:var(--paper);color:var(--ink)}
+#venue{background:var(--ink);color:var(--paper)}
 #venue .eyebrow{color:var(--rust)}
 #venue .eyebrow::before{background:var(--rust);opacity:1}
-#venue h2{color:var(--ink)}
-#venue .ph{color:var(--rust);background:rgba(174,59,36,.08);border-bottom-color:var(--rust)}
+#venue h2{color:var(--paper)}
+#venue .ph{color:var(--rust);background:rgba(231,184,96,.1);border-bottom-color:var(--rust)}
 
 .venue{display:grid;gap:clamp(30px,4vw,46px);align-items:start}
 @media (min-width:900px){.venue{grid-template-columns:1fr 1fr}}
@@ -849,7 +867,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 .map__frame{position:absolute;inset:14px;z-index:2;pointer-events:none}
 .map__frame i{
   position:absolute;width:16px;height:16px;
-  border-color:var(--ink);border-style:solid;border-width:0;
+  border-color:var(--rust);border-style:solid;border-width:0;
   font-style:normal;
 }
 .map__frame i:nth-child(1){top:0;left:0;border-top-width:2px;border-left-width:2px}
@@ -864,7 +882,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   max-width:82%;
 }
 .map__tag b{display:block;font-family:var(--font-display);font-size:.95rem;font-weight:500;color:var(--ink);margin-bottom:7px}
-.map__tag span{font-size:.85rem;color:var(--ink-soft);line-height:1.6}
+.map__tag span{font-size:.85rem;color:rgba(7,7,15,.65);line-height:1.6}
 
 .dl{display:grid;gap:0;margin-top:8px;border-top:1px solid var(--line-ink)}
 .dl__row{padding:18px 0;border-bottom:1px solid var(--line-ink);display:grid;gap:5px 20px}
@@ -872,25 +890,26 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 .dl__row:last-child{border-bottom:0}
 .dl__k{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--rust)}
 .dl__v{font-size:.95rem;color:var(--ink-soft);line-height:1.75}
-.dl__v strong{color:var(--ink);font-weight:600}
+.dl__v strong{color:var(--paper);font-weight:600}
 @media (min-width:560px){.dl__row{grid-template-columns:140px 1fr}}
 
 /* ---------------------------------------------------------------------------
-   13. CTA BAND — scene five, and the conversion point. Back to paper, with
-      the registration block rendered as an actual admit-one ticket: an
-      ink card with a punched, perforated stub rather than a glass panel.
-      It tilts a few degrees toward the cursor (a physical, "hold it up
-      to the light" gesture) and the register button is magnetic.
+   13. CTA BAND — the conversion point. Registration renders as an actual
+      admit-one ticket: an elevated panel with a punched, perforated stub
+      rather than a glass card. It tilts a few degrees toward the cursor
+      (a physical, "hold it up to the light" gesture) and the register
+      button is magnetic.
    --------------------------------------------------------------------------- */
-.band{position:relative;overflow:hidden;background:var(--paper)}
+.band{position:relative;overflow:hidden;background:var(--ink)}
 .band__in{position:relative;z-index:2;padding-block:clamp(68px,9vw,108px)}
 
 .ticket{
   position:relative;max-width:920px;margin-inline:auto;
   display:grid;grid-template-columns:1fr;
-  background:var(--ink);color:var(--paper);
+  background:var(--panel);color:var(--paper);
+  border:1px solid var(--line-ink);
   border-radius:6px;
-  box-shadow:0 40px 100px -30px rgba(22,19,13,.4);
+  box-shadow:0 40px 100px -30px rgba(0,0,0,.6);
   transition:transform .5s var(--ease);
   will-change:transform;
 }
@@ -901,7 +920,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   .ticket::before,.ticket::after{
     content:"";position:absolute;right:246px;
     width:28px;height:28px;border-radius:50%;
-    background:var(--paper);z-index:3;
+    background:var(--ink);z-index:3;
   }
   .ticket::before{top:-14px}
   .ticket::after{bottom:-14px}
@@ -913,7 +932,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 .ticket__main .btn{margin-top:28px}
 .ticket .eyebrow{color:var(--rust-hi)}
 .ticket .eyebrow::before{background:var(--rust-hi);opacity:1}
-.ticket .ph{color:var(--rust-hi);background:rgba(174,59,36,.14);border-bottom-color:var(--rust-hi)}
+.ticket .ph{color:var(--rust-hi);background:rgba(231,184,96,.14);border-bottom-color:var(--rust-hi)}
 
 .ticket__stub{
   position:relative;
@@ -957,11 +976,10 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 @media (prefers-reduced-motion:reduce){.ticket{transition:none}}
 
 /* ---------------------------------------------------------------------------
-   14. FOOTER — closing scene, ink. Bookends the nav's solid ink bar at
-      the top of the page.
+   14. FOOTER — bookends the nav's dark bar at the top of the page.
    --------------------------------------------------------------------------- */
 #contact{background:var(--ink);color:var(--paper)}
-#contact .ph{color:var(--rust-hi);background:rgba(174,59,36,.14);border-bottom-color:var(--rust-hi)}
+#contact .ph{color:var(--rust-hi);background:rgba(231,184,96,.14);border-bottom-color:var(--rust-hi)}
 
 .foot{padding-block:clamp(56px,7vw,80px) 32px}
 .foot__top{
@@ -998,6 +1016,118 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 }
 
 /* ---------------------------------------------------------------------------
+   15. COSMOS DECOR — starfield, nebula glow, and the technical-label font
+       pass. Brand reference: ieeenirma.org / the Technodyssey orientation
+       site — deep void, gold + blue accents, monospace mission-clock
+       labels. CSS/SVG only, no WebGL, so it stays cheap on mobile.
+   --------------------------------------------------------------------------- */
+
+/* Technical labels — every small tracked-caps readout uses the mono face */
+.eyebrow,.hero__coord,.waypoint__txt,.ledger__k,.fact__k,.dl__k,.slot__t,
+.tag,.brand__sub,.card__no,.spec__k{
+  font-family:var(--font-mono);
+}
+
+/* Starfield — a tiled dot pattern, fixed behind everything. Cheap: a
+   single repeating background, no per-star DOM nodes. */
+.stars{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(1.6px 1.6px at 20px 30px, rgba(245,240,228,.9) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 90px 120px, rgba(245,240,228,.7) 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 160px 60px, rgba(245,240,228,.8) 50%, transparent 52%),
+    radial-gradient(1px 1px at 130px 180px, rgba(245,240,228,.5) 50%, transparent 52%),
+    radial-gradient(1.3px 1.3px at 40px 190px, rgba(245,240,228,.65) 50%, transparent 52%),
+    radial-gradient(1px 1px at 200px 20px, rgba(245,240,228,.55) 50%, transparent 52%);
+  background-size:220px 220px;
+  background-repeat:repeat;
+  opacity:.55;
+}
+
+/* Twinkling sparkles — a handful of larger scattered stars, hero only */
+.sparkle{position:absolute;z-index:1;pointer-events:none;color:var(--star)}
+.sparkle svg{width:100%;height:100%;display:block}
+.js .sparkle--twinkle{animation:twinkle var(--tw-dur,4.5s) ease-in-out var(--tw-delay,0s) infinite}
+@keyframes twinkle{0%,100%{opacity:var(--tw-lo,.25)}50%{opacity:var(--tw-hi,.95)}}
+
+/* Nebula / black-hole glow — layered radial gradients standing in for the
+   reference sites' shader imagery. Positioned behind the hero title. */
+.nebula{
+  position:absolute;
+  top:-10%;left:50%;
+  width:min(1300px,170vw);
+  height:min(900px,120vw);
+  transform:translateX(-50%);
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(26% 30% at 50% 42%, rgba(7,7,15,.95) 0%, rgba(7,7,15,.7) 38%, transparent 62%),
+    radial-gradient(40% 34% at 50% 42%, var(--rust-hi) 0%, rgba(231,184,96,.5) 30%, transparent 62%),
+    radial-gradient(58% 46% at 50% 44%, rgba(124,92,255,.45) 0%, transparent 66%),
+    radial-gradient(70% 55% at 46% 40%, rgba(108,140,255,.22) 0%, transparent 70%);
+  filter:blur(6px);
+  opacity:.8;
+}
+
+/* Comet glow on the agenda rail's leading dot */
+.agenda-rail__dot{box-shadow:0 0 0 5px rgba(231,184,96,.16),0 0 18px 2px rgba(231,184,96,.5)}
+.agenda-rail__fill{box-shadow:0 0 12px 1px rgba(231,184,96,.4)}
+
+/* ---------------------------------------------------------------------------
+   16. MISSION BAR — sticky bottom readout: live countdown + register,
+       always reachable. Mirrors the Technodyssey reference's bottom bar.
+   --------------------------------------------------------------------------- */
+.missionbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;
+  display:flex;align-items:center;gap:14px;
+  padding:12px clamp(16px,4vw,28px);
+  background:rgba(7,7,15,.88);
+  backdrop-filter:blur(10px) saturate(1.2);
+  -webkit-backdrop-filter:blur(10px) saturate(1.2);
+  border-top:1px solid var(--line-ink);
+  font-family:var(--font-mono);
+  transform:translateY(0);
+  transition:transform .4s var(--ease);
+}
+.missionbar.is-hidden{transform:translateY(100%)}
+.missionbar__dot{
+  width:7px;height:7px;border-radius:50%;background:var(--rust-hi);flex:none;
+  box-shadow:0 0 10px 2px rgba(231,184,96,.6);
+  animation:pulse-dot 2.4s ease-in-out infinite;
+}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.35}}
+.missionbar__name{
+  font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--paper);white-space:nowrap;
+}
+.missionbar__t{
+  font-size:.72rem;color:var(--text-muted);white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+  display:none;
+}
+@media (min-width:560px){.missionbar__t{display:inline}}
+.missionbar__spacer{flex:1}
+.missionbar__reg{
+  padding:9px 18px;border-radius:999px;
+  background:linear-gradient(180deg,var(--nebula-hi),var(--nebula-core));
+  color:#1A1508;font-weight:700;font-size:.78rem;letter-spacing:.03em;
+  text-decoration:none;white-space:nowrap;
+  font-family:var(--font-sans);
+}
+.missionbar__close{
+  flex:none;width:26px;height:26px;display:grid;place-items:center;
+  color:var(--text-muted);border-radius:50%;
+  transition:color .2s var(--ease),background .2s var(--ease);
+}
+.missionbar__close:hover{color:var(--paper);background:rgba(245,240,228,.08)}
+.missionbar__close svg{width:13px;height:13px}
+
+@media (prefers-reduced-motion:reduce){
+  .missionbar__dot{animation:none}
+  .sparkle--twinkle{animation:none;opacity:.6}
+}
+
+/* ---------------------------------------------------------------------------
    15. SCROLL REVEAL — calm fade-up, no bounce
    --------------------------------------------------------------------------- */
 .js .reveal{
@@ -1026,6 +1156,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 </head>
 
 <body>
+<div class="stars" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 
 <a class="skip" href="#main">Skip to content</a>
@@ -1059,10 +1190,27 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 <main id="main">
 
 <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
-<!-- Scene one: paper &amp; ink. Kinetic, masked title lines rise on load and
-     drift a few px with the cursor (JS, .hero__title[data-parallax]); the
-     ink marquee at the base is the section's one restless element. -->
+<!-- Kinetic title lines rise out of their masks on load and drift a few
+     px with the cursor (JS, .hero__title[data-parallax]); the marquee at
+     the base is the section's one restless element. The nebula/starfield
+     glow is CSS-only (#nebula + .stars), no WebGL. -->
 <section class="hero" id="top" data-hero>
+  <div class="nebula" id="nebula" aria-hidden="true"></div>
+  <div class="sparkle sparkle--twinkle" style="top:12%;left:8%;width:12px;height:12px;--tw-dur:5.2s;--tw-delay:.2s;--tw-lo:.2;--tw-hi:.9" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
+  </div>
+  <div class="sparkle" style="top:20%;left:24%;width:6px;height:6px;opacity:.5" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+  </div>
+  <div class="sparkle sparkle--twinkle" style="top:8%;right:16%;width:9px;height:9px;--tw-dur:4.1s;--tw-delay:1.1s;--tw-lo:.25;--tw-hi:1" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+  </div>
+  <div class="sparkle" style="top:34%;right:8%;width:15px;height:15px;opacity:.3" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
+  </div>
+  <div class="sparkle sparkle--twinkle" style="top:46%;left:4%;width:8px;height:8px;--tw-dur:6s;--tw-delay:.6s;--tw-lo:.2;--tw-hi:.85" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+  </div>
   <div class="shell hero__in">
     <div class="hero__top">
       <!-- TODO: organizing body -->
@@ -1150,8 +1298,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 <div class="shell waypoint-gap"><div class="waypoint waypoint--rust" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Why this panel</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ ABOUT ══════════════════════════════ -->
-<!-- Scene two: ink, reversed out of the hero's paper — the first chapter
-     break. Themes are a numbered index (a contents page), not icon cards. -->
+<!-- Themes are a numbered index (a contents page), not icon cards. -->
 <section class="sec" id="about">
   <span class="about-ghost" aria-hidden="true">01</span>
   <div class="shell about">
@@ -1207,13 +1354,13 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   </div>
 </section>
 
-<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Meet the panel</span></span><span class="waypoint__line"></span></div></div>
+<div class="shell waypoint-gap"><div class="waypoint waypoint--rust" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Meet the panel</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ SPEAKERS ══════════════════════════════ -->
-<!-- Scene three: paper again, but each portrait is its own ink duotone
-     panel — a spread, not a card grid. Markup below is rendered from the
-     single `speakers` config object in the closing script (search for
-     "SPEAKER DATA"): edit names, bios and image paths there, not here. -->
+<!-- Each portrait is its own elevated duotone panel — a spread, not a
+     card grid. Markup below is rendered from the single `speakers`
+     config object in the closing script (search for "SPEAKER DATA"):
+     edit names, bios and image paths there, not here. -->
 <section class="sec" id="speakers">
   <div class="shell speakers-wrap">
     <span class="ghost-num" aria-hidden="true" data-speaker-count>04</span>
@@ -1234,8 +1381,8 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 <div class="shell waypoint-gap"><div class="waypoint waypoint--rust" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Run of show</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ AGENDA ══════════════════════════════ -->
-<!-- Scene four: ink, with a scroll-linked rail (see [data-agenda-rail] in
-     the closing script) standing in for the old dotted vertical line. -->
+<!-- A scroll-linked rail (see [data-agenda-rail] in the closing script)
+     stands in for a dotted vertical timeline. -->
 <section class="sec" id="agenda">
   <div class="shell">
     <div class="sec__head reveal">
@@ -1307,8 +1454,8 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 <div class="shell waypoint-gap"><div class="waypoint waypoint--rust" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Getting there</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ VENUE ══════════════════════════════ -->
-<!-- Scene six: paper. The map placeholder reads as a surveyor's plate
-     (corner ticks + blueprint linework) rather than a rounded glass tile. -->
+<!-- The map placeholder reads as a star-chart plate (gold corner ticks +
+     blue blueprint linework) rather than a rounded glass tile. -->
 <section class="sec" id="venue">
   <div class="shell">
     <div class="sec__head reveal" style="margin-bottom:clamp(36px,5vw,52px)">
@@ -1327,17 +1474,17 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         <svg class="map__art" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <pattern id="mgrid" width="34" height="34" patternUnits="userSpaceOnUse">
-              <path d="M34 0H0v34" fill="none" stroke="rgba(22,19,13,.08)" stroke-width="1"/>
+              <path d="M34 0H0v34" fill="none" stroke="rgba(245,240,228,.07)" stroke-width="1"/>
             </pattern>
           </defs>
           <rect width="400" height="300" fill="url(#mgrid)"/>
-          <path d="M-10 210 L150 150 L260 190 L410 130" fill="none" stroke="rgba(22,19,13,.12)" stroke-width="11" stroke-linecap="round"/>
-          <path d="M70 -10 L110 120 L90 310" fill="none" stroke="rgba(22,19,13,.09)" stroke-width="8" stroke-linecap="round"/>
-          <path d="M300 -10 L285 140 L330 310" fill="none" stroke="rgba(22,19,13,.09)" stroke-width="8" stroke-linecap="round"/>
-          <circle cx="200" cy="128" r="46" fill="rgba(174,59,36,.1)"/>
-          <circle cx="200" cy="128" r="46" fill="none" stroke="rgba(174,59,36,.4)" stroke-width="1" stroke-dasharray="4 5"/>
-          <path d="M200 108a11 11 0 0 1 11 11c0 8-11 21-11 21s-11-13-11-21a11 11 0 0 1 11-11z" fill="#AE3B24"/>
-          <circle cx="200" cy="119" r="4" fill="#F3EEE2"/>
+          <path d="M-10 210 L150 150 L260 190 L410 130" fill="none" stroke="rgba(108,140,255,.22)" stroke-width="11" stroke-linecap="round"/>
+          <path d="M70 -10 L110 120 L90 310" fill="none" stroke="rgba(108,140,255,.16)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M300 -10 L285 140 L330 310" fill="none" stroke="rgba(108,140,255,.16)" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="200" cy="128" r="46" fill="rgba(231,184,96,.12)"/>
+          <circle cx="200" cy="128" r="46" fill="none" stroke="rgba(231,184,96,.45)" stroke-width="1" stroke-dasharray="4 5"/>
+          <path d="M200 108a11 11 0 0 1 11 11c0 8-11 21-11 21s-11-13-11-21a11 11 0 0 1 11-11z" fill="#E7B860"/>
+          <circle cx="200" cy="119" r="4" fill="#07070F"/>
         </svg>
         <span class="map__frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
         <div class="map__tag">
@@ -1379,9 +1526,9 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 </section>
 
 <!-- ══════════════════════════════ CTA BAND ══════════════════════════════ -->
-<!-- Scene five: the conversion point, rendered as an admit-one ticket
-     rather than a glass panel. Tilts toward the cursor (see [data-ticket]
-     in the closing script); the register button reuses the hero's
+<!-- The conversion point, rendered as an admit-one ticket rather than a
+     glass panel. Tilts toward the cursor (see [data-ticket] in the
+     closing script); the register button reuses the hero's
      magnetic-button wiring via [data-magnetic]. -->
 <section class="band" id="register">
   <div class="shell">
@@ -1480,6 +1627,21 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     </div>
   </div>
 </footer>
+
+<!-- ══════════════════════════════ MISSION BAR ══════════════════════════════ -->
+<!-- Sticky bottom readout — mirrors the Technodyssey reference's bottom
+     bar. Dismissible; the countdown here is fed by the same
+     EVENT_STARTS_AT value as the hero (search "Countdown" in the script). -->
+<div class="missionbar" id="missionbar" role="complementary" aria-label="Event countdown and registration">
+  <span class="missionbar__dot" aria-hidden="true"></span>
+  <span class="missionbar__name">Founders Speak &middot; 2026</span>
+  <span class="missionbar__t" data-mb-time>T-000:00:00:00</span>
+  <span class="missionbar__spacer"></span>
+  <a class="missionbar__reg" href="#register" data-register>Register</a>
+  <button class="missionbar__close" type="button" data-mb-close aria-label="Dismiss">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+</div>
 
 <script>
 (function () {
@@ -1621,6 +1783,35 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---- Nebula parallax drift (calm, slow — disabled if reduced motion) */
+  var nebula = document.getElementById('nebula');
+  var nebulaTicking = false;
+  var applyNebulaParallax = function () {
+    nebulaTicking = false;
+    if (!nebula) return;
+    var y = window.scrollY * 0.08;
+    nebula.style.transform = 'translate(-50%,' + y + 'px)';
+  };
+  if (nebula && !reduced) {
+    window.addEventListener('scroll', function () {
+      if (!nebulaTicking) {
+        nebulaTicking = true;
+        requestAnimationFrame(applyNebulaParallax);
+      }
+    }, { passive: true });
+  }
+
+  /* ---- Mission bar: sticky countdown + register, dismissible -------- */
+  var missionbar = document.getElementById('missionbar');
+  if (missionbar) {
+    var mbClose = missionbar.querySelector('[data-mb-close]');
+    if (mbClose) {
+      mbClose.addEventListener('click', function () {
+        missionbar.classList.add('is-hidden');
+      });
+    }
+  }
+
   /* ---- Agenda: scroll-linked progress rail --------------------------
      The rail fills left-to-right as the section moves through the
      viewport — a directional stand-in for the old dotted timeline. */
@@ -1743,30 +1934,42 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 
   /* ---- Countdown -------------------------------------------------- */
   var cdBox = document.getElementById('countdown');
+  var mbTime = document.querySelector('[data-mb-time]');
   var target = new Date(EVENT_STARTS_AT).getTime();
 
-  if (cdBox && !isNaN(target)) {
-    var fields = {
+  if ((cdBox || mbTime) && !isNaN(target)) {
+    var fields = cdBox ? {
       d: cdBox.querySelector('[data-cd="d"]'),
       h: cdBox.querySelector('[data-cd="h"]'),
       m: cdBox.querySelector('[data-cd="m"]'),
       s: cdBox.querySelector('[data-cd="s"]')
-    };
+    } : null;
     var pad = function (n) { return n < 10 ? '0' + n : String(n); };
 
     var tick = function () {
       var gap = target - Date.now();
       if (gap <= 0) {
-        cdBox.hidden = true;
+        if (cdBox) cdBox.hidden = true;
+        if (mbTime) mbTime.textContent = 'T-000:00:00:00';
         clearInterval(timer);
         return;
       }
       var s = Math.floor(gap / 1000);
-      fields.d.textContent = String(Math.floor(s / 86400));
-      fields.h.textContent = pad(Math.floor(s / 3600) % 24);
-      fields.m.textContent = pad(Math.floor(s / 60) % 60);
-      fields.s.textContent = pad(s % 60);
-      cdBox.hidden = false;
+      var d = Math.floor(s / 86400);
+      var h = pad(Math.floor(s / 3600) % 24);
+      var m = pad(Math.floor(s / 60) % 60);
+      var sec = pad(s % 60);
+
+      if (fields) {
+        fields.d.textContent = String(d);
+        fields.h.textContent = h;
+        fields.m.textContent = m;
+        fields.s.textContent = sec;
+        cdBox.hidden = false;
+      }
+      if (mbTime) {
+        mbTime.textContent = 'T-' + pad(d) + ':' + h + ':' + m + ':' + sec;
+      }
     };
 
     tick();
