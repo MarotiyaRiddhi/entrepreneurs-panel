@@ -183,58 +183,96 @@ export class InfiniteSpeakerMenu {
         canvas.height = height;
         const ctx = canvas.getContext('2d');
 
-        // Card Background (Near-black with Neon gradient border)
-        const radGrad = ctx.createLinearGradient(0, 0, width, height);
-        radGrad.addColorStop(0, '#120F24');
-        radGrad.addColorStop(1, '#050308');
-
-        ctx.fillStyle = radGrad;
-        ctx.fillRect(0, 0, width, height);
-
-        // Outer Neon Border
-        ctx.strokeStyle = index % 2 === 0 ? 'rgba(168, 85, 247, 0.7)' : 'rgba(34, 211, 238, 0.7)';
-        ctx.lineWidth = 10;
-        ctx.strokeRect(5, 5, width - 10, height - 10);
-
-        // Inner Card Content (Avatar or Monogram + Tag)
-        const initials = speaker.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
-
-        // Avatar Placeholder Circle / Box
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(width / 2, height / 2 - 40, 140, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.clip();
-
-        const circleGrad = ctx.createLinearGradient(100, 100, 400, 400);
-        circleGrad.addColorStop(0, '#A855F7');
-        circleGrad.addColorStop(1, '#22D3EE');
-        ctx.fillStyle = circleGrad;
-        ctx.fill();
-
-        // Monogram Text
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = 'bold 110px Space Mono, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(initials, width / 2, height / 2 - 40);
-        ctx.restore();
-
-        // Tag Badge
-        ctx.fillStyle = '#FF8A3D';
-        ctx.font = 'bold 24px Space Mono, monospace';
-        ctx.textAlign = 'center';
-        ctx.fillText((speaker.tag || 'SPEAKER').toUpperCase(), width / 2, height / 2 + 140);
-
-        // Speaker Name
-        ctx.fillStyle = '#EDEAF5';
-        ctx.font = 'bold 42px General Sans, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(speaker.name, width / 2, height / 2 + 200);
-
-        // Create 3D Mesh
         const texture = new THREE.CanvasTexture(canvas);
         texture.colorSpace = THREE.SRGBColorSpace;
+
+        const drawCardContent = (img = null) => {
+            ctx.clearRect(0, 0, width, height);
+
+            // Card Background (Near-black with Neon gradient border)
+            const radGrad = ctx.createLinearGradient(0, 0, width, height);
+            radGrad.addColorStop(0, '#120F24');
+            radGrad.addColorStop(1, '#050308');
+
+            ctx.fillStyle = radGrad;
+            ctx.fillRect(0, 0, width, height);
+
+            // Outer Neon Border
+            ctx.strokeStyle = index % 2 === 0 ? 'rgba(168, 85, 247, 0.7)' : 'rgba(34, 211, 238, 0.7)';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(5, 5, width - 10, height - 10);
+
+            // Inner Card Content (Avatar or Monogram + Tag)
+            const initials = speaker.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(width / 2, height / 2 - 40, 140, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip();
+
+            if (img && img.complete && img.naturalWidth !== 0) {
+                const diameter = 280;
+                const aspect = img.naturalWidth / img.naturalHeight;
+                let dw, dh;
+                if (aspect > 1) {
+                    dh = diameter;
+                    dw = diameter * aspect;
+                } else {
+                    dw = diameter;
+                    dh = diameter / aspect;
+                }
+                const dx = (width / 2) - (dw / 2);
+                const dy = (height / 2 - 40) - (dh / 2);
+                ctx.drawImage(img, dx, dy, dw, dh);
+            } else {
+                const circleGrad = ctx.createLinearGradient(100, 100, 400, 400);
+                circleGrad.addColorStop(0, '#A855F7');
+                circleGrad.addColorStop(1, '#22D3EE');
+                ctx.fillStyle = circleGrad;
+                ctx.fill();
+
+                // Monogram Text
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = 'bold 110px Space Mono, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(initials, width / 2, height / 2 - 40);
+            }
+            ctx.restore();
+
+            // Neon ring around avatar
+            ctx.strokeStyle = index % 2 === 0 ? 'rgba(168, 85, 247, 0.9)' : 'rgba(34, 211, 238, 0.9)';
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.arc(width / 2, height / 2 - 40, 140, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Tag Badge
+            ctx.fillStyle = '#FF8A3D';
+            ctx.font = 'bold 24px Space Mono, monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText((speaker.tag || 'SPEAKER').toUpperCase(), width / 2, height / 2 + 140);
+
+            // Speaker Name
+            ctx.fillStyle = '#EDEAF5';
+            ctx.font = 'bold 42px General Sans, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(speaker.name, width / 2, height / 2 + 200);
+
+            texture.needsUpdate = true;
+        };
+
+        drawCardContent();
+
+        if (speaker.image) {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+                drawCardContent(img);
+            };
+            img.src = speaker.image;
+        }
 
         const geometry = new THREE.PlaneGeometry(2.1, 2.6, 1, 1);
         const material = new THREE.MeshStandardMaterial({
