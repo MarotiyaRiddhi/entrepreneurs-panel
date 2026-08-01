@@ -19,10 +19,9 @@
 <!-- Inline SVG favicon: a small four-pointed sparkle on the nebula base -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23120E1F'/%3E%3Cpath d='M16 6l2.4 7.6L26 16l-7.6 2.4L16 26l-2.4-7.6L6 16l7.6-2.4z' fill='%23D98CAE'/%3E%3C/svg%3E" />
 
-<!-- Fonts: Playfair Display (display serif) + Inter (body/UI), per spec -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<!-- Fonts: Clash Display (monumental headline serif-alternative) + General Sans (body/UI) -->
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,500,400&f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet" />
 
 <script>document.documentElement.className = 'js';</script>
 
@@ -38,17 +37,19 @@
        underline so you can spot them at a glance. Delete the class="ph"
        wrapper once real copy is in.
 
-  THE THREE THINGS TO SET FIRST (in the <script> near the bottom):
+  THE THINGS TO SET FIRST (in the <script> near the bottom):
     - REGISTRATION_URL  -> your Google Form / Luma link
     - EVENT_STARTS_AT   -> exact date+time, drives the countdown
-
-  ADDING SPEAKER HEADSHOTS:
-    Find the .avatar block in each speaker card. Replace the monogram
-    <div> with:  <img class="avatar-img" src="assets/name.jpg" alt="..." />
+    - speakers          -> the panel config object (search "SPEAKER DATA").
+                            The whole speakers section renders from this
+                            array — edit names/bios/links there, not in
+                            the HTML. Leave `image` empty for an initials
+                            placeholder; point it at a file once you have
+                            a headshot.
 
   DEPLOYING:
-    Self-contained file (fonts load from Google Fonts CDN, everything
-    else is inline). No build step. Drop it on Vercel / GitHub Pages /
+    Self-contained file (fonts load from Fontshare CDN, everything else
+    is inline). No build step. Drop it on Vercel / GitHub Pages /
     Netlify as-is.
   ============================================================================
 -->
@@ -73,8 +74,20 @@
   --glass-line-hi:rgba(217,140,174,.34);
   --glow-hover:0 0 2px rgba(217,140,174,.25), 0 0 60px -8px rgba(139,30,79,.55);
 
-  --font-display:"Playfair Display","Iowan Old Style","Georgia",serif;
-  --font-sans:"Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --font-display:"Clash Display","Playfair Display","Iowan Old Style","Georgia",serif;
+  --font-sans:"General Sans","Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+
+  /* Hero "scene" tokens — an editorial paper-and-ink register, deliberately
+     distinct from the cosmic register used further down the page. Each
+     section is its own scene; this is scene one. */
+  --paper:#F3EEE2;
+  --paper-deep:#E9E1CE;
+  --ink:#16130D;
+  --ink-soft:#5B5546;
+  --rust:#AE3B24;
+  --rust-hi:#C94E30;
+  --line-ink:rgba(22,19,13,.16);
+  --line-ink-hi:rgba(22,19,13,.36);
 
   --shell:1180px;
   --pad:clamp(20px,5vw,48px);
@@ -210,52 +223,15 @@ body::before{
 }
 
 /* Film grain — SVG turbulence, tiled, low opacity, blend-mode overlay so it
-   reads as texture rather than a visible pattern. Essential to the look. */
+   reads as texture rather than a visible pattern. Runs the full page,
+   over both the paper and ink registers. */
 .grain{
   position:fixed;inset:0;
   z-index:3;
   pointer-events:none;
-  opacity:.09;
+  opacity:.07;
   mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* Nebula glow — layered radial gradients forming a soft vortex, positioned
-   behind the hero. Given a slow scroll-parallax drift via JS (transform),
-   with a static fallback for reduced-motion / no-JS. */
-.nebula{
-  position:absolute;
-  top:-18%;left:50%;
-  width:min(1400px,180vw);
-  height:min(1100px,140vw);
-  transform:translateX(-50%);
-  z-index:0;
-  pointer-events:none;
-  background:
-    radial-gradient(38% 42% at 50% 38%, var(--nebula-hi) 0%, rgba(178,58,107,.55) 26%, transparent 62%),
-    radial-gradient(58% 58% at 50% 42%, var(--nebula-core) 0%, rgba(139,30,79,.4) 38%, transparent 68%),
-    radial-gradient(75% 70% at 50% 46%, rgba(139,30,79,.22) 0%, transparent 70%);
-  filter:blur(6px);
-  will-change:transform;
-}
-
-/* Sparkle stars — inline SVG four-pointed shapes, scattered as decoration.
-   Positions are per-instance via inline style; base rules just set common
-   behaviour. A subset twinkles via opacity pulse (respects reduced motion). */
-.sparkle{
-  position:absolute;
-  z-index:1;
-  pointer-events:none;
-  color:var(--star);
-}
-.sparkle svg{width:100%;height:100%;display:block}
-
-.js .sparkle--twinkle{
-  animation:twinkle var(--tw-dur,4.5s) ease-in-out var(--tw-delay,0s) infinite;
-}
-@keyframes twinkle{
-  0%,100%{opacity:var(--tw-lo,.25)}
-  50%{opacity:var(--tw-hi,.95)}
 }
 
 /* ---------------------------------------------------------------------------
@@ -312,16 +288,14 @@ body::before{
    --------------------------------------------------------------------------- */
 .nav{
   position:sticky;top:0;z-index:60;
-  background:rgba(18,14,31,.72);
-  backdrop-filter:blur(14px) saturate(1.3);
-  -webkit-backdrop-filter:blur(14px) saturate(1.3);
+  background:var(--ink);
   border-bottom:1px solid transparent;
   transition:border-color .3s var(--ease);
 }
-.nav.is-stuck{border-bottom-color:var(--glass-line)}
+.nav.is-stuck{border-bottom-color:var(--rust)}
 .nav__in{
   display:flex;align-items:center;gap:20px;
-  height:72px;
+  height:68px;
 }
 
 .brand{
@@ -330,16 +304,16 @@ body::before{
   font-family:var(--font-display);
   font-weight:500;
   letter-spacing:.015em;
-  font-size:1.1rem;
-  color:var(--text);
+  font-size:1.05rem;
+  color:var(--paper);
   margin-right:auto;
 }
-.brand__mark{width:20px;height:20px;flex:none;color:var(--accent)}
+.brand__mark{width:18px;height:18px;flex:none;color:var(--rust-hi)}
 .brand__sub{
   font-family:var(--font-sans);
-  color:var(--text-muted);
+  color:rgba(243,238,226,.5);
   font-weight:500;
-  font-size:.74rem;
+  font-size:.72rem;
   letter-spacing:.06em;
   display:block;
 }
@@ -352,10 +326,10 @@ body::before{
 }
 .nav__links a{
   text-decoration:none;
-  font-size:.9rem;
+  font-size:.88rem;
   font-weight:500;
   letter-spacing:.02em;
-  color:var(--text-muted);
+  color:rgba(243,238,226,.58);
   transition:color .2s var(--ease);
   position:relative;
 }
@@ -363,132 +337,191 @@ body::before{
   content:"";
   position:absolute;left:0;bottom:-6px;
   width:100%;height:1px;
-  background:var(--accent);
+  background:var(--rust-hi);
   transform:scaleX(0);
   transform-origin:left;
   transition:transform .26s var(--ease);
 }
-.nav__links a:hover{color:var(--text)}
+.nav__links a:hover{color:var(--paper)}
 .nav__links a:hover::after{transform:scaleX(1)}
 
 @media (min-width:900px){.nav__links{display:flex}}
 
 /* ---------------------------------------------------------------------------
-   7. HERO
+   7. HERO — scene one. Paper &amp; ink register, deliberately apart from the
+      cosmic register used below. Asymmetric, not centred; the marquee and
+      the kinetic headline carry the section rather than any glass or glow.
    --------------------------------------------------------------------------- */
 .hero{
   position:relative;
   overflow:hidden;
-  padding-block:clamp(64px,9vw,112px) 0;
+  background:var(--paper);
+  color:var(--ink);
 }
-.hero__in{position:relative;z-index:2}
+.hero::before{
+  /* two faint registration lines — a printer's crop mark, not a "grid bg" */
+  content:"";
+  position:absolute;inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    linear-gradient(var(--line-ink),var(--line-ink)) left 12% top/1px 100% no-repeat,
+    linear-gradient(var(--line-ink),var(--line-ink)) right 12% top/1px 100% no-repeat;
+  opacity:.6;
+}
+.hero__in{
+  position:relative;z-index:2;
+  padding-block:clamp(48px,7vw,84px) 0;
+}
 
-.dateline{
+.hero__top{
   display:flex;
   flex-wrap:wrap;
   align-items:baseline;
   justify-content:space-between;
-  gap:8px 16px;
-  margin-bottom:32px;
+  gap:10px 20px;
+  padding-bottom:22px;
+  border-bottom:1px solid var(--line-ink);
 }
-.dateline__coord{
+.hero__top .eyebrow{color:var(--rust)}
+.hero__top .eyebrow::before{background:var(--rust);opacity:1}
+.hero__coord{
   font-family:var(--font-sans);
   font-size:.72rem;
   font-weight:500;
   letter-spacing:.14em;
-  color:var(--text-muted);
+  color:var(--ink-soft);
   font-variant-numeric:tabular-nums;
   white-space:nowrap;
 }
-.dateline__coord b{color:var(--accent);font-weight:600;letter-spacing:.18em}
+.hero__coord b{color:var(--rust);font-weight:600;letter-spacing:.18em}
 
-.hero h1{margin-block:22px 0}
-.hero h1 em{
-  font-style:italic;
-  color:var(--nebula-hi);
-  background:linear-gradient(96deg,var(--nebula-hi),var(--accent));
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-
-.hero__lede{max-width:58ch;margin-top:28px}
-
-.hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
-
-.hero__note{font-size:.84rem;color:var(--text-muted);margin-top:14px}
-
-/* Spec strip — the four event facts, glass panel */
-.spec{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:1px;
-  margin-top:clamp(44px,6vw,68px);
-  background:var(--glass-line);
-  border-radius:var(--radius);
-  overflow:hidden;
-  border:1px solid var(--glass-line);
-}
-.spec__cell{
-  position:relative;
-  background:rgba(18,14,31,.72);
-  backdrop-filter:blur(6px);
-  padding:22px 24px;
-}
-.spec__k{
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:var(--accent);
+/* Kinetic title — each line masked and raised on load, then given a hair
+   of cursor-parallax depth. Restrained: a few pixels, never more. */
+.hero__title{margin-block:28px 0}
+.title-mask{overflow:hidden;display:block}
+.title-line{
   display:block;
-  margin-bottom:9px;
-}
-.spec__v{
   font-family:var(--font-display);
-  font-size:1.15rem;
   font-weight:500;
-  color:var(--text);
-  line-height:1.3;
+  font-size:clamp(2.9rem,10vw,6.6rem);
+  line-height:.98;
+  letter-spacing:-.01em;
+  color:var(--ink);
+  transform:translateY(112%);
+  transition:transform .95s var(--ease);
+  will-change:transform;
 }
-.spec__v small{
-  display:block;
-  font-family:var(--font-sans);
-  font-size:.78rem;
-  font-weight:500;
-  color:var(--text-muted);
-  margin-top:4px;
+.js .title-line{transition-delay:var(--td,0ms)}
+.hero.is-loaded .title-line{transform:translateY(0)}
+.title-line--accent{color:var(--rust)}
+.title-line--rule{
+  display:flex;align-items:center;gap:18px;
+  font-size:clamp(2.9rem,10vw,6.6rem);
 }
-@media (min-width:640px){.spec{grid-template-columns:repeat(2,1fr)}}
-@media (min-width:960px){.spec{grid-template-columns:repeat(4,1fr)}}
+.title-line--rule .rule{
+  height:2px;flex:1 1 auto;background:var(--ink);
+  transform-origin:left;transform:scaleX(0);
+  transition:transform 1.1s var(--ease);
+  transition-delay:.5s;
+}
+.hero.is-loaded .title-line--rule .rule{transform:scaleX(1)}
 
-/* Countdown */
-.count{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:30px}
-.count__label{
-  font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--text-muted);width:100%;
+.hero__grid{
+  display:grid;
+  gap:clamp(28px,4vw,40px);
+  margin-top:clamp(36px,5vw,54px);
+  padding-bottom:clamp(40px,5vw,56px);
 }
-.count__u{
-  min-width:66px;padding:11px 12px;border-radius:12px;
-  background:var(--glass);
-  border:1px solid var(--glass-line);
-  text-align:center;
-}
-.count__n{
-  display:block;font-family:var(--font-display);font-size:1.4rem;font-weight:600;
-  font-variant-numeric:tabular-nums;color:var(--accent);
-}
-.count__t{
-  display:block;font-size:9.5px;font-weight:600;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--text-muted);margin-top:3px;
+@media (min-width:880px){
+  .hero__grid{grid-template-columns:1.3fr .7fr;align-items:end}
 }
 
-/* Quiet theme ticker */
-.ticker{margin-top:clamp(52px,7vw,84px);border-top:1px solid var(--glass-line);padding-block:20px;position:relative;z-index:2}
-.ticker__row{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center}
-.ticker__row span{font-size:.8rem;font-weight:500;letter-spacing:.02em;color:var(--text-muted);display:flex;align-items:center;gap:10px}
-.ticker__row span::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--accent)}
-.ticker__row span:first-child::before{display:none}
+.hero__lede{max-width:46ch;color:var(--ink-soft)}
+.hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
+.hero__note{font-size:.84rem;color:var(--ink-soft);margin-top:14px}
+
+/* Architectural buttons for the paper scene — no gradient, no pill glow */
+.btn--ink{
+  background:var(--ink);color:var(--paper);
+  border-radius:2px;
+  position:relative;overflow:hidden;
+}
+.btn--ink span,.btn--ink svg{position:relative;z-index:1}
+.btn--ink::before{
+  content:"";position:absolute;inset:0;
+  background:var(--rust);
+  transform:translateY(101%);
+  transition:transform .4s var(--ease);
+}
+.btn--ink:hover::before{transform:translateY(0)}
+.btn--ink:hover{transform:none;box-shadow:none}
+
+.btn--outline{
+  border:1.5px solid var(--ink);
+  color:var(--ink);
+  border-radius:2px;
+  background:transparent;
+}
+.btn--outline:hover{
+  background:var(--ink);color:var(--paper);
+  transform:none;box-shadow:none;
+}
+
+/* Ledger — the four event facts, as a printed spec sheet, not a glass panel */
+.ledger{border-top:1px solid var(--ink)}
+.ledger__row{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:14px;padding:13px 0;border-bottom:1px solid var(--line-ink);
+}
+.ledger__k{
+  font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--rust);white-space:nowrap;
+}
+.ledger__v{
+  font-family:var(--font-display);font-size:1rem;font-weight:500;
+  color:var(--ink);text-align:right;line-height:1.3;
+}
+.ledger__v small{display:block;font-family:var(--font-sans);font-size:.72rem;font-weight:500;color:var(--ink-soft);margin-top:2px}
+
+/* Countdown — plain ink digits, no chips */
+.count{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-top:22px}
+.count__label{font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);width:100%}
+.count__u{text-align:left}
+.count__n{display:block;font-family:var(--font-display);font-size:1.7rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+.count__t{display:block;font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px}
+
+/* Marquee — continuous, ink-on-paper, the one "always moving" element in
+   the hero. Pure CSS loop; paused under reduced motion. */
+.marquee{
+  position:relative;z-index:2;
+  background:var(--ink);color:var(--paper);
+  overflow:hidden;
+  border-top:1px solid var(--rust);
+}
+.marquee__track{
+  display:flex;width:max-content;
+  animation:marquee 26s linear infinite;
+}
+.marquee__set{display:flex;flex:none;align-items:center}
+.marquee__set span{
+  padding:16px clamp(20px,3vw,36px);
+  font-family:var(--font-display);
+  font-size:clamp(.95rem,1.6vw,1.2rem);
+  font-weight:500;
+  white-space:nowrap;
+  display:flex;align-items:center;gap:clamp(20px,3vw,36px);
+}
+.marquee__set span::after{content:"—";color:var(--rust)}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.hero:hover .marquee__track{animation-play-state:paused}
+
+@media (prefers-reduced-motion:reduce){
+  .marquee__track{animation:none}
+  .title-line,.title-line--rule .rule{transition:none}
+}
+
+.hero .ph{color:var(--rust);background:rgba(174,59,36,.08);border-bottom-color:var(--rust)}
 
 /* ---------------------------------------------------------------------------
    8. SECTION SHELL
@@ -514,11 +547,42 @@ body::before{
   color:var(--text-muted);white-space:nowrap;
 }
 
+/* Rust variant — signals the next scene is the ink/paper register, not cosmic */
+.waypoint--rust .waypoint__line{border-top-color:rgba(174,59,36,.4)}
+.waypoint--rust .waypoint__mark{border-color:rgba(174,59,36,.4)}
+.waypoint--rust .waypoint__star{color:var(--rust-hi)}
+
 /* ---------------------------------------------------------------------------
-   9. ABOUT
+   9. ABOUT — scene two. Ink, reversed out of the hero's paper: the page's
+      first chapter break. A numbered index replaces the theme cards; no
+      boxes, no grid of icons — just rule lines and a serif ghost numeral.
    --------------------------------------------------------------------------- */
-.about{display:grid;gap:clamp(40px,5vw,68px);align-items:start}
+#about{
+  background:var(--ink);
+  color:var(--paper);
+  overflow:hidden;
+  position:relative;
+}
+#about .eyebrow{color:var(--rust-hi)}
+#about .eyebrow::before{background:var(--rust-hi);opacity:1}
+#about h2{color:var(--paper)}
+#about .lede{color:rgba(243,238,226,.62)}
+
+.about{display:grid;gap:clamp(40px,5vw,68px);align-items:start;position:relative;z-index:1}
 @media (min-width:900px){.about{grid-template-columns:1.1fr .9fr}}
+
+.about-ghost{
+  position:absolute;
+  top:-4vw;right:-2vw;
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(160px,26vw,340px);
+  line-height:1;
+  color:rgba(243,238,226,.045);
+  z-index:0;
+  user-select:none;
+  pointer-events:none;
+}
 
 .dropcap::first-letter{
   font-family:var(--font-display);
@@ -527,31 +591,59 @@ body::before{
   line-height:.78;
   float:left;
   padding:5px 10px 0 0;
-  color:var(--nebula-hi);
+  color:var(--rust-hi);
 }
 
-.themes{display:grid;gap:14px}
+/* Numbered index — a contents page, not a card grid */
+.themes{border-top:1px solid rgba(243,238,226,.16)}
 .theme{
-  display:flex;gap:16px;align-items:flex-start;
-  padding:22px;border-radius:16px;
-  background:var(--glass);
-  border:1px solid var(--glass-line);
-  transition:border-color .3s var(--ease),background .3s var(--ease);
+  position:relative;
+  display:grid;
+  grid-template-columns:44px 1fr;
+  gap:6px 20px;
+  padding:24px 0;
+  border-bottom:1px solid rgba(243,238,226,.16);
+  overflow:hidden;
 }
-.theme:hover{border-color:var(--glass-line-hi);background:var(--glass-hi)}
-.theme__ico{
-  width:40px;height:40px;flex:none;border-radius:11px;
-  display:grid;place-items:center;
-  background:rgba(139,30,79,.28);
-  color:var(--accent);
+.theme::before{
+  content:"";
+  position:absolute;inset:0 100% 0 0;
+  background:rgba(174,59,36,.08);
+  transition:right .4s var(--ease);
 }
-.theme__ico svg{width:19px;height:19px}
-.theme h3{font-size:1.08rem;margin-bottom:6px}
-.theme p{font-size:.9rem;color:var(--text-muted);line-height:1.65}
+.theme:hover::before{right:0}
+.theme__no{
+  position:relative;
+  font-family:var(--font-display);
+  font-size:1.05rem;
+  font-weight:500;
+  color:rgba(243,238,226,.32);
+  transition:color .3s var(--ease);
+  padding-top:.1em;
+}
+.theme:hover .theme__no{color:var(--rust-hi)}
+.theme__body{position:relative}
+.theme h3{font-size:1.08rem;margin-bottom:6px;color:var(--paper)}
+.theme p{font-size:.9rem;color:rgba(243,238,226,.56);line-height:1.65;max-width:46ch}
+@media (min-width:640px){
+  .theme{grid-template-columns:44px 15em 1fr;align-items:baseline}
+  .theme h3{margin-bottom:0}
+}
 
 /* ---------------------------------------------------------------------------
-   10. SPEAKERS
+   10. SPEAKERS — scene three. Back to paper (the rhythm: paper / ink /
+      paper), but each portrait is its own ink duotone panel, so the
+      contrast lives inside the row instead of between sections. Rows
+      alternate image side and stagger vertically — a spread, not a grid —
+      and every portrait unmasks gradually as it enters view.
    --------------------------------------------------------------------------- */
+#speakers{background:var(--paper);color:var(--ink)}
+#speakers .eyebrow{color:var(--rust)}
+#speakers .eyebrow::before{background:var(--rust);opacity:1}
+#speakers h2{color:var(--ink)}
+#speakers .lede{color:var(--ink-soft)}
+#speakers .ph{color:var(--rust);background:rgba(174,59,36,.08);border-bottom-color:var(--rust)}
+
 .speakers-wrap{position:relative}
 .speakers-wrap > .sec__head{position:relative;z-index:1}
 .ghost-num{
@@ -561,237 +653,348 @@ body::before{
   font-weight:600;
   font-size:clamp(140px,24vw,300px);
   line-height:1;
-  color:rgba(217,140,174,.07);
+  color:rgba(22,19,13,.055);
   z-index:0;
   user-select:none;
   pointer-events:none;
 }
 
-.speakers{position:relative;z-index:1;display:grid;gap:22px;margin-top:clamp(44px,5vw,64px)}
-@media (min-width:680px){.speakers{grid-template-columns:repeat(2,1fr)}}
-@media (min-width:1080px){.speakers{grid-template-columns:repeat(4,1fr)}}
+.speakers{position:relative;z-index:1;margin-top:clamp(48px,6vw,72px);border-top:1px solid var(--line-ink)}
 
-.card{
+.speaker{
   position:relative;
-  display:flex;flex-direction:column;
-  padding:28px 26px 26px;
-  border-radius:var(--radius);
-  background:var(--glass);
-  border:1px solid var(--glass-line);
-  transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease),background .35s var(--ease);
+  display:grid;
+  gap:26px;
+  padding-block:clamp(36px,5vw,56px);
+  border-bottom:1px solid var(--line-ink);
 }
-.card:hover{
-  transform:translateY(-5px);
-  border-color:var(--glass-line-hi);
-  background:var(--glass-hi);
-  box-shadow:var(--glow-hover);
+@media (min-width:820px){
+  .speaker{grid-template-columns:300px 1fr;align-items:center;gap:clamp(40px,5vw,72px)}
+  .speaker:nth-child(even){grid-template-columns:1fr 300px;transform:translateY(clamp(10px,2vw,24px))}
+  .speaker:nth-child(even) .portrait{order:2}
+  .speaker:nth-child(even) .speaker__body{order:1}
+  .speaker:nth-child(even) .speaker__index{right:auto;left:0}
 }
 
-.card__no{
+.speaker__index{
   position:absolute;
-  top:20px;right:20px;
-  display:flex;align-items:center;gap:5px;
-  padding:5px 10px;
-  border-radius:999px;
-  background:rgba(139,30,79,.22);
-  border:1px solid var(--glass-line);
-  color:var(--accent);
-  font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-}
-.card__no svg{width:9px;height:9px}
-
-/* Avatar: monogram tile now, <img class="avatar-img"> later */
-.avatar{
-  width:80px;height:80px;border-radius:50%;
-  background:rgba(139,30,79,.22);
-  border:1px solid var(--glass-line);
-  margin-bottom:22px;flex:none;
-  display:grid;place-items:center;
-}
-.avatar__in{
-  font-family:var(--font-display);
-  font-size:1.35rem;font-weight:600;letter-spacing:.02em;
-  color:var(--accent);
-}
-.avatar-img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:rgba(139,30,79,.22)}
-
-.card h3{margin-bottom:8px}
-
-.card__role{
-  font-family:var(--font-sans);
-  font-size:.82rem;font-weight:600;letter-spacing:.02em;line-height:1.5;
-  color:var(--accent);
-  padding-bottom:16px;margin-bottom:16px;
-  border-bottom:1px dashed var(--glass-line);
+  top:clamp(4px,1vw,14px);right:0;
+  font-family:var(--font-display);font-weight:600;
+  font-size:clamp(2.8rem,6vw,4.6rem);
+  color:rgba(22,19,13,.08);
+  line-height:1;z-index:0;
+  user-select:none;pointer-events:none;
 }
 
-.card__bio{font-size:.92rem;line-height:1.75;color:var(--text-muted);margin-bottom:20px}
-
-.card__foot{
-  margin-top:auto;padding-top:18px;
-  border-top:1px solid var(--glass-line);
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
+/* Portrait — a duotone panel, monogram now, <img> later. Unmasks with a
+   clip-path wipe + slow scale settle the moment the row enters view. */
+.portrait{
+  position:relative;
+  aspect-ratio:4/5;
+  overflow:hidden;
+  background:var(--ink);
+  border-radius:2px;
+  z-index:1;
 }
+.js .portrait{clip-path:inset(0 0 100% 0);transition:clip-path 1.05s var(--ease) .05s}
+.js .reveal.is-in .portrait{clip-path:inset(0 0 0% 0)}
+
+.portrait__inner{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(158deg,var(--ink) 0%,#2b2116 100%);
+  color:rgba(243,238,226,.92);
+  font-family:var(--font-display);font-weight:600;
+  font-size:clamp(2.6rem,5vw,3.6rem);letter-spacing:.02em;
+}
+img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--paper)}
+.js .portrait__inner{transform:scale(1.14);transition:transform 1.3s var(--ease) .05s}
+.js .reveal.is-in .portrait__inner{transform:scale(1)}
+
+.portrait__tag{
+  position:absolute;top:14px;left:14px;z-index:1;
+  padding:5px 11px;border-radius:999px;
+  background:rgba(22,19,13,.45);
+  border:1px solid rgba(243,238,226,.28);
+  color:var(--paper);
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+}
+
+.speaker__body{position:relative;z-index:1}
+.speaker__name{margin-bottom:8px;color:var(--ink)}
+.speaker__role{
+  font-family:var(--font-sans);font-size:.86rem;font-weight:600;letter-spacing:.02em;
+  color:var(--rust);margin-bottom:16px;
+}
+.speaker__bio{font-size:.98rem;line-height:1.8;color:var(--ink-soft);max-width:56ch;margin-bottom:22px}
+.speaker__foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 
 .tag{
   display:inline-flex;align-items:center;gap:6px;
-  padding:5px 12px;border-radius:999px;
-  background:rgba(139,30,79,.22);
-  border:1px solid var(--glass-line);
-  font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--accent);white-space:nowrap;
+  padding:6px 14px;border-radius:999px;
+  border:1px solid var(--line-ink-hi);
+  font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--rust);white-space:nowrap;
 }
 
 .li-link{
-  width:36px;height:36px;flex:none;
-  display:grid;place-items:center;border-radius:10px;
-  background:var(--glass);
-  border:1px solid var(--glass-line);
-  color:var(--text-muted);
+  width:38px;height:38px;flex:none;
+  display:grid;place-items:center;border-radius:999px;
+  border:1px solid var(--line-ink-hi);
+  color:var(--ink);
   transition:all .22s var(--ease);
 }
 .li-link svg{width:16px;height:16px}
 .li-link:hover{
-  background:var(--nebula-core);
-  border-color:var(--nebula-hi);
-  color:var(--star);
+  background:var(--ink);
+  border-color:var(--ink);
+  color:var(--paper);
   transform:translateY(-2px);
 }
 
-/* ---------------------------------------------------------------------------
-   11. AGENDA
-   --------------------------------------------------------------------------- */
-.agenda{margin-top:clamp(44px,5vw,64px);position:relative;padding-left:32px}
-.agenda::before{
-  content:"";position:absolute;left:5px;top:8px;bottom:8px;width:1px;
-  background:linear-gradient(180deg,var(--accent),rgba(217,140,174,.15) 60%,transparent);
+@media (prefers-reduced-motion:reduce){
+  .portrait,.portrait__inner{transition:none !important;clip-path:inset(0) !important;transform:none !important}
 }
 
-.slot{position:relative;padding-block:22px;border-bottom:1px solid var(--glass-line);display:grid;gap:5px 28px}
+/* ---------------------------------------------------------------------------
+   11. AGENDA — scene four. Ink again, with a scroll-linked progress rail
+      as the section's one directional device: it fills left-to-right as
+      you move through the schedule, rather than a dotted vertical line.
+      Oversized ghost numerals replace the timeline dots.
+   --------------------------------------------------------------------------- */
+#agenda{background:var(--ink);color:var(--paper);position:relative}
+#agenda .eyebrow{color:var(--rust-hi)}
+#agenda .eyebrow::before{background:var(--rust-hi);opacity:1}
+#agenda h2{color:var(--paper)}
+#agenda .lede{color:rgba(243,238,226,.62)}
+#agenda .ph{color:var(--rust-hi);background:rgba(174,59,36,.14);border-bottom-color:var(--rust-hi)}
+
+.agenda-rail{
+  position:relative;height:2px;border-radius:2px;
+  background:rgba(243,238,226,.14);
+  margin-top:clamp(40px,5vw,60px);
+}
+.agenda-rail__fill{
+  position:absolute;top:0;left:0;height:100%;width:0%;
+  background:var(--rust-hi);border-radius:2px;
+}
+.agenda-rail__dot{
+  position:absolute;top:50%;left:0%;
+  width:9px;height:9px;border-radius:50%;
+  background:var(--rust-hi);
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 0 5px rgba(174,59,36,.2);
+}
+@media (prefers-reduced-motion:reduce){.agenda-rail__fill,.agenda-rail__dot{transition:none}}
+
+.agenda{margin-top:0}
+.slot{
+  position:relative;
+  display:grid;
+  grid-template-columns:64px 1fr;
+  gap:4px 22px;
+  padding-block:26px;
+  border-bottom:1px solid rgba(243,238,226,.14);
+  align-items:start;
+}
 .slot:last-child{border-bottom:0}
-.slot::before{
-  content:"";position:absolute;left:-32px;top:29px;
-  width:12px;height:12px;border-radius:50%;
-  background:var(--bg);border:2px solid var(--accent);
-  box-shadow:0 0 0 4px rgba(217,140,174,.1);
+.slot__no{
+  font-family:var(--font-display);font-weight:600;
+  font-size:clamp(2rem,3.6vw,2.7rem);
+  line-height:1;
+  color:rgba(243,238,226,.16);
+  transition:color .35s var(--ease);
 }
-.slot__t{font-size:.85rem;font-weight:600;letter-spacing:.02em;color:var(--accent)}
-.slot h3{font-size:1.14rem}
-.slot p{font-size:.9rem;color:var(--text-muted);line-height:1.7}
-@media (min-width:760px){
-  .slot{grid-template-columns:150px 1fr}
-  .slot__t{grid-row:span 2;padding-top:3px}
+.slot:hover .slot__no{color:var(--rust-hi)}
+.slot__body{min-width:0}
+.slot__t{display:block;font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--rust-hi);margin-bottom:6px}
+.slot h3{font-size:1.14rem;color:var(--paper)}
+.slot p{font-size:.9rem;color:rgba(243,238,226,.58);line-height:1.7;max-width:54ch;margin-top:6px}
+@media (min-width:700px){
+  .slot{grid-template-columns:72px 140px 1fr;gap:4px 28px;align-items:baseline}
+  .slot__no{align-self:start}
+  .slot__t{margin-bottom:0}
+  .slot__body{display:contents}
+  .slot p{grid-column:2 / -1}
 }
 
-.slot--key::before{background:var(--nebula-core);border-color:var(--nebula-hi)}
-.slot--key h3{color:var(--nebula-hi)}
+.slot--key{background:linear-gradient(90deg,rgba(174,59,36,.12),transparent 70%)}
+.slot--key .slot__no{color:var(--rust-hi)}
+.slot--key h3{color:var(--rust-hi)}
 
 /* ---------------------------------------------------------------------------
-   12. VENUE
+   12. VENUE — scene six. Paper, with the map treated as a surveyor's
+      plate (corner ticks, blueprint linework in ink) rather than a
+      rounded glass tile, and logistics as a plain printed schedule.
    --------------------------------------------------------------------------- */
+#venue{background:var(--paper);color:var(--ink)}
+#venue .eyebrow{color:var(--rust)}
+#venue .eyebrow::before{background:var(--rust);opacity:1}
+#venue h2{color:var(--ink)}
+#venue .ph{color:var(--rust);background:rgba(174,59,36,.08);border-bottom-color:var(--rust)}
+
 .venue{display:grid;gap:clamp(30px,4vw,46px);align-items:start}
 @media (min-width:900px){.venue{grid-template-columns:1fr 1fr}}
 
 .map{
   position:relative;aspect-ratio:4/3;
-  border-radius:var(--radius);overflow:hidden;
-  background:var(--glass);
-  border:1px solid var(--glass-line);
+  border-radius:2px;overflow:hidden;
+  background:var(--paper-deep);
+  border:1px solid var(--line-ink-hi);
   display:grid;place-items:center;
 }
 .map iframe{width:100%;height:100%;border:0;display:block}
 .map__art{position:absolute;inset:0;width:100%;height:100%}
+/* Surveyor's-plate corner ticks — a map plate, not a card */
+.map__frame{position:absolute;inset:14px;z-index:2;pointer-events:none}
+.map__frame i{
+  position:absolute;width:16px;height:16px;
+  border-color:var(--ink);border-style:solid;border-width:0;
+  font-style:normal;
+}
+.map__frame i:nth-child(1){top:0;left:0;border-top-width:2px;border-left-width:2px}
+.map__frame i:nth-child(2){top:0;right:0;border-top-width:2px;border-right-width:2px}
+.map__frame i:nth-child(3){bottom:0;left:0;border-bottom-width:2px;border-left-width:2px}
+.map__frame i:nth-child(4){bottom:0;right:0;border-bottom-width:2px;border-right-width:2px}
+
 .map__tag{
-  position:relative;text-align:center;padding:20px 24px;border-radius:14px;
-  background:rgba(18,14,31,.85);
-  border:1px solid var(--glass-line);
+  position:relative;z-index:1;text-align:center;padding:20px 24px;border-radius:2px;
+  background:var(--paper);
+  border:1px solid var(--line-ink-hi);
   max-width:82%;
 }
-.map__tag b{display:block;font-family:var(--font-display);font-size:.95rem;font-weight:500;color:var(--text);margin-bottom:7px}
-.map__tag span{font-size:.85rem;color:var(--text-muted);line-height:1.6}
+.map__tag b{display:block;font-family:var(--font-display);font-size:.95rem;font-weight:500;color:var(--ink);margin-bottom:7px}
+.map__tag span{font-size:.85rem;color:var(--ink-soft);line-height:1.6}
 
-.dl{display:grid;gap:0;margin-top:8px}
-.dl__row{padding:18px 0;border-bottom:1px solid var(--glass-line);display:grid;gap:5px 20px}
-.dl__row:first-child{padding-top:0}
+.dl{display:grid;gap:0;margin-top:8px;border-top:1px solid var(--line-ink)}
+.dl__row{padding:18px 0;border-bottom:1px solid var(--line-ink);display:grid;gap:5px 20px}
+.dl__row:first-child{padding-top:18px}
 .dl__row:last-child{border-bottom:0}
-.dl__k{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
-.dl__v{font-size:.95rem;color:var(--text-muted);line-height:1.75}
-.dl__v strong{color:var(--text);font-weight:600}
+.dl__k{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--rust)}
+.dl__v{font-size:.95rem;color:var(--ink-soft);line-height:1.75}
+.dl__v strong{color:var(--ink);font-weight:600}
 @media (min-width:560px){.dl__row{grid-template-columns:140px 1fr}}
 
 /* ---------------------------------------------------------------------------
-   13. CTA BAND
+   13. CTA BAND — scene five, and the conversion point. Back to paper, with
+      the registration block rendered as an actual admit-one ticket: an
+      ink card with a punched, perforated stub rather than a glass panel.
+      It tilts a few degrees toward the cursor (a physical, "hold it up
+      to the light" gesture) and the register button is magnetic.
    --------------------------------------------------------------------------- */
-.band{position:relative;overflow:hidden}
+.band{position:relative;overflow:hidden;background:var(--paper)}
 .band__in{position:relative;z-index:2;padding-block:clamp(68px,9vw,108px)}
 
-.launch{
-  position:relative;max-width:900px;margin-inline:auto;
+.ticket{
+  position:relative;max-width:920px;margin-inline:auto;
   display:grid;grid-template-columns:1fr;
-  border-radius:24px;overflow:hidden;
-  background:var(--glass);
-  border:1px solid var(--glass-line);
-  box-shadow:0 30px 80px -30px rgba(139,30,79,.4);
-}
-@media (min-width:760px){.launch{grid-template-columns:1fr 240px}}
-
-.launch__main{padding:clamp(40px,6vw,60px);text-align:left}
-.launch__main h2{margin-block:16px 16px}
-.launch__main .btn{margin-top:28px}
-
-.launch__facts{
-  position:relative;
-  background:rgba(139,30,79,.14);
-  padding:clamp(28px,4vw,36px) clamp(28px,4vw,32px);
-  display:flex;flex-direction:column;gap:18px;justify-content:center;
-  border-top:1px solid var(--glass-line);
+  background:var(--ink);color:var(--paper);
+  border-radius:6px;
+  box-shadow:0 40px 100px -30px rgba(22,19,13,.4);
+  transition:transform .5s var(--ease);
+  will-change:transform;
 }
 @media (min-width:760px){
-  .launch__facts{border-top:0;border-left:1px solid var(--glass-line)}
+  .ticket{grid-template-columns:1fr 260px;transform-style:preserve-3d}
+  /* punched notches at the perforation seam, colored to match the page
+     behind the ticket so they read as cut-outs, not decoration */
+  .ticket::before,.ticket::after{
+    content:"";position:absolute;right:246px;
+    width:28px;height:28px;border-radius:50%;
+    background:var(--paper);z-index:3;
+  }
+  .ticket::before{top:-14px}
+  .ticket::after{bottom:-14px}
+}
+
+.ticket__main{padding:clamp(40px,6vw,60px);text-align:left;border-radius:6px 0 0 6px}
+.ticket__main h2{margin-block:16px 16px;color:var(--paper)}
+.ticket__main .lede{color:rgba(243,238,226,.62)}
+.ticket__main .btn{margin-top:28px}
+.ticket .eyebrow{color:var(--rust-hi)}
+.ticket .eyebrow::before{background:var(--rust-hi);opacity:1}
+.ticket .ph{color:var(--rust-hi);background:rgba(174,59,36,.14);border-bottom-color:var(--rust-hi)}
+
+.ticket__stub{
+  position:relative;
+  background:rgba(243,238,226,.045);
+  padding:clamp(28px,4vw,34px) clamp(28px,4vw,32px);
+  display:flex;flex-direction:column;gap:16px;
+  border-top:2px dashed rgba(243,238,226,.25);
+  border-radius:0 0 6px 6px;
+}
+@media (min-width:760px){
+  .ticket__stub{
+    border-top:0;border-left:2px dashed rgba(243,238,226,.25);
+    border-radius:0 6px 6px 0;justify-content:center;
+  }
 }
 .fact__row{display:flex;flex-direction:column;gap:4px}
 .fact__k{
   font-size:.66rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--accent);display:flex;align-items:center;gap:7px;
+  color:var(--rust-hi);display:flex;align-items:center;gap:7px;
 }
 .fact__k svg{width:9px;height:9px;flex:none}
-.fact__v{font-family:var(--font-display);font-size:1.05rem;font-weight:500;color:var(--text);line-height:1.3}
+.fact__v{font-family:var(--font-display);font-size:1.05rem;font-weight:500;color:var(--paper);line-height:1.3}
+
+.ticket__barcode{
+  height:30px;margin-top:8px;opacity:.8;
+  background:repeating-linear-gradient(90deg,
+    var(--paper) 0 2px, transparent 2px 5px,
+    var(--paper) 5px 6px, transparent 6px 12px,
+    var(--paper) 12px 15px, transparent 15px 19px,
+    var(--paper) 19px 20px, transparent 20px 25px);
+}
+
+/* Paper-filled button — for use on the ink ticket, mirrors .btn--ink's
+   fill-sweep but inverted */
+.btn--paper{background:var(--paper);color:var(--ink);border-radius:2px;position:relative;overflow:hidden}
+.btn--paper span,.btn--paper svg{position:relative;z-index:1}
+.btn--paper::before{content:"";position:absolute;inset:0;background:var(--rust-hi);transform:translateY(101%);transition:transform .4s var(--ease)}
+.btn--paper:hover::before{transform:translateY(0)}
+.btn--paper:hover{color:var(--paper);transform:none;box-shadow:none}
+
+@media (prefers-reduced-motion:reduce){.ticket{transition:none}}
 
 /* ---------------------------------------------------------------------------
-   14. FOOTER
+   14. FOOTER — closing scene, ink. Bookends the nav's solid ink bar at
+      the top of the page.
    --------------------------------------------------------------------------- */
+#contact{background:var(--ink);color:var(--paper)}
+#contact .ph{color:var(--rust-hi);background:rgba(174,59,36,.14);border-bottom-color:var(--rust-hi)}
+
 .foot{padding-block:clamp(56px,7vw,80px) 32px}
 .foot__top{
   display:grid;gap:38px;padding-bottom:38px;
-  border-bottom:1px solid var(--glass-line);
+  border-bottom:1px solid rgba(243,238,226,.16);
 }
 @media (min-width:820px){.foot__top{grid-template-columns:1.6fr 1fr 1fr}}
 .foot h4{
   font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--accent);margin-bottom:18px;
+  color:var(--rust-hi);margin-bottom:18px;
 }
-.foot__blurb{font-size:.9rem;color:var(--text-muted);max-width:42ch;margin-top:16px;line-height:1.75}
+.foot__blurb{font-size:.9rem;color:rgba(243,238,226,.6);max-width:42ch;margin-top:16px;line-height:1.75}
 .foot ul{list-style:none;padding:0;display:grid;gap:12px}
 .foot ul a,.foot address a{
-  font-size:.9rem;color:var(--text-muted);text-decoration:none;
+  font-size:.9rem;color:rgba(243,238,226,.6);text-decoration:none;
   transition:color .2s var(--ease);
 }
-.foot ul a:hover,.foot address a:hover{color:var(--accent)}
-.foot address{font-style:normal;font-size:.9rem;color:var(--text-muted);line-height:1.8}
+.foot ul a:hover,.foot address a:hover{color:var(--rust-hi)}
+.foot address{font-style:normal;font-size:.9rem;color:rgba(243,238,226,.6);line-height:1.8}
 
 .socials{display:flex;gap:10px;margin-top:20px}
 .socials a{
-  width:38px;height:38px;display:grid;place-items:center;border-radius:11px;
-  background:var(--glass);border:1px solid var(--glass-line);color:var(--text-muted);
+  width:38px;height:38px;display:grid;place-items:center;border-radius:999px;
+  background:transparent;border:1px solid rgba(243,238,226,.28);color:rgba(243,238,226,.7);
   transition:all .22s var(--ease);
 }
 .socials svg{width:16px;height:16px}
-.socials a:hover{background:var(--nebula-core);border-color:var(--nebula-hi);color:var(--star);transform:translateY(-2px)}
+.socials a:hover{background:var(--rust-hi);border-color:var(--rust-hi);color:var(--paper);transform:translateY(-2px)}
 
 .foot__base{
   padding-top:28px;display:flex;flex-wrap:wrap;gap:12px 24px;
   justify-content:space-between;align-items:center;
-  font-size:.8rem;color:var(--text-muted);
+  font-size:.8rem;color:rgba(243,238,226,.5);
 }
 
 /* ---------------------------------------------------------------------------
@@ -808,8 +1011,6 @@ body::before{
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .js .reveal{opacity:1;transform:none;transition:none}
-  .js .sparkle--twinkle{animation:none;opacity:.6}
-  .nebula{transform:translateX(-50%) !important}
   *,*::before,*::after{
     animation-duration:.001ms !important;
     animation-iteration-count:1 !important;
@@ -818,38 +1019,14 @@ body::before{
 }
 
 @media print{
-  .grain,.nebula,.sparkle,.nav{display:none}
+  .grain,.nav{display:none}
   body{background:#fff;color:#000}
 }
 </style>
 </head>
 
 <body>
-<div class="nebula" id="nebula" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
-
-<!-- Scattered sparkle stars — inline SVG four-pointed shapes, a few twinkling -->
-<div class="sparkle sparkle--twinkle" style="top:9%;left:8%;width:14px;height:14px;--tw-dur:5.2s;--tw-delay:.2s;--tw-lo:.2;--tw-hi:.9" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
-</div>
-<div class="sparkle" style="top:16%;left:22%;width:6px;height:6px;opacity:.5" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-</div>
-<div class="sparkle sparkle--twinkle" style="top:6%;right:14%;width:10px;height:10px;--tw-dur:4.1s;--tw-delay:1.1s;--tw-lo:.25;--tw-hi:1" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-</div>
-<div class="sparkle" style="top:28%;right:6%;width:18px;height:18px;opacity:.3" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
-</div>
-<div class="sparkle sparkle--twinkle" style="top:38%;left:4%;width:8px;height:8px;--tw-dur:6s;--tw-delay:.6s;--tw-lo:.2;--tw-hi:.85" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-</div>
-<div class="sparkle" style="top:65%;right:10%;width:9px;height:9px;opacity:.4" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-</div>
-<div class="sparkle sparkle--twinkle" style="top:82%;left:12%;width:12px;height:12px;--tw-dur:5.6s;--tw-delay:1.6s;--tw-lo:.2;--tw-hi:.9" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
-</div>
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -882,82 +1059,101 @@ body::before{
 <main id="main">
 
 <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
-<section class="hero" id="top">
+<!-- Scene one: paper &amp; ink. Kinetic, masked title lines rise on load and
+     drift a few px with the cursor (JS, .hero__title[data-parallax]); the
+     ink marquee at the base is the section's one restless element. -->
+<section class="hero" id="top" data-hero>
   <div class="shell hero__in">
-    <div class="dateline reveal">
+    <div class="hero__top">
       <!-- TODO: organizing body -->
       <p class="eyebrow" style="margin:0">
         <span class="ph">Organising body — E-Cell / Student Council / Dept.</span>
       </p>
-      <span class="dateline__coord">23.0225&deg;N&nbsp; 72.5714&deg;E &mdash; <b>AHMEDABAD</b></span>
+      <span class="hero__coord">N&nbsp;23.0225&deg; &nbsp;E&nbsp;72.5714&deg; &mdash; <b>AHMEDABAD</b></span>
     </div>
 
     <!-- TODO: event title + tagline -->
-    <h1 class="reveal" style="--d:60ms">
-      Founders Speak: <em>Building</em><br />India&rsquo;s Next-Gen Startups
+    <h1 class="hero__title" data-parallax>
+      <span class="title-mask"><span class="title-line" style="--td:60ms">Founders</span></span>
+      <span class="title-mask"><span class="title-line title-line--accent" style="--td:170ms">Speak.</span></span>
+      <span class="title-mask"><span class="title-line title-line--rule" style="--td:280ms"><span class="rule" aria-hidden="true"></span>21.08</span></span>
     </h1>
 
-    <p class="lede hero__lede reveal" style="--d:120ms">
-      Four founders. One stage. An unfiltered conversation on building companies
-      in fintech, electric mobility and clean energy &mdash; and on the leap from
-      a safe career to a company of your own.
-    </p>
+    <div class="hero__grid">
+      <div class="reveal" style="--d:420ms">
+        <p class="lede hero__lede">
+          Four founders. One stage. An unfiltered conversation on building
+          companies in fintech, electric mobility and clean energy &mdash; and
+          on the leap from a safe career to a company of your own.
+        </p>
 
-    <div class="hero__cta reveal" style="--d:180ms">
-      <a class="btn btn--primary" href="#register" data-register>
-        Register &mdash; free entry
-        <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a class="btn btn--ghost" href="#speakers">Meet the panel</a>
+        <div class="hero__cta">
+          <a class="btn btn--ink" href="#register" data-register data-magnetic>
+            <span>Register &mdash; free entry</span>
+            <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn--outline" href="#speakers"><span>Meet the panel</span></a>
+        </div>
+
+        <p class="hero__note" data-register-note hidden></p>
+      </div>
+
+      <div class="reveal" style="--d:500ms">
+        <!-- ── Event facts. TODO: time, venue, mode ── -->
+        <dl class="ledger">
+          <div class="ledger__row">
+            <dt class="ledger__k">Date</dt>
+            <dd class="ledger__v">21 Aug 2026<small>Friday</small></dd>
+          </div>
+          <div class="ledger__row">
+            <dt class="ledger__k">Time</dt>
+            <dd class="ledger__v"><span class="ph">TODO</span><small>Add IST start / end</small></dd>
+          </div>
+          <div class="ledger__row">
+            <dt class="ledger__k">Venue</dt>
+            <dd class="ledger__v"><span class="ph">TODO</span><small>Nirma University</small></dd>
+          </div>
+          <div class="ledger__row">
+            <dt class="ledger__k">Mode</dt>
+            <dd class="ledger__v"><span class="ph">TODO</span><small>Confirm livestream</small></dd>
+          </div>
+        </dl>
+
+        <!-- Countdown. Hidden automatically once the date passes. -->
+        <div class="count" id="countdown" hidden>
+          <span class="count__label">Doors open in</span>
+          <div class="count__u"><span class="count__n" data-cd="d">--</span><span class="count__t">Days</span></div>
+          <div class="count__u"><span class="count__n" data-cd="h">--</span><span class="count__t">Hrs</span></div>
+          <div class="count__u"><span class="count__n" data-cd="m">--</span><span class="count__t">Min</span></div>
+          <div class="count__u"><span class="count__n" data-cd="s">--</span><span class="count__t">Sec</span></div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <p class="hero__note reveal" style="--d:200ms" data-register-note hidden></p>
-
-    <!-- ── Event facts. TODO: time, venue, mode ── -->
-    <dl class="spec reveal" style="--d:240ms">
-      <div class="spec__cell">
-        <dt class="spec__k">Date</dt>
-        <dd class="spec__v">21 August 2026<small>Friday</small></dd>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <div class="marquee__set">
+        <span>Fintech</span><span>EV &amp; Mobility</span><span>Green Energy</span>
+        <span>Entrepreneurship</span><span>Consulting &rarr; Founder</span>
+        <span>Innovation</span><span>Leadership</span><span>Technical Freedom</span>
       </div>
-      <div class="spec__cell">
-        <dt class="spec__k">Time</dt>
-        <dd class="spec__v"><span class="ph">TODO</span><small>Add IST start / end</small></dd>
-      </div>
-      <div class="spec__cell">
-        <dt class="spec__k">Venue</dt>
-        <dd class="spec__v"><span class="ph">TODO</span><small>Nirma University, Ahmedabad</small></dd>
-      </div>
-      <div class="spec__cell">
-        <dt class="spec__k">Mode</dt>
-        <dd class="spec__v"><span class="ph">TODO</span><small>Confirm livestream</small></dd>
-      </div>
-    </dl>
-
-    <!-- Countdown. Hidden automatically once the date passes. -->
-    <div class="count reveal" style="--d:280ms" id="countdown" hidden>
-      <span class="count__label">Doors open in</span>
-      <div class="count__u"><span class="count__n" data-cd="d">--</span><span class="count__t">Days</span></div>
-      <div class="count__u"><span class="count__n" data-cd="h">--</span><span class="count__t">Hrs</span></div>
-      <div class="count__u"><span class="count__n" data-cd="m">--</span><span class="count__t">Min</span></div>
-      <div class="count__u"><span class="count__n" data-cd="s">--</span><span class="count__t">Sec</span></div>
-    </div>
-
-    <div class="ticker reveal" style="--d:300ms" aria-hidden="true">
-      <div class="ticker__row">
-        <span>Fintech</span>
-        <span>EV &amp; Mobility</span>
-        <span>Green Energy</span>
-        <span>Consulting &rarr; Founder</span>
-        <span>Founder Q&amp;A</span>
+      <div class="marquee__set">
+        <span>Fintech</span><span>EV &amp; Mobility</span><span>Green Energy</span>
+        <span>Entrepreneurship</span><span>Consulting &rarr; Founder</span>
+        <span>Innovation</span><span>Leadership</span><span>Technical Freedom</span>
       </div>
     </div>
   </div>
 </section>
 
-<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Why this panel</span></span><span class="waypoint__line"></span></div></div>
+<div class="shell waypoint-gap"><div class="waypoint waypoint--rust" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Why this panel</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ ABOUT ══════════════════════════════ -->
+<!-- Scene two: ink, reversed out of the hero's paper — the first chapter
+     break. Themes are a numbered index (a contents page), not icon cards. -->
 <section class="sec" id="about">
+  <span class="about-ghost" aria-hidden="true">01</span>
   <div class="shell about">
     <div class="sec__head reveal">
       <p class="eyebrow">About the panel</p>
@@ -977,40 +1173,32 @@ body::before{
 
     <div class="themes reveal" style="--d:120ms">
       <div class="theme">
-        <span class="theme__ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg>
-        </span>
-        <div>
+        <span class="theme__no" aria-hidden="true">01</span>
+        <div class="theme__body">
           <h3>Fintech &amp; digital banking</h3>
           <p>Building financial products in India &mdash; trust, regulation and distribution at scale.</p>
         </div>
       </div>
 
       <div class="theme">
-        <span class="theme__ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>
-        </span>
-        <div>
+        <span class="theme__no" aria-hidden="true">02</span>
+        <div class="theme__body">
           <h3>EV &amp; green energy</h3>
           <p>Hardware, capital intensity and the long game of building in clean mobility.</p>
         </div>
       </div>
 
       <div class="theme">
-        <span class="theme__ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7V4h8v3"/><path d="M4 7h16v13H4z"/><path d="M4 12h16"/></svg>
-        </span>
-        <div>
+        <span class="theme__no" aria-hidden="true">03</span>
+        <div class="theme__body">
           <h3>Consulting &rarr; founder</h3>
           <p>Leaving a structured career path, and what the first eighteen months really cost.</p>
         </div>
       </div>
 
       <div class="theme">
-        <span class="theme__ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 19a6.5 6.5 0 0 1 13 0"/><path d="M17 11.5a3 3 0 1 0-1.8-5.4"/><path d="M18.5 19a5.6 5.6 0 0 0-3-4.9"/></svg>
-        </span>
-        <div>
+        <span class="theme__no" aria-hidden="true">04</span>
+        <div class="theme__body">
           <h3>Open floor Q&amp;A</h3>
           <p>Half the room&rsquo;s questions, answered live. Bring the one you actually care about.</p>
         </div>
@@ -1022,12 +1210,16 @@ body::before{
 <div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Meet the panel</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ SPEAKERS ══════════════════════════════ -->
+<!-- Scene three: paper again, but each portrait is its own ink duotone
+     panel — a spread, not a card grid. Markup below is rendered from the
+     single `speakers` config object in the closing script (search for
+     "SPEAKER DATA"): edit names, bios and image paths there, not here. -->
 <section class="sec" id="speakers">
   <div class="shell speakers-wrap">
-    <span class="ghost-num" aria-hidden="true">04</span>
+    <span class="ghost-num" aria-hidden="true" data-speaker-count>04</span>
 
     <div class="sec__head reveal">
-      <p class="eyebrow">The panel &mdash; 04 confirmed</p>
+      <p class="eyebrow">The panel &mdash; <span data-speaker-count>04</span> confirmed</p>
       <h2>Who you&rsquo;ll hear from.</h2>
       <p class="lede">
         Four founders and operators across fintech, clean energy and consulting.
@@ -1035,136 +1227,15 @@ body::before{
       </p>
     </div>
 
-    <div class="speakers">
-
-      <!-- ── 01 · Jasmin Gupta ── -->
-      <article class="card reveal">
-        <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-          01
-        </span>
-
-        <div class="avatar">
-          <div class="avatar__in" aria-hidden="true">JG</div>
-        </div>
-        <!--
-          TODO: swap the block above for the real headshot —
-          <div class="avatar"><img class="avatar-img" src="assets/jasmin-gupta.jpg" alt="Portrait of Jasmin Gupta" /></div>
-        -->
-
-        <h3>Jasmin Gupta</h3>
-        <p class="card__role">
-          <!-- TODO: replace with the confirmed one-line designation -->
-          Fintech Leader &middot; TEDx Speaker
-        </p>
-        <p class="card__bio">
-          Globally recognised fintech expert and TEDx speaker. Former Co-founder
-          &amp; CEO of LXME, India&rsquo;s first financial platform built for women.
-          Has scaled digital banking products including NiyoX and FreoSave.
-        </p>
-
-        <div class="card__foot">
-          <span class="tag">Fintech</span>
-          <a class="li-link" href="https://linkedin.com/in/jasminbgupta-digitalbank" target="_blank" rel="noopener noreferrer" aria-label="Jasmin Gupta on LinkedIn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.4 2.5 4.4 5.9V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H9z"/></svg>
-          </a>
-        </div>
-      </article>
-
-      <!-- ── 02 · Dhairya Shah ── -->
-      <article class="card reveal" style="--d:90ms">
-        <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-          02
-        </span>
-
-        <div class="avatar">
-          <div class="avatar__in" aria-hidden="true">DS</div>
-        </div>
-
-        <h3>Dhairya Shah</h3>
-        <p class="card__role">
-          <!-- TODO: confirm exact one-line designation -->
-          Founder &amp; CEO, Mindra Group
-        </p>
-        <p class="card__bio">
-          Leads Mindra Group across Mindra EV, Mindra Green Energy and Mindra New
-          Energy. A familiar name on campus &mdash; he recruits at Nirma University,
-          so many of you already know the brand before you know the founder.
-        </p>
-
-        <div class="card__foot">
-          <span class="tag">Home-grown CEO</span>
-          <a class="li-link" href="https://linkedin.com/in/dhairya-shah-5a2ba990" target="_blank" rel="noopener noreferrer" aria-label="Dhairya Shah on LinkedIn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.4 2.5 4.4 5.9V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H9z"/></svg>
-          </a>
-        </div>
-      </article>
-
-      <!-- ── 03 · Devansh Rana ── -->
-      <article class="card reveal" style="--d:180ms">
-        <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-          03
-        </span>
-
-        <div class="avatar">
-          <div class="avatar__in" aria-hidden="true">DR</div>
-        </div>
-
-        <h3>Devansh Rana</h3>
-        <p class="card__role">
-          <!-- TODO: confirm current venture + title -->
-          <span class="ph">TODO &mdash; current title &amp; venture</span>
-        </p>
-        <p class="card__bio">
-          Ex-Deloitte and a Nirma University alumnus.
-          <span class="ph">TODO &mdash; one line on what he is building now.</span>
-        </p>
-
-        <div class="card__foot">
-          <span class="tag">Nirma Alumnus</span>
-          <a class="li-link" href="https://linkedin.com/in/devanshrana" target="_blank" rel="noopener noreferrer" aria-label="Devansh Rana on LinkedIn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.4 2.5 4.4 5.9V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H9z"/></svg>
-          </a>
-        </div>
-      </article>
-
-      <!-- ── 04 · Nikita Lalwani ── -->
-      <article class="card reveal" style="--d:270ms">
-        <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-          04
-        </span>
-
-        <div class="avatar">
-          <div class="avatar__in" aria-hidden="true">NL</div>
-        </div>
-
-        <h3>Nikita Lalwani</h3>
-        <p class="card__role">
-          <!-- TODO: confirm current title + venture -->
-          <span class="ph">TODO &mdash; current title &amp; venture</span>
-        </p>
-        <p class="card__bio">
-          <span class="ph">TODO &mdash; two to three lines of bio, to be supplied.</span>
-        </p>
-
-        <div class="card__foot">
-          <span class="tag">Panelist</span>
-          <a class="li-link" href="https://linkedin.com/in/nikitalalwani7" target="_blank" rel="noopener noreferrer" aria-label="Nikita Lalwani on LinkedIn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.4 2.5 4.4 5.9V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H9z"/></svg>
-          </a>
-        </div>
-      </article>
-
-    </div>
+    <div class="speakers" data-speakers-list></div>
   </div>
 </section>
 
-<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Run of show</span></span><span class="waypoint__line"></span></div></div>
+<div class="shell waypoint-gap"><div class="waypoint waypoint--rust" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Run of show</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ AGENDA ══════════════════════════════ -->
+<!-- Scene four: ink, with a scroll-linked rail (see [data-agenda-rail] in
+     the closing script) standing in for the old dotted vertical line. -->
 <section class="sec" id="agenda">
   <div class="shell">
     <div class="sec__head reveal">
@@ -1176,46 +1247,68 @@ body::before{
       </p>
     </div>
 
+    <div class="agenda-rail" aria-hidden="true" data-agenda-rail>
+      <span class="agenda-rail__fill"></span>
+      <span class="agenda-rail__dot"></span>
+    </div>
+
     <!-- TODO: replace every time below with the confirmed schedule -->
-    <div class="agenda reveal" style="--d:100ms">
+    <div class="agenda">
 
-      <div class="slot">
-        <span class="slot__t"><span class="ph">TODO 00:00</span></span>
-        <h3>Registration &amp; welcome</h3>
-        <p>Check-in, seating and a short welcome from the organising team.</p>
+      <div class="slot reveal">
+        <span class="slot__no" aria-hidden="true">01</span>
+        <div class="slot__body">
+          <span class="slot__t"><span class="ph">TODO 00:00</span></span>
+          <h3>Registration &amp; welcome</h3>
+          <p>Check-in, seating and a short welcome from the organising team.</p>
+        </div>
       </div>
 
-      <div class="slot">
-        <span class="slot__t"><span class="ph">TODO 00:00</span></span>
-        <h3>Introducing the panel</h3>
-        <p>Host sets the frame and introduces the four founders.</p>
+      <div class="slot reveal" style="--d:70ms">
+        <span class="slot__no" aria-hidden="true">02</span>
+        <div class="slot__body">
+          <span class="slot__t"><span class="ph">TODO 00:00</span></span>
+          <h3>Introducing the panel</h3>
+          <p>Host sets the frame and introduces the four founders.</p>
+        </div>
       </div>
 
-      <div class="slot slot--key">
-        <span class="slot__t"><span class="ph">TODO 00:00</span></span>
-        <h3>Panel discussion</h3>
-        <p>The main session &mdash; fintech, EV and clean energy, and the move from a career to a company.</p>
+      <div class="slot slot--key reveal" style="--d:140ms">
+        <span class="slot__no" aria-hidden="true">03</span>
+        <div class="slot__body">
+          <span class="slot__t"><span class="ph">TODO 00:00</span></span>
+          <h3>Panel discussion</h3>
+          <p>The main session &mdash; fintech, EV and clean energy, and the move from a career to a company.</p>
+        </div>
       </div>
 
-      <div class="slot">
-        <span class="slot__t"><span class="ph">TODO 00:00</span></span>
-        <h3>Open Q&amp;A</h3>
-        <p>Questions from the floor, taken live.</p>
+      <div class="slot reveal" style="--d:210ms">
+        <span class="slot__no" aria-hidden="true">04</span>
+        <div class="slot__body">
+          <span class="slot__t"><span class="ph">TODO 00:00</span></span>
+          <h3>Open Q&amp;A</h3>
+          <p>Questions from the floor, taken live.</p>
+        </div>
       </div>
 
-      <div class="slot">
-        <span class="slot__t"><span class="ph">TODO 00:00</span></span>
-        <h3>Networking &amp; close</h3>
-        <p>Informal networking with the panelists and refreshments.</p>
+      <div class="slot reveal" style="--d:280ms">
+        <span class="slot__no" aria-hidden="true">05</span>
+        <div class="slot__body">
+          <span class="slot__t"><span class="ph">TODO 00:00</span></span>
+          <h3>Networking &amp; close</h3>
+          <p>Informal networking with the panelists and refreshments.</p>
+        </div>
       </div>
 
     </div>
   </div>
 </section>
 
-<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Getting there</span></span><span class="waypoint__line"></span></div></div>
+<div class="shell waypoint-gap"><div class="waypoint waypoint--rust" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Getting there</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ VENUE ══════════════════════════════ -->
+<!-- Scene six: paper. The map placeholder reads as a surveyor's plate
+     (corner ticks + blueprint linework) rather than a rounded glass tile. -->
 <section class="sec" id="venue">
   <div class="shell">
     <div class="sec__head reveal" style="margin-bottom:clamp(36px,5vw,52px)">
@@ -1234,18 +1327,19 @@ body::before{
         <svg class="map__art" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <pattern id="mgrid" width="34" height="34" patternUnits="userSpaceOnUse">
-              <path d="M34 0H0v34" fill="none" stroke="rgba(217,140,174,.12)" stroke-width="1"/>
+              <path d="M34 0H0v34" fill="none" stroke="rgba(22,19,13,.08)" stroke-width="1"/>
             </pattern>
           </defs>
           <rect width="400" height="300" fill="url(#mgrid)"/>
-          <path d="M-10 210 L150 150 L260 190 L410 130" fill="none" stroke="rgba(217,140,174,.18)" stroke-width="11" stroke-linecap="round"/>
-          <path d="M70 -10 L110 120 L90 310" fill="none" stroke="rgba(217,140,174,.14)" stroke-width="8" stroke-linecap="round"/>
-          <path d="M300 -10 L285 140 L330 310" fill="none" stroke="rgba(217,140,174,.14)" stroke-width="8" stroke-linecap="round"/>
-          <circle cx="200" cy="128" r="46" fill="rgba(139,30,79,.22)"/>
-          <circle cx="200" cy="128" r="46" fill="none" stroke="rgba(217,140,174,.4)" stroke-width="1" stroke-dasharray="4 5"/>
-          <path d="M200 108a11 11 0 0 1 11 11c0 8-11 21-11 21s-11-13-11-21a11 11 0 0 1 11-11z" fill="#D98CAE"/>
-          <circle cx="200" cy="119" r="4" fill="#120E1F"/>
+          <path d="M-10 210 L150 150 L260 190 L410 130" fill="none" stroke="rgba(22,19,13,.12)" stroke-width="11" stroke-linecap="round"/>
+          <path d="M70 -10 L110 120 L90 310" fill="none" stroke="rgba(22,19,13,.09)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M300 -10 L285 140 L330 310" fill="none" stroke="rgba(22,19,13,.09)" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="200" cy="128" r="46" fill="rgba(174,59,36,.1)"/>
+          <circle cx="200" cy="128" r="46" fill="none" stroke="rgba(174,59,36,.4)" stroke-width="1" stroke-dasharray="4 5"/>
+          <path d="M200 108a11 11 0 0 1 11 11c0 8-11 21-11 21s-11-13-11-21a11 11 0 0 1 11-11z" fill="#AE3B24"/>
+          <circle cx="200" cy="119" r="4" fill="#F3EEE2"/>
         </svg>
+        <span class="map__frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
         <div class="map__tag">
           <b>Map embed placeholder</b>
           <span>Paste the Google Maps <code>&lt;iframe&gt;</code> here &mdash; see the comment just above this block in the HTML.</span>
@@ -1285,24 +1379,28 @@ body::before{
 </section>
 
 <!-- ══════════════════════════════ CTA BAND ══════════════════════════════ -->
+<!-- Scene five: the conversion point, rendered as an admit-one ticket
+     rather than a glass panel. Tilts toward the cursor (see [data-ticket]
+     in the closing script); the register button reuses the hero's
+     magnetic-button wiring via [data-magnetic]. -->
 <section class="band" id="register">
   <div class="shell">
-    <div class="launch reveal">
-      <div class="launch__main">
-        <p class="eyebrow">Registration</p>
+    <div class="ticket reveal" data-ticket>
+      <div class="ticket__main">
+        <p class="eyebrow">Registration &middot; Admit one</p>
         <h2>Seats are limited.<br /><em>Claim yours.</em></h2>
         <p class="lede">
           Free for all students and faculty. Register in advance &mdash; entry on
           the day is subject to seats remaining.
         </p>
 
-        <a class="btn btn--primary" href="#register" data-register>
-          Register now
+        <a class="btn btn--paper" href="#register" data-register data-magnetic>
+          <span>Register now</span>
           <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
       </div>
 
-      <div class="launch__facts">
+      <div class="ticket__stub">
         <div class="fact__row">
           <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Date</span>
           <span class="fact__v">21 Aug 2026</span>
@@ -1315,6 +1413,7 @@ body::before{
           <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Access</span>
           <span class="fact__v">General &middot; Free</span>
         </div>
+        <div class="ticket__barcode" aria-hidden="true"></div>
       </div>
     </div>
   </div>
@@ -1397,6 +1496,98 @@ body::before{
   var EVENT_STARTS_AT = '2026-08-21T10:00:00+05:30';
 
   /* ═══════════════════════════════════════════════════════════════════
+     SPEAKER DATA — the single source of truth for the panel section.
+     Leave `title` / `bio` empty ('') until confirmed; the render below
+     shows a dotted "TODO" placeholder automatically. Leave `image`
+     empty to show an initials monogram instead of a photo — once you
+     have a headshot, just point it at the file (e.g. "assets/name.jpg").
+     ═══════════════════════════════════════════════════════════════════ */
+  var speakers = [
+    {
+      name: 'Jasmin Gupta',
+      title: 'Fintech Leader · TEDx Speaker',
+      tag: 'Fintech',
+      bio: 'Globally recognised fintech expert and TEDx speaker. Former Co-founder & CEO of LXME, India’s first financial platform built for women. Has scaled digital banking products including NiyoX and FreoSave.',
+      image: '',
+      linkedin: 'https://linkedin.com/in/jasminbgupta-digitalbank'
+    },
+    {
+      name: 'Dhairya Shah',
+      title: 'Founder & CEO, Mindra Group',
+      tag: 'Home-grown CEO',
+      bio: 'Leads Mindra Group across Mindra EV, Mindra Green Energy and Mindra New Energy. A familiar name on campus — he recruits at Nirma University, so many of you already know the brand before you know the founder.',
+      image: '',
+      linkedin: 'https://linkedin.com/in/dhairya-shah-5a2ba990'
+    },
+    {
+      name: 'Devansh Rana',
+      title: '',
+      tag: 'Nirma Alumnus',
+      bio: 'Ex-Deloitte and a Nirma University alumnus.',
+      image: '',
+      linkedin: 'https://linkedin.com/in/devanshrana'
+    },
+    {
+      name: 'Nikita Lalwani',
+      title: '',
+      tag: 'Panelist',
+      bio: '',
+      image: '',
+      linkedin: 'https://linkedin.com/in/nikitalalwani7'
+    }
+  ];
+
+  /* ---- Render speakers ---------------------------------------------- */
+  var speakersList = document.querySelector('[data-speakers-list]');
+
+  var esc = function (s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+
+  var initials = function (name) {
+    return name.split(/\s+/).map(function (w) { return w[0]; }).join('').slice(0, 2).toUpperCase();
+  };
+
+  var field = function (value, placeholder) {
+    return value ? esc(value) : '<span class="ph">' + esc(placeholder) + '</span>';
+  };
+
+  if (speakersList) {
+    speakersList.innerHTML = speakers.map(function (sp, i) {
+      var no = String(i + 1).padStart(2, '0');
+      var portrait = sp.image
+        ? '<img class="portrait__inner portrait__img" src="' + esc(sp.image) + '" alt="Portrait of ' + esc(sp.name) + '" loading="lazy" />'
+        : '<div class="portrait__inner portrait__ph" aria-hidden="true">' + esc(initials(sp.name)) + '</div>';
+
+      return (
+        '<article class="speaker reveal" style="--d:' + (i * 70) + 'ms">' +
+          '<span class="speaker__index" aria-hidden="true">' + no + '</span>' +
+          '<div class="portrait">' + portrait +
+            '<span class="portrait__tag">' + esc(sp.tag) + '</span>' +
+          '</div>' +
+          '<div class="speaker__body">' +
+            '<h3 class="speaker__name">' + esc(sp.name) + '</h3>' +
+            '<p class="speaker__role">' + field(sp.title, 'Title & venture to be confirmed') + '</p>' +
+            '<p class="speaker__bio">' + field(sp.bio, 'Bio to be supplied.') + '</p>' +
+            '<div class="speaker__foot">' +
+              '<span class="tag">' + esc(sp.tag) + '</span>' +
+              '<a class="li-link" href="' + esc(sp.linkedin) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(sp.name) + ' on LinkedIn">' +
+                '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.4 2.5 4.4 5.9V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H9z"/></svg>' +
+              '</a>' +
+            '</div>' +
+          '</div>' +
+        '</article>'
+      );
+    }).join('');
+  }
+
+  document.querySelectorAll('[data-speaker-count]').forEach(function (el) {
+    el.textContent = String(speakers.length).padStart(2, '0');
+  });
+
+  /* ═══════════════════════════════════════════════════════════════════
      Nothing below needs editing.
      ═══════════════════════════════════════════════════════════════════ */
 
@@ -1426,27 +1617,111 @@ body::before{
     nav.classList.toggle('is-stuck', window.scrollY > 12);
   };
   onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
 
-  /* ---- Nebula parallax drift (calm, slow — disabled if reduced motion) */
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var nebula = document.getElementById('nebula');
-  var ticking = false;
 
-  var applyParallax = function () {
-    ticking = false;
-    if (!nebula) return;
-    var y = window.scrollY * 0.08;
-    nebula.style.transform = 'translate(-50%,' + y + 'px)';
-  };
+  /* ---- Agenda: scroll-linked progress rail --------------------------
+     The rail fills left-to-right as the section moves through the
+     viewport — a directional stand-in for the old dotted timeline. */
+  var agendaRail = document.querySelector('[data-agenda-rail]');
+  if (agendaRail) {
+    var railFill = agendaRail.querySelector('.agenda-rail__fill');
+    var railDot = agendaRail.querySelector('.agenda-rail__dot');
+    var agendaSec = document.getElementById('agenda');
+    var railTicking = false;
 
-  var onScrollAll = function () {
-    onScroll();
-    if (!reduced && !ticking) {
-      ticking = true;
-      requestAnimationFrame(applyParallax);
-    }
-  };
-  window.addEventListener('scroll', onScrollAll, { passive: true });
+    var updateRail = function () {
+      railTicking = false;
+      var rect = agendaSec.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var total = rect.height + vh;
+      var progressed = vh - rect.top;
+      var pct = Math.max(0, Math.min(1, progressed / total)) * 100;
+      railFill.style.width = pct + '%';
+      railDot.style.left = pct + '%';
+    };
+
+    updateRail();
+    window.addEventListener('scroll', function () {
+      if (!railTicking) {
+        railTicking = true;
+        requestAnimationFrame(updateRail);
+      }
+    }, { passive: true });
+    window.addEventListener('resize', updateRail);
+  }
+
+  /* ---- Hero: kinetic title reveal on load -------------------------
+     Lines rise out of their masks a beat after paint, staggered by the
+     --td custom property set inline on each .title-line. */
+  var hero = document.querySelector('[data-hero]');
+  if (hero) {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { hero.classList.add('is-loaded'); });
+    });
+  }
+
+  /* ---- Hero: cursor-responsive title parallax ---------------------
+     Each title line drifts a few px toward the pointer, lerped toward
+     target each frame for a calm, weighted feel. Skipped entirely under
+     reduced motion or on touch (no persistent pointer). */
+  var titleWrap = document.querySelector('[data-parallax]');
+  if (titleWrap && !reduced && matchMedia('(hover:hover)').matches) {
+    var lines = Array.prototype.slice.call(titleWrap.querySelectorAll('.title-line'));
+    var tx = 0, ty = 0, cx = 0, cy = 0;
+    var raf = null;
+
+    var loop = function () {
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      lines.forEach(function (el, i) {
+        var depth = (i + 1) * 0.35;
+        el.style.transform = 'translate(' + (cx * depth).toFixed(2) + 'px,' + (cy * depth).toFixed(2) + 'px)';
+      });
+      raf = requestAnimationFrame(loop);
+    };
+
+    hero.addEventListener('mousemove', function (e) {
+      var r = hero.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width - 0.5) * 16;
+      ty = ((e.clientY - r.top) / r.height - 0.5) * 10;
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+    hero.addEventListener('mouseleave', function () { tx = 0; ty = 0; });
+  }
+
+  /* ---- Magnetic button ---------------------------------------------
+     The primary CTA's label nudges toward the cursor within its own
+     bounds — a small tactile detail, not a full magnetic-cursor gimmick. */
+  if (!reduced && matchMedia('(hover:hover)').matches) {
+    document.querySelectorAll('[data-magnetic]').forEach(function (btn) {
+      btn.addEventListener('mousemove', function (e) {
+        var r = btn.getBoundingClientRect();
+        var x = (e.clientX - r.left - r.width / 2) * 0.28;
+        var y = (e.clientY - r.top - r.height / 2) * 0.5;
+        btn.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+      });
+      btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
+    });
+  }
+
+  /* ---- Registration: ticket tilt -----------------------------------
+     The admit-one card tilts a few degrees toward the cursor, like
+     picking it up to read it — restrained (a handful of degrees) and
+     only where a persistent pointer makes it feel intentional. */
+  var ticket = document.querySelector('[data-ticket]');
+  if (ticket && !reduced && matchMedia('(hover:hover)').matches) {
+    ticket.addEventListener('mousemove', function (e) {
+      var r = ticket.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      ticket.style.transform =
+        'perspective(1400px) rotateX(' + (py * -5).toFixed(2) + 'deg) rotateY(' +
+        (px * 7).toFixed(2) + 'deg) translateY(-4px)';
+    });
+    ticket.addEventListener('mouseleave', function () { ticket.style.transform = ''; });
+  }
 
   /* ---- Scroll reveal --------------------------------------------- */
   var items = document.querySelectorAll('.reveal');
