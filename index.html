@@ -1943,6 +1943,8 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   </div>
 </footer>
 
+<script src="js/vendor/qrcode.js"></script>
+<script src="js/vendor/qrcode_UTF8.js"></script>
 <script>
 (function () {
   'use strict';
@@ -2104,19 +2106,50 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     if (e.key === 'Escape' && ticketModal && !ticketModal.hidden) closeTicketModal();
   });
 
+  function toTitleCase(str) {
+    return str.replace(/\S+/g, function (word) {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    });
+  }
+
+  function slugify(str) {
+    return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  /* Single source of truth for the event facts printed on the ticket —
+     read straight from the DOM (the live .ticket__stub rows and the
+     page title/venue copy) instead of duplicating the strings here. */
+  function readEventData() {
+    var facts = {};
+    document.querySelectorAll('.ticket__stub .fact__row').forEach(function (row) {
+      var k = row.querySelector('.fact__k');
+      var v = row.querySelector('.fact__v');
+      if (k && v) facts[k.textContent.trim().toUpperCase()] = v.textContent.trim();
+    });
+    var venueEl = document.querySelector('.dl .dl__row .dl__v strong');
+    return {
+      title: document.title.split('|')[0].trim(),
+      venue: venueEl ? venueEl.textContent.trim() : 'Nirma University',
+      date: facts.DATE || '',
+      time: facts.TIME || '',
+      access: facts.ACCESS || ''
+    };
+  }
+
   /* Mirrors the live .ticket card: rounded panel, punched circular
      notches at the perforation seam (real transparent cut-outs via
      destination-out, so the PNG works on any background), a dashed
-     seam line, and a barcode built from the same repeating bar
-     pattern used by .ticket__barcode's CSS gradient. */
-  function drawTicket(name) {
+     seam line, and a real scannable QR code. */
+  function drawTicket(rawName) {
+    var name = toTitleCase(rawName);
+    var data = readEventData();
     var SCALE = 2;
     var gold = '#E7B860', paper = '#F5F0E4', panelBg = '#12111F';
     var muted = 'rgba(245,240,228,.65)';
 
     var outerPad = 30;
-    var ticketW = 1180, ticketH = 420;
-    var stubW = 260, mainW = ticketW - stubW;
+    var ticketW = 1360, ticketH = 460;
+    var stubW = 320, mainW = ticketW - stubW;
     var radius = 10;
 
     var W = ticketW + outerPad * 2, H = ticketH + outerPad * 2;
@@ -2155,15 +2188,21 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       return lines;
     }
 
-    function drawBarcode(x, y, w, h) {
-      var unit = 25, bars = [[0, 2], [5, 6], [12, 15], [19, 20]];
+    function drawQR(x, y, size, text) {
+      var qr = qrcode(0, 'M');
+      qr.addData(text);
+      qr.make();
+      var count = qr.getModuleCount();
+      var cell = size / count;
       ctx.fillStyle = paper;
-      for (var offset = 0; offset < w; offset += unit) {
-        bars.forEach(function (b) {
-          var bx = x + offset + b[0];
-          if (bx >= x + w) return;
-          ctx.fillRect(bx, y, Math.min(b[1] - b[0], x + w - bx), h);
-        });
+      ctx.fillRect(x, y, size, size);
+      ctx.fillStyle = panelBg;
+      for (var r = 0; r < count; r += 1) {
+        for (var c = 0; c < count; c += 1) {
+          if (qr.isDark(r, c)) {
+            ctx.fillRect(x + c * cell, y + r * cell, Math.ceil(cell), Math.ceil(cell));
+          }
+        }
       }
     }
 
@@ -2209,7 +2248,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 
     ctx.fillStyle = paper;
     ctx.font = 'italic 500 40px "Fraunces", Georgia, serif';
-    wrapLines('Stellar Panel: Voices of Change', mainContentW).forEach(function (l) {
+    wrapLines(data.title, mainContentW).forEach(function (l) {
       ctx.fillText(l, mainX, cy);
       cy += 46;
     });
@@ -2217,7 +2256,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 
     ctx.fillStyle = muted;
     ctx.font = '400 19px system-ui, sans-serif';
-    ctx.fillText('Nirma University', mainX, cy);
+    ctx.fillText(data.venue, mainX, cy);
     cy += 66;
 
     ctx.fillStyle = gold;
@@ -2234,18 +2273,24 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     ctx.fillText(name, mainX, cy);
 
     var stubX = seamX + 40;
-    var sy = ticketY + 74;
-    [['DATE', '21 Aug 2026'], ['TIME', 'TBA'], ['ACCESS', 'General · Free']].forEach(function (item) {
+    var sy = ticketY + 70;
+    [['DATE', data.date], ['TIME', data.time], ['ACCESS', data.access]].forEach(function (item) {
       ctx.fillStyle = gold;
       ctx.font = '700 12px "Space Mono", monospace';
       ctx.fillText(item[0], stubX, sy);
       ctx.fillStyle = paper;
       ctx.font = '500 21px "Fraunces", Georgia, serif';
       ctx.fillText(item[1], stubX, sy + 28);
-      sy += 76;
+      sy += 62;
     });
 
-    drawBarcode(stubX, ticketY + ticketH - 70, ticketX + ticketW - 40 - stubX, 30);
+    var qrSize = 132;
+    var qrY = ticketY + ticketH - 40 - qrSize;
+    ctx.fillStyle = gold;
+    ctx.font = '700 12px "Space Mono", monospace';
+    ctx.fillText('SCAN TO VERIFY', stubX, qrY - 14);
+    var qrPayload = 'TICKET|' + slugify(data.title) + '|' + name + '|' + data.date;
+    drawQR(stubX, qrY, qrSize, qrPayload);
 
     ctx.restore();
 
@@ -2273,16 +2318,36 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         ticketNameInput.focus();
         return;
       }
-      var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-      ready.then(function () {
+      function download() {
         var canvas = drawTicket(name);
-        var link = document.createElement('a');
-        link.download = 'ticket-' + name.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '.png';
-        link.href = canvas.toDataURL('image/png');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
+        /* toBlob + a blob: URL, not toDataURL — Safari in particular
+           ignores the `download` attribute (or just opens the image)
+           when href is a data: URI; blob: URLs are the reliable
+           cross-browser way to force a save-to-disk. */
+        canvas.toBlob(function (blob) {
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement('a');
+          link.download = 'ticket-' + slugify(name) + '.png';
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        }, 'image/png');
+      }
+
+      /* Fire the download synchronously within the click's user-gesture
+         whenever possible — waiting on a promise first (even one that
+         resolves instantly) can lose the gesture and cause some browsers
+         to silently block the download. Fonts are already loaded by the
+         time someone reaches this modal, so this is the common path;
+         the async fallback only kicks in if they genuinely aren't ready. */
+      if (!document.fonts || document.fonts.status === 'loaded') {
+        download();
+      } else {
+        document.fonts.ready.then(download);
+      }
+
       closeTicketModal();
       ticketForm.reset();
     });
