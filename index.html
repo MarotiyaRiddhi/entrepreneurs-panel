@@ -856,42 +856,85 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 @media (min-width:560px){.dl__row{grid-template-columns:140px 1fr}}
 
 /* ---------------------------------------------------------------------------
-   13. CTA BAND
+   13. CTA BAND — scene five, and the conversion point. Back to paper, with
+      the registration block rendered as an actual admit-one ticket: an
+      ink card with a punched, perforated stub rather than a glass panel.
+      It tilts a few degrees toward the cursor (a physical, "hold it up
+      to the light" gesture) and the register button is magnetic.
    --------------------------------------------------------------------------- */
-.band{position:relative;overflow:hidden}
+.band{position:relative;overflow:hidden;background:var(--paper)}
 .band__in{position:relative;z-index:2;padding-block:clamp(68px,9vw,108px)}
 
-.launch{
-  position:relative;max-width:900px;margin-inline:auto;
+.ticket{
+  position:relative;max-width:920px;margin-inline:auto;
   display:grid;grid-template-columns:1fr;
-  border-radius:24px;overflow:hidden;
-  background:var(--glass);
-  border:1px solid var(--glass-line);
-  box-shadow:0 30px 80px -30px rgba(139,30,79,.4);
-}
-@media (min-width:760px){.launch{grid-template-columns:1fr 240px}}
-
-.launch__main{padding:clamp(40px,6vw,60px);text-align:left}
-.launch__main h2{margin-block:16px 16px}
-.launch__main .btn{margin-top:28px}
-
-.launch__facts{
-  position:relative;
-  background:rgba(139,30,79,.14);
-  padding:clamp(28px,4vw,36px) clamp(28px,4vw,32px);
-  display:flex;flex-direction:column;gap:18px;justify-content:center;
-  border-top:1px solid var(--glass-line);
+  background:var(--ink);color:var(--paper);
+  border-radius:6px;
+  box-shadow:0 40px 100px -30px rgba(22,19,13,.4);
+  transition:transform .5s var(--ease);
+  will-change:transform;
 }
 @media (min-width:760px){
-  .launch__facts{border-top:0;border-left:1px solid var(--glass-line)}
+  .ticket{grid-template-columns:1fr 260px;transform-style:preserve-3d}
+  /* punched notches at the perforation seam, colored to match the page
+     behind the ticket so they read as cut-outs, not decoration */
+  .ticket::before,.ticket::after{
+    content:"";position:absolute;right:246px;
+    width:28px;height:28px;border-radius:50%;
+    background:var(--paper);z-index:3;
+  }
+  .ticket::before{top:-14px}
+  .ticket::after{bottom:-14px}
+}
+
+.ticket__main{padding:clamp(40px,6vw,60px);text-align:left;border-radius:6px 0 0 6px}
+.ticket__main h2{margin-block:16px 16px;color:var(--paper)}
+.ticket__main .lede{color:rgba(243,238,226,.62)}
+.ticket__main .btn{margin-top:28px}
+.ticket .eyebrow{color:var(--rust-hi)}
+.ticket .eyebrow::before{background:var(--rust-hi);opacity:1}
+.ticket .ph{color:var(--rust-hi);background:rgba(174,59,36,.14);border-bottom-color:var(--rust-hi)}
+
+.ticket__stub{
+  position:relative;
+  background:rgba(243,238,226,.045);
+  padding:clamp(28px,4vw,34px) clamp(28px,4vw,32px);
+  display:flex;flex-direction:column;gap:16px;
+  border-top:2px dashed rgba(243,238,226,.25);
+  border-radius:0 0 6px 6px;
+}
+@media (min-width:760px){
+  .ticket__stub{
+    border-top:0;border-left:2px dashed rgba(243,238,226,.25);
+    border-radius:0 6px 6px 0;justify-content:center;
+  }
 }
 .fact__row{display:flex;flex-direction:column;gap:4px}
 .fact__k{
   font-size:.66rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--accent);display:flex;align-items:center;gap:7px;
+  color:var(--rust-hi);display:flex;align-items:center;gap:7px;
 }
 .fact__k svg{width:9px;height:9px;flex:none}
-.fact__v{font-family:var(--font-display);font-size:1.05rem;font-weight:500;color:var(--text);line-height:1.3}
+.fact__v{font-family:var(--font-display);font-size:1.05rem;font-weight:500;color:var(--paper);line-height:1.3}
+
+.ticket__barcode{
+  height:30px;margin-top:8px;opacity:.8;
+  background:repeating-linear-gradient(90deg,
+    var(--paper) 0 2px, transparent 2px 5px,
+    var(--paper) 5px 6px, transparent 6px 12px,
+    var(--paper) 12px 15px, transparent 15px 19px,
+    var(--paper) 19px 20px, transparent 20px 25px);
+}
+
+/* Paper-filled button — for use on the ink ticket, mirrors .btn--ink's
+   fill-sweep but inverted */
+.btn--paper{background:var(--paper);color:var(--ink);border-radius:2px;position:relative;overflow:hidden}
+.btn--paper span,.btn--paper svg{position:relative;z-index:1}
+.btn--paper::before{content:"";position:absolute;inset:0;background:var(--rust-hi);transform:translateY(101%);transition:transform .4s var(--ease)}
+.btn--paper:hover::before{transform:translateY(0)}
+.btn--paper:hover{color:var(--paper);transform:none;box-shadow:none}
+
+@media (prefers-reduced-motion:reduce){.ticket{transition:none}}
 
 /* ---------------------------------------------------------------------------
    14. FOOTER
@@ -1309,24 +1352,28 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 </section>
 
 <!-- ══════════════════════════════ CTA BAND ══════════════════════════════ -->
+<!-- Scene five: the conversion point, rendered as an admit-one ticket
+     rather than a glass panel. Tilts toward the cursor (see [data-ticket]
+     in the closing script); the register button reuses the hero's
+     magnetic-button wiring via [data-magnetic]. -->
 <section class="band" id="register">
   <div class="shell">
-    <div class="launch reveal">
-      <div class="launch__main">
-        <p class="eyebrow">Registration</p>
+    <div class="ticket reveal" data-ticket>
+      <div class="ticket__main">
+        <p class="eyebrow">Registration &middot; Admit one</p>
         <h2>Seats are limited.<br /><em>Claim yours.</em></h2>
         <p class="lede">
           Free for all students and faculty. Register in advance &mdash; entry on
           the day is subject to seats remaining.
         </p>
 
-        <a class="btn btn--primary" href="#register" data-register>
-          Register now
+        <a class="btn btn--paper" href="#register" data-register data-magnetic>
+          <span>Register now</span>
           <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
       </div>
 
-      <div class="launch__facts">
+      <div class="ticket__stub">
         <div class="fact__row">
           <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Date</span>
           <span class="fact__v">21 Aug 2026</span>
@@ -1339,6 +1386,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
           <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Access</span>
           <span class="fact__v">General &middot; Free</span>
         </div>
+        <div class="ticket__barcode" aria-hidden="true"></div>
       </div>
     </div>
   </div>
@@ -1629,6 +1677,23 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       });
       btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
     });
+  }
+
+  /* ---- Registration: ticket tilt -----------------------------------
+     The admit-one card tilts a few degrees toward the cursor, like
+     picking it up to read it — restrained (a handful of degrees) and
+     only where a persistent pointer makes it feel intentional. */
+  var ticket = document.querySelector('[data-ticket]');
+  if (ticket && !reduced && matchMedia('(hover:hover)').matches) {
+    ticket.addEventListener('mousemove', function (e) {
+      var r = ticket.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      ticket.style.transform =
+        'perspective(1400px) rotateX(' + (py * -5).toFixed(2) + 'deg) rotateY(' +
+        (px * 7).toFixed(2) + 'deg) translateY(-4px)';
+    });
+    ticket.addEventListener('mouseleave', function () { ticket.style.transform = ''; });
   }
 
   /* ---- Scroll reveal --------------------------------------------- */
