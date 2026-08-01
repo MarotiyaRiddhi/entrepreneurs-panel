@@ -104,6 +104,33 @@
   object-fit: cover;
 }
 
+/* ── Liquid Ether WebGL Fixed Background (Continuous for non-hero sections) ── */
+#liquid-ether-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+  will-change: opacity;
+}
+
+#liquid-ether-wrapper canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Ensure continuous Liquid Ether background flows uninterrupted behind all non-hero sections */
+#about, #speakers, #agenda, #venue, #register, #contact, footer {
+  background: transparent !important;
+}
+
 html.fs-show-intro,
 html.fs-show-intro body {
   overflow: hidden !important;
@@ -1552,6 +1579,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 
 <body>
 <div id="black-hole-wrapper" class="black-hole-intro-overlay" aria-hidden="true"></div>
+<div id="liquid-ether-wrapper" aria-hidden="true"></div>
 <div class="stars" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 
@@ -2561,6 +2589,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 <script type="module">
   import { BlackHoleIntroManager } from './js/introManager.js';
   import { InfiniteSpeakerMenu } from './js/infiniteMenu.js';
+  import { LiquidEther } from './js/liquidEther.js';
 
   function initApp() {
     new BlackHoleIntroManager();
@@ -2568,6 +2597,35 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     const speakersContainer = document.querySelector('[data-speakers-list]');
     if (speakersContainer && window.speakers) {
       new InfiniteSpeakerMenu(speakersContainer, window.speakers);
+    }
+
+    // Liquid Ether Background Manager
+    const etherContainer = document.getElementById('liquid-ether-wrapper');
+    if (etherContainer) {
+      new LiquidEther(etherContainer);
+
+      // Hero -> Liquid Ether Crossfade on Scroll
+      const heroSection = document.querySelector('[data-hero]') || document.getElementById('top');
+
+      const handleScrollCrossfade = () => {
+        if (!heroSection) {
+          etherContainer.style.opacity = '1';
+          return;
+        }
+
+        const heroHeight = heroSection.offsetHeight || window.innerHeight;
+        const scrollY = window.scrollY || window.pageYOffset || 0;
+
+        // Smooth crossfade: starts fading in at 15% hero scroll, reaches 1.0 by 75% hero scroll
+        const fadeStart = heroHeight * 0.15;
+        const fadeEnd = heroHeight * 0.75;
+        const opacity = Math.min(1, Math.max(0, (scrollY - fadeStart) / (fadeEnd - fadeStart)));
+
+        etherContainer.style.opacity = opacity.toFixed(3);
+      };
+
+      window.addEventListener('scroll', handleScrollCrossfade, { passive: true });
+      handleScrollCrossfade();
     }
   }
 
