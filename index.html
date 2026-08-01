@@ -4,15 +4,15 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-<title>Founders Speak — Entrepreneurs Panel Discussion | Nirma University</title>
-<meta name="description" content="An entrepreneurs panel discussion at Nirma University, Ahmedabad — 21 August 2026. Four founders on fintech, EV &amp; green energy, and the consulting-to-founder leap." />
+<title>Stellar panel: Voices of Change | Nirma University</title>
+<meta name="description" content="Stellar panel: Voices of Change — An entrepreneurs panel discussion at Nirma University, Ahmedabad — 21 August 2026. Four founders on fintech, EV &amp; green energy, and the consulting-to-founder leap." />
 <meta name="theme-color" content="#07070F" />
 <meta name="color-scheme" content="dark" />
 
 <!-- Social share cards (WhatsApp / LinkedIn / X). Replace og:image once you have a poster. -->
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Founders Speak — Entrepreneurs Panel Discussion" />
-<meta property="og:description" content="Four founders. One stage. Nirma University, Ahmedabad — 21 August 2026." />
+<meta property="og:title" content="Stellar panel: Voices of Change — Entrepreneurs Panel Discussion" />
+<meta property="og:description" content="Stellar panel: Voices of Change. Four founders. One stage. Nirma University, Ahmedabad — 21 August 2026." />
 <meta property="og:image" content="assets/share-card.jpg" />
 <meta name="twitter:card" content="summary_large_image" />
 
@@ -27,7 +27,26 @@
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
-<script>document.documentElement.className = 'js';</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://esm.sh/three@0.167.1",
+    "postprocessing": "https://esm.sh/postprocessing@6.38.3?external=three",
+    "gsap": "https://esm.sh/gsap@3.14.2"
+  }
+}
+</script>
+<script>
+(function() {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var seen = sessionStorage.getItem('fs_intro_seen') === 'true';
+  if (reduced || seen) {
+    document.documentElement.classList.add('fs-skip-intro');
+  } else {
+    document.documentElement.classList.add('fs-show-intro');
+  }
+})();
+</script>
 
 <!--
   ============================================================================
@@ -59,6 +78,234 @@
 -->
 
 <style>
+/* ── Black Hole WebGL Overlay (Appear-Then-Vanish Mode) ── */
+#black-hole-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background: #050308;
+  pointer-events: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  will-change: opacity;
+}
+
+.fs-skip-intro #black-hole-wrapper {
+  display: none !important;
+}
+
+#black-hole-wrapper canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+html.fs-show-intro,
+html.fs-show-intro body {
+  overflow: hidden !important;
+}
+
+/* ── Staggered Hero Cascade Reveal ── */
+html.fs-show-intro .nav,
+html.fs-show-intro .hero__top,
+html.fs-show-intro .hero__title,
+html.fs-show-intro .hero__lede,
+html.fs-show-intro .hero__count-wrap,
+html.fs-show-intro .hero__cta {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--cascade-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+/* Staggered delays for flowing cascade sequence */
+.nav { --cascade-delay: 0ms; }
+.hero__top { --cascade-delay: 90ms; }
+.hero__title { --cascade-delay: 180ms; }
+.hero__lede { --cascade-delay: 270ms; }
+.hero__count-wrap { --cascade-delay: 360ms; }
+.hero__cta { --cascade-delay: 450ms; }
+
+/* Active Cascade Reveal State */
+html.fs-show-intro.fs-hero-content-entering .nav,
+html.fs-show-intro.fs-hero-content-entering .hero__top,
+html.fs-show-intro.fs-hero-content-entering .hero__title,
+html.fs-show-intro.fs-hero-content-entering .hero__lede,
+html.fs-show-intro.fs-hero-content-entering .hero__count-wrap,
+html.fs-show-intro.fs-hero-content-entering .hero__cta,
+html.fs-skip-intro .nav,
+html.fs-skip-intro .hero__top,
+html.fs-skip-intro .hero__title,
+html.fs-skip-intro .hero__lede,
+html.fs-skip-intro .hero__count-wrap,
+html.fs-skip-intro .hero__cta {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+  transform: translate3d(0, 0, 0);
+}
+
+/* Center all main section headings for visual hierarchy */
+.sec__head {
+  text-align: center;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.sec__head .eyebrow {
+  display: inline-flex;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.sec__head h2 {
+  text-align: center;
+}
+.ticket__main h2,
+.ticket__main .eyebrow {
+  text-align: center;
+  justify-content: center;
+}
+
+/* ── React Bits Infinite Menu for Speakers ── */
+.infinite-menu-wrap {
+  position: relative;
+  width: 100%;
+  margin-top: clamp(24px, 4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.infinite-menu__canvas-host {
+  width: 100%;
+  height: clamp(360px, 45vh, 460px);
+  position: relative;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.infinite-menu__canvas-host:active {
+  cursor: grabbing;
+}
+
+.infinite-menu__canvas-host canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+.infinite-menu__ui-host {
+  width: 100%;
+  max-width: 660px;
+  margin-top: 12px;
+}
+
+.infinite-menu__detail {
+  background: rgba(18, 17, 31, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 12px;
+  padding: clamp(20px, 4vw, 32px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 0 30px rgba(168, 85, 247, 0.15);
+  text-align: center;
+}
+
+.infinite-menu__meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.infinite-menu__index {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+}
+
+.infinite-menu__tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #FF8A3D;
+  background: rgba(255, 138, 61, 0.12);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 138, 61, 0.3);
+}
+
+.infinite-menu__name {
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 700;
+  color: var(--paper);
+  margin-bottom: 6px;
+}
+
+.infinite-menu__role {
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: #22D3EE;
+  margin-bottom: 14px;
+}
+
+.infinite-menu__bio {
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  max-width: 58ch;
+  margin: 0 auto 20px auto;
+}
+
+.infinite-menu__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.infinite-menu__nav-btns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-nav-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(245, 240, 228, 0.06);
+  border: 1px solid rgba(231, 184, 96, 0.25);
+  color: var(--paper);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.menu-nav-btn:hover {
+  background: rgba(168, 85, 247, 0.25);
+  border-color: #A855F7;
+  transform: scale(1.08);
+}
+
 /* ---------------------------------------------------------------------------
    1. TOKENS — exact cosmic/nebula palette as specified
    --------------------------------------------------------------------------- */
@@ -498,15 +745,98 @@ body::before{
 }
 .ledger__v small{display:block;font-family:var(--font-sans);font-size:.72rem;font-weight:500;color:var(--ink-soft);margin-top:2px}
 
-/* Countdown — mission-clock tiles: dark plates, tabular gold digits */
-.count{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;margin-top:22px}
-.count__label{font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);width:100%;font-family:var(--font-mono)}
-.count__u{
-  text-align:center;min-width:56px;padding:10px 8px;
-  background:var(--panel);border:1px solid var(--line-ink);border-radius:6px;
+/* Countdown — Cosmic Neon / Black-Hole Treatment in Hero */
+.hero__count-wrap{
+  background:rgba(18,17,31,0.55);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(231,184,96,0.25);
+  border-radius:12px;
+  padding:22px 24px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.45), 0 0 35px -5px rgba(231,184,96,0.12), inset 0 0 1px rgba(255,255,255,0.1);
+  position:relative;
+  overflow:hidden;
 }
-.count__n{display:block;font-family:var(--font-mono);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--rust)}
-.count__t{display:block;font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-top:3px;font-family:var(--font-mono)}
+.hero__count-wrap::before{
+  content:"";
+  position:absolute;
+  top:-40%;
+  right:-40%;
+  width:140px;
+  height:140px;
+  background:radial-gradient(circle, rgba(231,184,96,0.15) 0%, rgba(124,92,255,0.1) 50%, transparent 70%);
+  pointer-events:none;
+  border-radius:50%;
+  filter:blur(20px);
+}
+.count{display:flex;flex-direction:column;gap:12px;margin:0}
+.count__head{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+}
+.count__pulse{
+  width:8px;
+  height:8px;
+  background:var(--rust);
+  border-radius:50%;
+  box-shadow:0 0 10px var(--rust), 0 0 18px var(--rust-hi);
+  animation:countPulse 2s infinite ease-in-out;
+}
+@keyframes countPulse{
+  0%,100%{transform:scale(1);opacity:.8}
+  50%{transform:scale(1.25);opacity:1;box-shadow:0 0 14px var(--rust-hi), 0 0 24px var(--rust)}
+}
+.count__label{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--rust-hi);
+  font-family:var(--font-mono);
+  margin:0;
+}
+.count__grid{
+  display:flex;
+  gap:10px;
+  width:100%;
+}
+.count__u{
+  flex:1;
+  text-align:center;
+  padding:12px 8px;
+  background:rgba(7,7,15,0.65);
+  border:1px solid rgba(231,184,96,0.2);
+  border-radius:8px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+  transition:border-color .3s, box-shadow .3s, transform .3s;
+}
+.count__u:hover{
+  border-color:rgba(231,184,96,0.45);
+  box-shadow:0 0 18px rgba(231,184,96,0.18);
+  transform:translateY(-2px);
+}
+.count__n{
+  display:block;
+  font-family:var(--font-mono);
+  font-size:clamp(1.4rem, 2.5vw, 1.85rem);
+  font-weight:700;
+  font-variant-numeric:tabular-nums;
+  color:var(--paper);
+  text-shadow:0 0 12px rgba(231,184,96,0.45);
+  line-height:1.1;
+}
+.count__t{
+  display:block;
+  font-size:9.5px;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  margin-top:5px;
+  font-family:var(--font-mono);
+}
 
 /* Marquee — continuous, ink-on-paper, the one "always moving" element in
    the hero. Pure CSS loop; paused under reduced motion. */
@@ -1156,6 +1486,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 </head>
 
 <body>
+<div id="black-hole-wrapper" class="black-hole-intro-overlay" aria-hidden="true"></div>
 <div class="stars" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 
@@ -1169,14 +1500,13 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
       </span>
       <span>
-        Founders Speak
-        <span class="brand__sub">Nirma University</span>
+        Stellar panel
+        <span class="brand__sub">Voices of Change &middot; Nirma University</span>
       </span>
     </a>
 
     <nav aria-label="Section navigation">
       <ul class="nav__links">
-        <li><a href="#about">About</a></li>
         <li><a href="#speakers">Panelists</a></li>
         <li><a href="#agenda">Agenda</a></li>
         <li><a href="#venue">Venue</a></li>
@@ -1213,18 +1543,17 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   </div>
   <div class="shell hero__in">
     <div class="hero__top">
-      <!-- TODO: organizing body -->
       <p class="eyebrow" style="margin:0">
-        <span class="ph">Organising body — E-Cell / Student Council / Dept.</span>
+        Organising Body &mdash; E-Cell &amp; Student Council
       </p>
       <span class="hero__coord">N&nbsp;23.0225&deg; &nbsp;E&nbsp;72.5714&deg; &mdash; <b>AHMEDABAD</b></span>
     </div>
 
-    <!-- TODO: event title + tagline -->
+    <!-- Event Title: Stellar panel: Voices of Change -->
     <h1 class="hero__title" data-parallax>
-      <span class="title-mask"><span class="title-line" style="--td:60ms">Founders</span></span>
-      <span class="title-mask"><span class="title-line title-line--accent" style="--td:170ms">Speak.</span></span>
-      <span class="title-mask"><span class="title-line title-line--rule" style="--td:280ms"><span class="rule" aria-hidden="true"></span>21.08</span></span>
+      <span class="title-mask"><span class="title-line" style="--td:60ms">Stellar</span></span>
+      <span class="title-mask"><span class="title-line title-line--accent" style="--td:170ms">panel.</span></span>
+      <span class="title-mask"><span class="title-line title-line--rule" style="--td:280ms"><span class="rule" aria-hidden="true"></span>Voices of Change</span></span>
     </h1>
 
     <div class="hero__grid">
@@ -1247,33 +1576,20 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       </div>
 
       <div class="reveal" style="--d:500ms">
-        <!-- ── Event facts. TODO: time, venue, mode ── -->
-        <dl class="ledger">
-          <div class="ledger__row">
-            <dt class="ledger__k">Date</dt>
-            <dd class="ledger__v">21 Aug 2026<small>Friday</small></dd>
+        <!-- Countdown. Cosmic neon card in Hero. -->
+        <div class="hero__count-wrap" id="countdown" hidden>
+          <div class="count">
+            <div class="count__head">
+              <span class="count__pulse" aria-hidden="true"></span>
+              <span class="count__label">Doors open in</span>
+            </div>
+            <div class="count__grid">
+              <div class="count__u"><span class="count__n" data-cd="d">--</span><span class="count__t">Days</span></div>
+              <div class="count__u"><span class="count__n" data-cd="h">--</span><span class="count__t">Hrs</span></div>
+              <div class="count__u"><span class="count__n" data-cd="m">--</span><span class="count__t">Min</span></div>
+              <div class="count__u"><span class="count__n" data-cd="s">--</span><span class="count__t">Sec</span></div>
+            </div>
           </div>
-          <div class="ledger__row">
-            <dt class="ledger__k">Time</dt>
-            <dd class="ledger__v"><span class="ph">TODO</span><small>Add IST start / end</small></dd>
-          </div>
-          <div class="ledger__row">
-            <dt class="ledger__k">Venue</dt>
-            <dd class="ledger__v"><span class="ph">TODO</span><small>Nirma University</small></dd>
-          </div>
-          <div class="ledger__row">
-            <dt class="ledger__k">Mode</dt>
-            <dd class="ledger__v"><span class="ph">TODO</span><small>Confirm livestream</small></dd>
-          </div>
-        </dl>
-
-        <!-- Countdown. Hidden automatically once the date passes. -->
-        <div class="count" id="countdown" hidden>
-          <span class="count__label">Doors open in</span>
-          <div class="count__u"><span class="count__n" data-cd="d">--</span><span class="count__t">Days</span></div>
-          <div class="count__u"><span class="count__n" data-cd="h">--</span><span class="count__t">Hrs</span></div>
-          <div class="count__u"><span class="count__n" data-cd="m">--</span><span class="count__t">Min</span></div>
-          <div class="count__u"><span class="count__n" data-cd="s">--</span><span class="count__t">Sec</span></div>
         </div>
       </div>
     </div>
@@ -1290,65 +1606,6 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         <span>Fintech</span><span>EV &amp; Mobility</span><span>Green Energy</span>
         <span>Entrepreneurship</span><span>Consulting &rarr; Founder</span>
         <span>Innovation</span><span>Leadership</span><span>Technical Freedom</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="shell waypoint-gap"><div class="waypoint waypoint--rust" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Why this panel</span></span><span class="waypoint__line"></span></div></div>
-
-<!-- ══════════════════════════════ ABOUT ══════════════════════════════ -->
-<!-- Themes are a numbered index (a contents page), not icon cards. -->
-<section class="sec" id="about">
-  <span class="about-ghost" aria-hidden="true">01</span>
-  <div class="shell about">
-    <div class="sec__head reveal">
-      <p class="eyebrow">About the panel</p>
-      <h2>Four operators who have<br />actually shipped.</h2>
-      <p class="lede dropcap">
-        Most startup advice is written by people who have never had to make
-        payroll. This panel is the opposite: a fintech founder who built India&rsquo;s
-        first financial platform for women, a CEO scaling an EV and clean-energy
-        group out of Gujarat, and alumni who traded consulting careers for
-        cap tables of their own.
-      </p>
-      <p class="lede" style="margin-top:18px">
-        Expect specifics &mdash; how the first cheque was raised, what broke at scale,
-        and what they would tell a final-year student sitting on an idea today.
-      </p>
-    </div>
-
-    <div class="themes reveal" style="--d:120ms">
-      <div class="theme">
-        <span class="theme__no" aria-hidden="true">01</span>
-        <div class="theme__body">
-          <h3>Fintech &amp; digital banking</h3>
-          <p>Building financial products in India &mdash; trust, regulation and distribution at scale.</p>
-        </div>
-      </div>
-
-      <div class="theme">
-        <span class="theme__no" aria-hidden="true">02</span>
-        <div class="theme__body">
-          <h3>EV &amp; green energy</h3>
-          <p>Hardware, capital intensity and the long game of building in clean mobility.</p>
-        </div>
-      </div>
-
-      <div class="theme">
-        <span class="theme__no" aria-hidden="true">03</span>
-        <div class="theme__body">
-          <h3>Consulting &rarr; founder</h3>
-          <p>Leaving a structured career path, and what the first eighteen months really cost.</p>
-        </div>
-      </div>
-
-      <div class="theme">
-        <span class="theme__no" aria-hidden="true">04</span>
-        <div class="theme__body">
-          <h3>Open floor Q&amp;A</h3>
-          <p>Half the room&rsquo;s questions, answered live. Bring the one you actually care about.</p>
-        </div>
       </div>
     </div>
   </div>
@@ -1374,7 +1631,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       </p>
     </div>
 
-    <div class="speakers" data-speakers-list></div>
+    <div class="infinite-menu-wrap" data-speakers-list></div>
   </div>
 </section>
 
@@ -1405,7 +1662,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       <div class="slot reveal">
         <span class="slot__no" aria-hidden="true">01</span>
         <div class="slot__body">
-          <span class="slot__t"><span class="ph">TODO 00:00</span></span>
+          <span class="slot__t">TBA</span>
           <h3>Registration &amp; welcome</h3>
           <p>Check-in, seating and a short welcome from the organising team.</p>
         </div>
@@ -1414,7 +1671,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       <div class="slot reveal" style="--d:70ms">
         <span class="slot__no" aria-hidden="true">02</span>
         <div class="slot__body">
-          <span class="slot__t"><span class="ph">TODO 00:00</span></span>
+          <span class="slot__t">TBA</span>
           <h3>Introducing the panel</h3>
           <p>Host sets the frame and introduces the four founders.</p>
         </div>
@@ -1423,7 +1680,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       <div class="slot slot--key reveal" style="--d:140ms">
         <span class="slot__no" aria-hidden="true">03</span>
         <div class="slot__body">
-          <span class="slot__t"><span class="ph">TODO 00:00</span></span>
+          <span class="slot__t">TBA</span>
           <h3>Panel discussion</h3>
           <p>The main session &mdash; fintech, EV and clean energy, and the move from a career to a company.</p>
         </div>
@@ -1432,7 +1689,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       <div class="slot reveal" style="--d:210ms">
         <span class="slot__no" aria-hidden="true">04</span>
         <div class="slot__body">
-          <span class="slot__t"><span class="ph">TODO 00:00</span></span>
+          <span class="slot__t">TBA</span>
           <h3>Open Q&amp;A</h3>
           <p>Questions from the floor, taken live.</p>
         </div>
@@ -1441,7 +1698,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       <div class="slot reveal" style="--d:280ms">
         <span class="slot__no" aria-hidden="true">05</span>
         <div class="slot__body">
-          <span class="slot__t"><span class="ph">TODO 00:00</span></span>
+          <span class="slot__t">TBA</span>
           <h3>Networking &amp; close</h3>
           <p>Informal networking with the panelists and refreshments.</p>
         </div>
@@ -1501,23 +1758,23 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
           </div>
           <div class="dl__row">
             <dt class="dl__k">Hall</dt>
-            <dd class="dl__v"><span class="ph">TODO &mdash; auditorium / seminar hall name and block</span></dd>
+            <dd class="dl__v">Auditorium / Seminar Hall (TBA)</dd>
           </div>
           <div class="dl__row">
             <dt class="dl__k">Entry gate</dt>
-            <dd class="dl__v"><span class="ph">TODO &mdash; which gate to use, and parking instructions</span></dd>
+            <dd class="dl__v">Gate &amp; parking details to be announced</dd>
           </div>
           <div class="dl__row">
             <dt class="dl__k">Reaching campus</dt>
-            <dd class="dl__v">The campus sits on the SG Highway, roughly 20&ndash;30 minutes from central Ahmedabad by cab or auto. <span class="ph">TODO &mdash; add nearest bus stop / BRTS stand and travel notes.</span></dd>
+            <dd class="dl__v">The campus sits on the SG Highway, roughly 20&ndash;30 minutes from central Ahmedabad by cab or auto.</dd>
           </div>
           <div class="dl__row">
             <dt class="dl__k">On arrival</dt>
-            <dd class="dl__v"><span class="ph">TODO &mdash; ID card requirement, reporting time, and any external-visitor process.</span></dd>
+            <dd class="dl__v">Reporting &amp; visitor entry details to be announced.</dd>
           </div>
           <div class="dl__row">
             <dt class="dl__k">Accessibility</dt>
-            <dd class="dl__v"><span class="ph">TODO &mdash; step-free access and seating support. Add a contact for assistance.</span></dd>
+            <dd class="dl__v">Step-free access available. Contact organizing team for assistance.</dd>
           </div>
         </dl>
       </div>
@@ -1554,7 +1811,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         </div>
         <div class="fact__row">
           <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Time</span>
-          <span class="fact__v"><span class="ph">TODO</span></span>
+          <span class="fact__v">TBA</span>
         </div>
         <div class="fact__row">
           <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Access</span>
@@ -1577,11 +1834,10 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
           <span class="brand__mark" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
           </span>
-          <span>Founders Speak<span class="brand__sub">Entrepreneurs Panel Discussion</span></span>
+          <span>Stellar panel<span class="brand__sub">Voices of Change &middot; Nirma University</span></span>
         </a>
         <p class="foot__blurb">
-          Hosted at Nirma University, Ahmedabad by
-          <span class="ph">TODO &mdash; organising body</span>.
+          Hosted at Nirma University, Ahmedabad by E-Cell &amp; Student Council.
         </p>
         <div class="socials">
           <!-- TODO: replace # with your real handles, or delete unused links -->
@@ -1600,7 +1856,6 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       <div>
         <h4>Event</h4>
         <ul>
-          <li><a href="#about">About the panel</a></li>
           <li><a href="#speakers">Panelists</a></li>
           <li><a href="#agenda">Agenda</a></li>
           <li><a href="#venue">Venue &amp; logistics</a></li>
@@ -1611,9 +1866,8 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       <div>
         <h4>Contact</h4>
         <address>
-          <!-- TODO: real contact email and phone -->
-          <a href="mailto:ecell@nirmauni.ac.in"><span class="ph">TODO &mdash; contact email</span></a><br />
-          <span class="ph">TODO &mdash; student coordinator &amp; phone</span><br /><br />
+          <a href="mailto:ecell@nirmauni.ac.in">ecell@nirmauni.ac.in</a><br />
+          Student Coordinators<br /><br />
           Nirma University<br />
           Sarkhej&ndash;Gandhinagar Highway<br />
           Ahmedabad, Gujarat 382481
@@ -1622,26 +1876,11 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     </div>
 
     <div class="foot__base">
-      <span>&copy; 2026 <span class="ph">TODO &mdash; organising body</span>, Nirma University.</span>
+      <span>&copy; 2026 Stellar panel: Voices of Change, Nirma University.</span>
       <span>21 Aug 2026 &middot; Ahmedabad</span>
     </div>
   </div>
 </footer>
-
-<!-- ══════════════════════════════ MISSION BAR ══════════════════════════════ -->
-<!-- Sticky bottom readout — mirrors the Technodyssey reference's bottom
-     bar. Dismissible; the countdown here is fed by the same
-     EVENT_STARTS_AT value as the hero (search "Countdown" in the script). -->
-<div class="missionbar" id="missionbar" role="complementary" aria-label="Event countdown and registration">
-  <span class="missionbar__dot" aria-hidden="true"></span>
-  <span class="missionbar__name">Founders Speak &middot; 2026</span>
-  <span class="missionbar__t" data-mb-time>T-000:00:00:00</span>
-  <span class="missionbar__spacer"></span>
-  <a class="missionbar__reg" href="#register" data-register>Register</a>
-  <button class="missionbar__close" type="button" data-mb-close aria-label="Dismiss">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
-  </button>
-</div>
 
 <script>
 (function () {
@@ -1698,6 +1937,8 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       linkedin: 'https://linkedin.com/in/nikitalalwani7'
     }
   ];
+
+  window.speakers = speakers;
 
   /* ---- Render speakers ---------------------------------------------- */
   var speakersList = document.querySelector('[data-speakers-list]');
@@ -1976,6 +2217,26 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     var timer = setInterval(tick, 1000);
   }
 })();
+</script>
+
+<script type="module">
+  import { BlackHoleIntroManager } from './js/introManager.js';
+  import { InfiniteSpeakerMenu } from './js/infiniteMenu.js';
+
+  function initApp() {
+    new BlackHoleIntroManager();
+
+    const speakersContainer = document.querySelector('[data-speakers-list]');
+    if (speakersContainer && window.speakers) {
+      new InfiniteSpeakerMenu(speakersContainer, window.speakers);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', initApp);
+  } else {
+    initApp();
+  }
 </script>
 </body>
 </html>
