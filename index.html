@@ -422,12 +422,13 @@ section[id],footer[id]{scroll-margin-top:84px}
   text-transform:uppercase;
   color:var(--accent);
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   gap:14px;
 }
 .eyebrow::before{
   content:"";
   width:26px;height:1px;
+  margin-top:.6em;
   background:var(--accent);
   flex:none;
   opacity:.7;
@@ -643,6 +644,7 @@ body::before{
   border-bottom:1px solid var(--line-ink);
   text-align:center;
 }
+.hero__top > *{min-width:0;max-width:100%}
 .hero__top .eyebrow{color:var(--rust)}
 .hero__top .eyebrow::before{background:var(--rust);opacity:1}
 .hero__coord{
@@ -655,6 +657,10 @@ body::before{
   white-space:nowrap;
 }
 .hero__coord b{color:var(--rust);font-weight:600;letter-spacing:.18em}
+
+@media (max-width:640px){
+  .hero__coord{white-space:normal;text-align:center}
+}
 
 /* Kinetic title — each line masked and raised on load, then given a hair
    of cursor-parallax depth. Restrained: a few pixels, never more. */
