@@ -205,31 +205,37 @@ export class InfiniteSpeakerMenu {
             // Inner Card Content (Avatar or Monogram + Tag)
             const initials = speaker.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
+            const rectX = 15;
+            const rectY = 15;
+            const rectW = width - 30;
+            const rectH = height - 30;
+
             ctx.save();
             ctx.beginPath();
-            ctx.arc(width / 2, height / 2 - 40, 140, 0, Math.PI * 2);
+            ctx.rect(rectX, rectY, rectW, rectH);
             ctx.closePath();
             ctx.clip();
 
             if (img && img.complete && img.naturalWidth !== 0) {
-                const diameter = 280;
+                // Cover-fit: scale image to fill the rectangle, cropping overflow
                 const aspect = img.naturalWidth / img.naturalHeight;
+                const rectAspect = rectW / rectH;
                 let dw, dh;
-                if (aspect > 1) {
-                    dh = diameter;
-                    dw = diameter * aspect;
+                if (aspect > rectAspect) {
+                    dh = rectH;
+                    dw = rectH * aspect;
                 } else {
-                    dw = diameter;
-                    dh = diameter / aspect;
+                    dw = rectW;
+                    dh = rectW / aspect;
                 }
-                const dx = (width / 2) - (dw / 2);
-                const dy = (height / 2 - 40) - (dh / 2);
+                const dx = (rectX + rectW / 2) - (dw / 2);
+                const dy = (rectY + rectH / 2) - (dh / 2);
                 ctx.drawImage(img, dx, dy, dw, dh);
             } else {
-                const circleGrad = ctx.createLinearGradient(100, 100, 400, 400);
-                circleGrad.addColorStop(0, '#A855F7');
-                circleGrad.addColorStop(1, '#22D3EE');
-                ctx.fillStyle = circleGrad;
+                const rectGrad = ctx.createLinearGradient(rectX, rectY, rectX + rectW, rectY + rectH);
+                rectGrad.addColorStop(0, '#A855F7');
+                rectGrad.addColorStop(1, '#22D3EE');
+                ctx.fillStyle = rectGrad;
                 ctx.fill();
 
                 // Monogram Text
@@ -237,28 +243,14 @@ export class InfiniteSpeakerMenu {
                 ctx.font = 'bold 110px Space Mono, sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(initials, width / 2, height / 2 - 40);
+                ctx.fillText(initials, rectX + rectW / 2, rectY + rectH / 2);
             }
             ctx.restore();
 
-            // Neon ring around avatar
+            // Neon border around avatar
             ctx.strokeStyle = index % 2 === 0 ? 'rgba(168, 85, 247, 0.9)' : 'rgba(34, 211, 238, 0.9)';
             ctx.lineWidth = 6;
-            ctx.beginPath();
-            ctx.arc(width / 2, height / 2 - 40, 140, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Tag Badge
-            ctx.fillStyle = '#FF8A3D';
-            ctx.font = 'bold 24px Space Mono, monospace';
-            ctx.textAlign = 'center';
-            ctx.fillText((speaker.tag || 'SPEAKER').toUpperCase(), width / 2, height / 2 + 140);
-
-            // Speaker Name
-            ctx.fillStyle = '#EDEAF5';
-            ctx.font = 'bold 42px General Sans, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(speaker.name, width / 2, height / 2 + 200);
+            ctx.strokeRect(rectX, rectY, rectW, rectH);
 
             texture.needsUpdate = true;
         };
