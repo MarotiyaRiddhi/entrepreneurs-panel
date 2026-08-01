@@ -19,10 +19,9 @@
 <!-- Inline SVG favicon: a small four-pointed sparkle on the nebula base -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23120E1F'/%3E%3Cpath d='M16 6l2.4 7.6L26 16l-7.6 2.4L16 26l-2.4-7.6L6 16l7.6-2.4z' fill='%23D98CAE'/%3E%3C/svg%3E" />
 
-<!-- Fonts: Playfair Display (display serif) + Inter (body/UI), per spec -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<!-- Fonts: Clash Display (monumental headline serif-alternative) + General Sans (body/UI) -->
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,500,400&f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet" />
 
 <script>document.documentElement.className = 'js';</script>
 
@@ -73,8 +72,20 @@
   --glass-line-hi:rgba(217,140,174,.34);
   --glow-hover:0 0 2px rgba(217,140,174,.25), 0 0 60px -8px rgba(139,30,79,.55);
 
-  --font-display:"Playfair Display","Iowan Old Style","Georgia",serif;
-  --font-sans:"Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --font-display:"Clash Display","Playfair Display","Iowan Old Style","Georgia",serif;
+  --font-sans:"General Sans","Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+
+  /* Hero "scene" tokens — an editorial paper-and-ink register, deliberately
+     distinct from the cosmic register used further down the page. Each
+     section is its own scene; this is scene one. */
+  --paper:#F3EEE2;
+  --paper-deep:#E9E1CE;
+  --ink:#16130D;
+  --ink-soft:#5B5546;
+  --rust:#AE3B24;
+  --rust-hi:#C94E30;
+  --line-ink:rgba(22,19,13,.16);
+  --line-ink-hi:rgba(22,19,13,.36);
 
   --shell:1180px;
   --pad:clamp(20px,5vw,48px);
@@ -210,52 +221,15 @@ body::before{
 }
 
 /* Film grain — SVG turbulence, tiled, low opacity, blend-mode overlay so it
-   reads as texture rather than a visible pattern. Essential to the look. */
+   reads as texture rather than a visible pattern. Runs the full page,
+   over both the paper and ink registers. */
 .grain{
   position:fixed;inset:0;
   z-index:3;
   pointer-events:none;
-  opacity:.09;
+  opacity:.07;
   mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* Nebula glow — layered radial gradients forming a soft vortex, positioned
-   behind the hero. Given a slow scroll-parallax drift via JS (transform),
-   with a static fallback for reduced-motion / no-JS. */
-.nebula{
-  position:absolute;
-  top:-18%;left:50%;
-  width:min(1400px,180vw);
-  height:min(1100px,140vw);
-  transform:translateX(-50%);
-  z-index:0;
-  pointer-events:none;
-  background:
-    radial-gradient(38% 42% at 50% 38%, var(--nebula-hi) 0%, rgba(178,58,107,.55) 26%, transparent 62%),
-    radial-gradient(58% 58% at 50% 42%, var(--nebula-core) 0%, rgba(139,30,79,.4) 38%, transparent 68%),
-    radial-gradient(75% 70% at 50% 46%, rgba(139,30,79,.22) 0%, transparent 70%);
-  filter:blur(6px);
-  will-change:transform;
-}
-
-/* Sparkle stars — inline SVG four-pointed shapes, scattered as decoration.
-   Positions are per-instance via inline style; base rules just set common
-   behaviour. A subset twinkles via opacity pulse (respects reduced motion). */
-.sparkle{
-  position:absolute;
-  z-index:1;
-  pointer-events:none;
-  color:var(--star);
-}
-.sparkle svg{width:100%;height:100%;display:block}
-
-.js .sparkle--twinkle{
-  animation:twinkle var(--tw-dur,4.5s) ease-in-out var(--tw-delay,0s) infinite;
-}
-@keyframes twinkle{
-  0%,100%{opacity:var(--tw-lo,.25)}
-  50%{opacity:var(--tw-hi,.95)}
 }
 
 /* ---------------------------------------------------------------------------
@@ -312,16 +286,14 @@ body::before{
    --------------------------------------------------------------------------- */
 .nav{
   position:sticky;top:0;z-index:60;
-  background:rgba(18,14,31,.72);
-  backdrop-filter:blur(14px) saturate(1.3);
-  -webkit-backdrop-filter:blur(14px) saturate(1.3);
+  background:var(--ink);
   border-bottom:1px solid transparent;
   transition:border-color .3s var(--ease);
 }
-.nav.is-stuck{border-bottom-color:var(--glass-line)}
+.nav.is-stuck{border-bottom-color:var(--rust)}
 .nav__in{
   display:flex;align-items:center;gap:20px;
-  height:72px;
+  height:68px;
 }
 
 .brand{
@@ -330,16 +302,16 @@ body::before{
   font-family:var(--font-display);
   font-weight:500;
   letter-spacing:.015em;
-  font-size:1.1rem;
-  color:var(--text);
+  font-size:1.05rem;
+  color:var(--paper);
   margin-right:auto;
 }
-.brand__mark{width:20px;height:20px;flex:none;color:var(--accent)}
+.brand__mark{width:18px;height:18px;flex:none;color:var(--rust-hi)}
 .brand__sub{
   font-family:var(--font-sans);
-  color:var(--text-muted);
+  color:rgba(243,238,226,.5);
   font-weight:500;
-  font-size:.74rem;
+  font-size:.72rem;
   letter-spacing:.06em;
   display:block;
 }
@@ -352,10 +324,10 @@ body::before{
 }
 .nav__links a{
   text-decoration:none;
-  font-size:.9rem;
+  font-size:.88rem;
   font-weight:500;
   letter-spacing:.02em;
-  color:var(--text-muted);
+  color:rgba(243,238,226,.58);
   transition:color .2s var(--ease);
   position:relative;
 }
@@ -363,132 +335,191 @@ body::before{
   content:"";
   position:absolute;left:0;bottom:-6px;
   width:100%;height:1px;
-  background:var(--accent);
+  background:var(--rust-hi);
   transform:scaleX(0);
   transform-origin:left;
   transition:transform .26s var(--ease);
 }
-.nav__links a:hover{color:var(--text)}
+.nav__links a:hover{color:var(--paper)}
 .nav__links a:hover::after{transform:scaleX(1)}
 
 @media (min-width:900px){.nav__links{display:flex}}
 
 /* ---------------------------------------------------------------------------
-   7. HERO
+   7. HERO — scene one. Paper &amp; ink register, deliberately apart from the
+      cosmic register used below. Asymmetric, not centred; the marquee and
+      the kinetic headline carry the section rather than any glass or glow.
    --------------------------------------------------------------------------- */
 .hero{
   position:relative;
   overflow:hidden;
-  padding-block:clamp(64px,9vw,112px) 0;
+  background:var(--paper);
+  color:var(--ink);
 }
-.hero__in{position:relative;z-index:2}
+.hero::before{
+  /* two faint registration lines — a printer's crop mark, not a "grid bg" */
+  content:"";
+  position:absolute;inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    linear-gradient(var(--line-ink),var(--line-ink)) left 12% top/1px 100% no-repeat,
+    linear-gradient(var(--line-ink),var(--line-ink)) right 12% top/1px 100% no-repeat;
+  opacity:.6;
+}
+.hero__in{
+  position:relative;z-index:2;
+  padding-block:clamp(48px,7vw,84px) 0;
+}
 
-.dateline{
+.hero__top{
   display:flex;
   flex-wrap:wrap;
   align-items:baseline;
   justify-content:space-between;
-  gap:8px 16px;
-  margin-bottom:32px;
+  gap:10px 20px;
+  padding-bottom:22px;
+  border-bottom:1px solid var(--line-ink);
 }
-.dateline__coord{
+.hero__top .eyebrow{color:var(--rust)}
+.hero__top .eyebrow::before{background:var(--rust);opacity:1}
+.hero__coord{
   font-family:var(--font-sans);
   font-size:.72rem;
   font-weight:500;
   letter-spacing:.14em;
-  color:var(--text-muted);
+  color:var(--ink-soft);
   font-variant-numeric:tabular-nums;
   white-space:nowrap;
 }
-.dateline__coord b{color:var(--accent);font-weight:600;letter-spacing:.18em}
+.hero__coord b{color:var(--rust);font-weight:600;letter-spacing:.18em}
 
-.hero h1{margin-block:22px 0}
-.hero h1 em{
-  font-style:italic;
-  color:var(--nebula-hi);
-  background:linear-gradient(96deg,var(--nebula-hi),var(--accent));
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-
-.hero__lede{max-width:58ch;margin-top:28px}
-
-.hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
-
-.hero__note{font-size:.84rem;color:var(--text-muted);margin-top:14px}
-
-/* Spec strip — the four event facts, glass panel */
-.spec{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:1px;
-  margin-top:clamp(44px,6vw,68px);
-  background:var(--glass-line);
-  border-radius:var(--radius);
-  overflow:hidden;
-  border:1px solid var(--glass-line);
-}
-.spec__cell{
-  position:relative;
-  background:rgba(18,14,31,.72);
-  backdrop-filter:blur(6px);
-  padding:22px 24px;
-}
-.spec__k{
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:var(--accent);
+/* Kinetic title — each line masked and raised on load, then given a hair
+   of cursor-parallax depth. Restrained: a few pixels, never more. */
+.hero__title{margin-block:28px 0}
+.title-mask{overflow:hidden;display:block}
+.title-line{
   display:block;
-  margin-bottom:9px;
-}
-.spec__v{
   font-family:var(--font-display);
-  font-size:1.15rem;
   font-weight:500;
-  color:var(--text);
-  line-height:1.3;
+  font-size:clamp(2.9rem,10vw,6.6rem);
+  line-height:.98;
+  letter-spacing:-.01em;
+  color:var(--ink);
+  transform:translateY(112%);
+  transition:transform .95s var(--ease);
+  will-change:transform;
 }
-.spec__v small{
-  display:block;
-  font-family:var(--font-sans);
-  font-size:.78rem;
-  font-weight:500;
-  color:var(--text-muted);
-  margin-top:4px;
+.js .title-line{transition-delay:var(--td,0ms)}
+.hero.is-loaded .title-line{transform:translateY(0)}
+.title-line--accent{color:var(--rust)}
+.title-line--rule{
+  display:flex;align-items:center;gap:18px;
+  font-size:clamp(2.9rem,10vw,6.6rem);
 }
-@media (min-width:640px){.spec{grid-template-columns:repeat(2,1fr)}}
-@media (min-width:960px){.spec{grid-template-columns:repeat(4,1fr)}}
+.title-line--rule .rule{
+  height:2px;flex:1 1 auto;background:var(--ink);
+  transform-origin:left;transform:scaleX(0);
+  transition:transform 1.1s var(--ease);
+  transition-delay:.5s;
+}
+.hero.is-loaded .title-line--rule .rule{transform:scaleX(1)}
 
-/* Countdown */
-.count{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:30px}
-.count__label{
-  font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--text-muted);width:100%;
+.hero__grid{
+  display:grid;
+  gap:clamp(28px,4vw,40px);
+  margin-top:clamp(36px,5vw,54px);
+  padding-bottom:clamp(40px,5vw,56px);
 }
-.count__u{
-  min-width:66px;padding:11px 12px;border-radius:12px;
-  background:var(--glass);
-  border:1px solid var(--glass-line);
-  text-align:center;
-}
-.count__n{
-  display:block;font-family:var(--font-display);font-size:1.4rem;font-weight:600;
-  font-variant-numeric:tabular-nums;color:var(--accent);
-}
-.count__t{
-  display:block;font-size:9.5px;font-weight:600;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--text-muted);margin-top:3px;
+@media (min-width:880px){
+  .hero__grid{grid-template-columns:1.3fr .7fr;align-items:end}
 }
 
-/* Quiet theme ticker */
-.ticker{margin-top:clamp(52px,7vw,84px);border-top:1px solid var(--glass-line);padding-block:20px;position:relative;z-index:2}
-.ticker__row{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center}
-.ticker__row span{font-size:.8rem;font-weight:500;letter-spacing:.02em;color:var(--text-muted);display:flex;align-items:center;gap:10px}
-.ticker__row span::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--accent)}
-.ticker__row span:first-child::before{display:none}
+.hero__lede{max-width:46ch;color:var(--ink-soft)}
+.hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
+.hero__note{font-size:.84rem;color:var(--ink-soft);margin-top:14px}
+
+/* Architectural buttons for the paper scene — no gradient, no pill glow */
+.btn--ink{
+  background:var(--ink);color:var(--paper);
+  border-radius:2px;
+  position:relative;overflow:hidden;
+}
+.btn--ink span,.btn--ink svg{position:relative;z-index:1}
+.btn--ink::before{
+  content:"";position:absolute;inset:0;
+  background:var(--rust);
+  transform:translateY(101%);
+  transition:transform .4s var(--ease);
+}
+.btn--ink:hover::before{transform:translateY(0)}
+.btn--ink:hover{transform:none;box-shadow:none}
+
+.btn--outline{
+  border:1.5px solid var(--ink);
+  color:var(--ink);
+  border-radius:2px;
+  background:transparent;
+}
+.btn--outline:hover{
+  background:var(--ink);color:var(--paper);
+  transform:none;box-shadow:none;
+}
+
+/* Ledger — the four event facts, as a printed spec sheet, not a glass panel */
+.ledger{border-top:1px solid var(--ink)}
+.ledger__row{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:14px;padding:13px 0;border-bottom:1px solid var(--line-ink);
+}
+.ledger__k{
+  font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--rust);white-space:nowrap;
+}
+.ledger__v{
+  font-family:var(--font-display);font-size:1rem;font-weight:500;
+  color:var(--ink);text-align:right;line-height:1.3;
+}
+.ledger__v small{display:block;font-family:var(--font-sans);font-size:.72rem;font-weight:500;color:var(--ink-soft);margin-top:2px}
+
+/* Countdown — plain ink digits, no chips */
+.count{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-top:22px}
+.count__label{font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);width:100%}
+.count__u{text-align:left}
+.count__n{display:block;font-family:var(--font-display);font-size:1.7rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+.count__t{display:block;font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px}
+
+/* Marquee — continuous, ink-on-paper, the one "always moving" element in
+   the hero. Pure CSS loop; paused under reduced motion. */
+.marquee{
+  position:relative;z-index:2;
+  background:var(--ink);color:var(--paper);
+  overflow:hidden;
+  border-top:1px solid var(--rust);
+}
+.marquee__track{
+  display:flex;width:max-content;
+  animation:marquee 26s linear infinite;
+}
+.marquee__set{display:flex;flex:none;align-items:center}
+.marquee__set span{
+  padding:16px clamp(20px,3vw,36px);
+  font-family:var(--font-display);
+  font-size:clamp(.95rem,1.6vw,1.2rem);
+  font-weight:500;
+  white-space:nowrap;
+  display:flex;align-items:center;gap:clamp(20px,3vw,36px);
+}
+.marquee__set span::after{content:"—";color:var(--rust)}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.hero:hover .marquee__track{animation-play-state:paused}
+
+@media (prefers-reduced-motion:reduce){
+  .marquee__track{animation:none}
+  .title-line,.title-line--rule .rule{transition:none}
+}
+
+.hero .ph{color:var(--rust);background:rgba(174,59,36,.08);border-bottom-color:var(--rust)}
 
 /* ---------------------------------------------------------------------------
    8. SECTION SHELL
@@ -808,8 +839,6 @@ body::before{
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .js .reveal{opacity:1;transform:none;transition:none}
-  .js .sparkle--twinkle{animation:none;opacity:.6}
-  .nebula{transform:translateX(-50%) !important}
   *,*::before,*::after{
     animation-duration:.001ms !important;
     animation-iteration-count:1 !important;
@@ -818,38 +847,14 @@ body::before{
 }
 
 @media print{
-  .grain,.nebula,.sparkle,.nav{display:none}
+  .grain,.nav{display:none}
   body{background:#fff;color:#000}
 }
 </style>
 </head>
 
 <body>
-<div class="nebula" id="nebula" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
-
-<!-- Scattered sparkle stars — inline SVG four-pointed shapes, a few twinkling -->
-<div class="sparkle sparkle--twinkle" style="top:9%;left:8%;width:14px;height:14px;--tw-dur:5.2s;--tw-delay:.2s;--tw-lo:.2;--tw-hi:.9" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
-</div>
-<div class="sparkle" style="top:16%;left:22%;width:6px;height:6px;opacity:.5" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-</div>
-<div class="sparkle sparkle--twinkle" style="top:6%;right:14%;width:10px;height:10px;--tw-dur:4.1s;--tw-delay:1.1s;--tw-lo:.25;--tw-hi:1" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-</div>
-<div class="sparkle" style="top:28%;right:6%;width:18px;height:18px;opacity:.3" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
-</div>
-<div class="sparkle sparkle--twinkle" style="top:38%;left:4%;width:8px;height:8px;--tw-dur:6s;--tw-delay:.6s;--tw-lo:.2;--tw-hi:.85" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-</div>
-<div class="sparkle" style="top:65%;right:10%;width:9px;height:9px;opacity:.4" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-</div>
-<div class="sparkle sparkle--twinkle" style="top:82%;left:12%;width:12px;height:12px;--tw-dur:5.6s;--tw-delay:1.6s;--tw-lo:.2;--tw-hi:.9" aria-hidden="true">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
-</div>
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -882,73 +887,89 @@ body::before{
 <main id="main">
 
 <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
-<section class="hero" id="top">
+<!-- Scene one: paper &amp; ink. Kinetic, masked title lines rise on load and
+     drift a few px with the cursor (JS, .hero__title[data-parallax]); the
+     ink marquee at the base is the section's one restless element. -->
+<section class="hero" id="top" data-hero>
   <div class="shell hero__in">
-    <div class="dateline reveal">
+    <div class="hero__top">
       <!-- TODO: organizing body -->
       <p class="eyebrow" style="margin:0">
         <span class="ph">Organising body — E-Cell / Student Council / Dept.</span>
       </p>
-      <span class="dateline__coord">23.0225&deg;N&nbsp; 72.5714&deg;E &mdash; <b>AHMEDABAD</b></span>
+      <span class="hero__coord">N&nbsp;23.0225&deg; &nbsp;E&nbsp;72.5714&deg; &mdash; <b>AHMEDABAD</b></span>
     </div>
 
     <!-- TODO: event title + tagline -->
-    <h1 class="reveal" style="--d:60ms">
-      Founders Speak: <em>Building</em><br />India&rsquo;s Next-Gen Startups
+    <h1 class="hero__title" data-parallax>
+      <span class="title-mask"><span class="title-line" style="--td:60ms">Founders</span></span>
+      <span class="title-mask"><span class="title-line title-line--accent" style="--td:170ms">Speak.</span></span>
+      <span class="title-mask"><span class="title-line title-line--rule" style="--td:280ms"><span class="rule" aria-hidden="true"></span>21.08</span></span>
     </h1>
 
-    <p class="lede hero__lede reveal" style="--d:120ms">
-      Four founders. One stage. An unfiltered conversation on building companies
-      in fintech, electric mobility and clean energy &mdash; and on the leap from
-      a safe career to a company of your own.
-    </p>
+    <div class="hero__grid">
+      <div class="reveal" style="--d:420ms">
+        <p class="lede hero__lede">
+          Four founders. One stage. An unfiltered conversation on building
+          companies in fintech, electric mobility and clean energy &mdash; and
+          on the leap from a safe career to a company of your own.
+        </p>
 
-    <div class="hero__cta reveal" style="--d:180ms">
-      <a class="btn btn--primary" href="#register" data-register>
-        Register &mdash; free entry
-        <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a class="btn btn--ghost" href="#speakers">Meet the panel</a>
+        <div class="hero__cta">
+          <a class="btn btn--ink" href="#register" data-register data-magnetic>
+            <span>Register &mdash; free entry</span>
+            <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn--outline" href="#speakers"><span>Meet the panel</span></a>
+        </div>
+
+        <p class="hero__note" data-register-note hidden></p>
+      </div>
+
+      <div class="reveal" style="--d:500ms">
+        <!-- ── Event facts. TODO: time, venue, mode ── -->
+        <dl class="ledger">
+          <div class="ledger__row">
+            <dt class="ledger__k">Date</dt>
+            <dd class="ledger__v">21 Aug 2026<small>Friday</small></dd>
+          </div>
+          <div class="ledger__row">
+            <dt class="ledger__k">Time</dt>
+            <dd class="ledger__v"><span class="ph">TODO</span><small>Add IST start / end</small></dd>
+          </div>
+          <div class="ledger__row">
+            <dt class="ledger__k">Venue</dt>
+            <dd class="ledger__v"><span class="ph">TODO</span><small>Nirma University</small></dd>
+          </div>
+          <div class="ledger__row">
+            <dt class="ledger__k">Mode</dt>
+            <dd class="ledger__v"><span class="ph">TODO</span><small>Confirm livestream</small></dd>
+          </div>
+        </dl>
+
+        <!-- Countdown. Hidden automatically once the date passes. -->
+        <div class="count" id="countdown" hidden>
+          <span class="count__label">Doors open in</span>
+          <div class="count__u"><span class="count__n" data-cd="d">--</span><span class="count__t">Days</span></div>
+          <div class="count__u"><span class="count__n" data-cd="h">--</span><span class="count__t">Hrs</span></div>
+          <div class="count__u"><span class="count__n" data-cd="m">--</span><span class="count__t">Min</span></div>
+          <div class="count__u"><span class="count__n" data-cd="s">--</span><span class="count__t">Sec</span></div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <p class="hero__note reveal" style="--d:200ms" data-register-note hidden></p>
-
-    <!-- ── Event facts. TODO: time, venue, mode ── -->
-    <dl class="spec reveal" style="--d:240ms">
-      <div class="spec__cell">
-        <dt class="spec__k">Date</dt>
-        <dd class="spec__v">21 August 2026<small>Friday</small></dd>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <div class="marquee__set">
+        <span>Fintech</span><span>EV &amp; Mobility</span><span>Green Energy</span>
+        <span>Entrepreneurship</span><span>Consulting &rarr; Founder</span>
+        <span>Innovation</span><span>Leadership</span><span>Technical Freedom</span>
       </div>
-      <div class="spec__cell">
-        <dt class="spec__k">Time</dt>
-        <dd class="spec__v"><span class="ph">TODO</span><small>Add IST start / end</small></dd>
-      </div>
-      <div class="spec__cell">
-        <dt class="spec__k">Venue</dt>
-        <dd class="spec__v"><span class="ph">TODO</span><small>Nirma University, Ahmedabad</small></dd>
-      </div>
-      <div class="spec__cell">
-        <dt class="spec__k">Mode</dt>
-        <dd class="spec__v"><span class="ph">TODO</span><small>Confirm livestream</small></dd>
-      </div>
-    </dl>
-
-    <!-- Countdown. Hidden automatically once the date passes. -->
-    <div class="count reveal" style="--d:280ms" id="countdown" hidden>
-      <span class="count__label">Doors open in</span>
-      <div class="count__u"><span class="count__n" data-cd="d">--</span><span class="count__t">Days</span></div>
-      <div class="count__u"><span class="count__n" data-cd="h">--</span><span class="count__t">Hrs</span></div>
-      <div class="count__u"><span class="count__n" data-cd="m">--</span><span class="count__t">Min</span></div>
-      <div class="count__u"><span class="count__n" data-cd="s">--</span><span class="count__t">Sec</span></div>
-    </div>
-
-    <div class="ticker reveal" style="--d:300ms" aria-hidden="true">
-      <div class="ticker__row">
-        <span>Fintech</span>
-        <span>EV &amp; Mobility</span>
-        <span>Green Energy</span>
-        <span>Consulting &rarr; Founder</span>
-        <span>Founder Q&amp;A</span>
+      <div class="marquee__set">
+        <span>Fintech</span><span>EV &amp; Mobility</span><span>Green Energy</span>
+        <span>Entrepreneurship</span><span>Consulting &rarr; Founder</span>
+        <span>Innovation</span><span>Leadership</span><span>Technical Freedom</span>
       </div>
     </div>
   </div>
@@ -1426,27 +1447,63 @@ body::before{
     nav.classList.toggle('is-stuck', window.scrollY > 12);
   };
   onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
 
-  /* ---- Nebula parallax drift (calm, slow — disabled if reduced motion) */
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var nebula = document.getElementById('nebula');
-  var ticking = false;
 
-  var applyParallax = function () {
-    ticking = false;
-    if (!nebula) return;
-    var y = window.scrollY * 0.08;
-    nebula.style.transform = 'translate(-50%,' + y + 'px)';
-  };
+  /* ---- Hero: kinetic title reveal on load -------------------------
+     Lines rise out of their masks a beat after paint, staggered by the
+     --td custom property set inline on each .title-line. */
+  var hero = document.querySelector('[data-hero]');
+  if (hero) {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { hero.classList.add('is-loaded'); });
+    });
+  }
 
-  var onScrollAll = function () {
-    onScroll();
-    if (!reduced && !ticking) {
-      ticking = true;
-      requestAnimationFrame(applyParallax);
-    }
-  };
-  window.addEventListener('scroll', onScrollAll, { passive: true });
+  /* ---- Hero: cursor-responsive title parallax ---------------------
+     Each title line drifts a few px toward the pointer, lerped toward
+     target each frame for a calm, weighted feel. Skipped entirely under
+     reduced motion or on touch (no persistent pointer). */
+  var titleWrap = document.querySelector('[data-parallax]');
+  if (titleWrap && !reduced && matchMedia('(hover:hover)').matches) {
+    var lines = Array.prototype.slice.call(titleWrap.querySelectorAll('.title-line'));
+    var tx = 0, ty = 0, cx = 0, cy = 0;
+    var raf = null;
+
+    var loop = function () {
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      lines.forEach(function (el, i) {
+        var depth = (i + 1) * 0.35;
+        el.style.transform = 'translate(' + (cx * depth).toFixed(2) + 'px,' + (cy * depth).toFixed(2) + 'px)';
+      });
+      raf = requestAnimationFrame(loop);
+    };
+
+    hero.addEventListener('mousemove', function (e) {
+      var r = hero.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width - 0.5) * 16;
+      ty = ((e.clientY - r.top) / r.height - 0.5) * 10;
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+    hero.addEventListener('mouseleave', function () { tx = 0; ty = 0; });
+  }
+
+  /* ---- Magnetic button ---------------------------------------------
+     The primary CTA's label nudges toward the cursor within its own
+     bounds — a small tactile detail, not a full magnetic-cursor gimmick. */
+  if (!reduced && matchMedia('(hover:hover)').matches) {
+    document.querySelectorAll('[data-magnetic]').forEach(function (btn) {
+      btn.addEventListener('mousemove', function (e) {
+        var r = btn.getBoundingClientRect();
+        var x = (e.clientX - r.left - r.width / 2) * 0.28;
+        var y = (e.clientY - r.top - r.height / 2) * 0.5;
+        btn.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+      });
+      btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
+    });
+  }
 
   /* ---- Scroll reveal --------------------------------------------- */
   var items = document.querySelectorAll('.reveal');
