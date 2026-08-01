@@ -37,17 +37,19 @@
        underline so you can spot them at a glance. Delete the class="ph"
        wrapper once real copy is in.
 
-  THE THREE THINGS TO SET FIRST (in the <script> near the bottom):
+  THE THINGS TO SET FIRST (in the <script> near the bottom):
     - REGISTRATION_URL  -> your Google Form / Luma link
     - EVENT_STARTS_AT   -> exact date+time, drives the countdown
-
-  ADDING SPEAKER HEADSHOTS:
-    Find the .avatar block in each speaker card. Replace the monogram
-    <div> with:  <img class="avatar-img" src="assets/name.jpg" alt="..." />
+    - speakers          -> the panel config object (search "SPEAKER DATA").
+                            The whole speakers section renders from this
+                            array — edit names/bios/links there, not in
+                            the HTML. Leave `image` empty for an initials
+                            placeholder; point it at a file once you have
+                            a headshot.
 
   DEPLOYING:
-    Self-contained file (fonts load from Google Fonts CDN, everything
-    else is inline). No build step. Drop it on Vercel / GitHub Pages /
+    Self-contained file (fonts load from Fontshare CDN, everything else
+    is inline). No build step. Drop it on Vercel / GitHub Pages /
     Netlify as-is.
   ============================================================================
 -->
@@ -629,8 +631,19 @@ body::before{
 }
 
 /* ---------------------------------------------------------------------------
-   10. SPEAKERS
+   10. SPEAKERS — scene three. Back to paper (the rhythm: paper / ink /
+      paper), but each portrait is its own ink duotone panel, so the
+      contrast lives inside the row instead of between sections. Rows
+      alternate image side and stagger vertically — a spread, not a grid —
+      and every portrait unmasks gradually as it enters view.
    --------------------------------------------------------------------------- */
+#speakers{background:var(--paper);color:var(--ink)}
+#speakers .eyebrow{color:var(--rust)}
+#speakers .eyebrow::before{background:var(--rust);opacity:1}
+#speakers h2{color:var(--ink)}
+#speakers .lede{color:var(--ink-soft)}
+#speakers .ph{color:var(--rust);background:rgba(174,59,36,.08);border-bottom-color:var(--rust)}
+
 .speakers-wrap{position:relative}
 .speakers-wrap > .sec__head{position:relative;z-index:1}
 .ghost-num{
@@ -640,101 +653,107 @@ body::before{
   font-weight:600;
   font-size:clamp(140px,24vw,300px);
   line-height:1;
-  color:rgba(217,140,174,.07);
+  color:rgba(22,19,13,.055);
   z-index:0;
   user-select:none;
   pointer-events:none;
 }
 
-.speakers{position:relative;z-index:1;display:grid;gap:22px;margin-top:clamp(44px,5vw,64px)}
-@media (min-width:680px){.speakers{grid-template-columns:repeat(2,1fr)}}
-@media (min-width:1080px){.speakers{grid-template-columns:repeat(4,1fr)}}
+.speakers{position:relative;z-index:1;margin-top:clamp(48px,6vw,72px);border-top:1px solid var(--line-ink)}
 
-.card{
+.speaker{
   position:relative;
-  display:flex;flex-direction:column;
-  padding:28px 26px 26px;
-  border-radius:var(--radius);
-  background:var(--glass);
-  border:1px solid var(--glass-line);
-  transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease),background .35s var(--ease);
+  display:grid;
+  gap:26px;
+  padding-block:clamp(36px,5vw,56px);
+  border-bottom:1px solid var(--line-ink);
 }
-.card:hover{
-  transform:translateY(-5px);
-  border-color:var(--glass-line-hi);
-  background:var(--glass-hi);
-  box-shadow:var(--glow-hover);
+@media (min-width:820px){
+  .speaker{grid-template-columns:300px 1fr;align-items:center;gap:clamp(40px,5vw,72px)}
+  .speaker:nth-child(even){grid-template-columns:1fr 300px;transform:translateY(clamp(10px,2vw,24px))}
+  .speaker:nth-child(even) .portrait{order:2}
+  .speaker:nth-child(even) .speaker__body{order:1}
+  .speaker:nth-child(even) .speaker__index{right:auto;left:0}
 }
 
-.card__no{
+.speaker__index{
   position:absolute;
-  top:20px;right:20px;
-  display:flex;align-items:center;gap:5px;
-  padding:5px 10px;
-  border-radius:999px;
-  background:rgba(139,30,79,.22);
-  border:1px solid var(--glass-line);
-  color:var(--accent);
-  font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-}
-.card__no svg{width:9px;height:9px}
-
-/* Avatar: monogram tile now, <img class="avatar-img"> later */
-.avatar{
-  width:80px;height:80px;border-radius:50%;
-  background:rgba(139,30,79,.22);
-  border:1px solid var(--glass-line);
-  margin-bottom:22px;flex:none;
-  display:grid;place-items:center;
-}
-.avatar__in{
-  font-family:var(--font-display);
-  font-size:1.35rem;font-weight:600;letter-spacing:.02em;
-  color:var(--accent);
-}
-.avatar-img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:rgba(139,30,79,.22)}
-
-.card h3{margin-bottom:8px}
-
-.card__role{
-  font-family:var(--font-sans);
-  font-size:.82rem;font-weight:600;letter-spacing:.02em;line-height:1.5;
-  color:var(--accent);
-  padding-bottom:16px;margin-bottom:16px;
-  border-bottom:1px dashed var(--glass-line);
+  top:clamp(4px,1vw,14px);right:0;
+  font-family:var(--font-display);font-weight:600;
+  font-size:clamp(2.8rem,6vw,4.6rem);
+  color:rgba(22,19,13,.08);
+  line-height:1;z-index:0;
+  user-select:none;pointer-events:none;
 }
 
-.card__bio{font-size:.92rem;line-height:1.75;color:var(--text-muted);margin-bottom:20px}
-
-.card__foot{
-  margin-top:auto;padding-top:18px;
-  border-top:1px solid var(--glass-line);
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
+/* Portrait — a duotone panel, monogram now, <img> later. Unmasks with a
+   clip-path wipe + slow scale settle the moment the row enters view. */
+.portrait{
+  position:relative;
+  aspect-ratio:4/5;
+  overflow:hidden;
+  background:var(--ink);
+  border-radius:2px;
+  z-index:1;
 }
+.js .portrait{clip-path:inset(0 0 100% 0);transition:clip-path 1.05s var(--ease) .05s}
+.js .reveal.is-in .portrait{clip-path:inset(0 0 0% 0)}
+
+.portrait__inner{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(158deg,var(--ink) 0%,#2b2116 100%);
+  color:rgba(243,238,226,.92);
+  font-family:var(--font-display);font-weight:600;
+  font-size:clamp(2.6rem,5vw,3.6rem);letter-spacing:.02em;
+}
+img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--paper)}
+.js .portrait__inner{transform:scale(1.14);transition:transform 1.3s var(--ease) .05s}
+.js .reveal.is-in .portrait__inner{transform:scale(1)}
+
+.portrait__tag{
+  position:absolute;top:14px;left:14px;z-index:1;
+  padding:5px 11px;border-radius:999px;
+  background:rgba(22,19,13,.45);
+  border:1px solid rgba(243,238,226,.28);
+  color:var(--paper);
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+}
+
+.speaker__body{position:relative;z-index:1}
+.speaker__name{margin-bottom:8px;color:var(--ink)}
+.speaker__role{
+  font-family:var(--font-sans);font-size:.86rem;font-weight:600;letter-spacing:.02em;
+  color:var(--rust);margin-bottom:16px;
+}
+.speaker__bio{font-size:.98rem;line-height:1.8;color:var(--ink-soft);max-width:56ch;margin-bottom:22px}
+.speaker__foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 
 .tag{
   display:inline-flex;align-items:center;gap:6px;
-  padding:5px 12px;border-radius:999px;
-  background:rgba(139,30,79,.22);
-  border:1px solid var(--glass-line);
-  font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--accent);white-space:nowrap;
+  padding:6px 14px;border-radius:999px;
+  border:1px solid var(--line-ink-hi);
+  font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--rust);white-space:nowrap;
 }
 
 .li-link{
-  width:36px;height:36px;flex:none;
-  display:grid;place-items:center;border-radius:10px;
-  background:var(--glass);
-  border:1px solid var(--glass-line);
-  color:var(--text-muted);
+  width:38px;height:38px;flex:none;
+  display:grid;place-items:center;border-radius:999px;
+  border:1px solid var(--line-ink-hi);
+  color:var(--ink);
   transition:all .22s var(--ease);
 }
 .li-link svg{width:16px;height:16px}
 .li-link:hover{
-  background:var(--nebula-core);
-  border-color:var(--nebula-hi);
-  color:var(--star);
+  background:var(--ink);
+  border-color:var(--ink);
+  color:var(--paper);
   transform:translateY(-2px);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .portrait,.portrait__inner{transition:none !important;clip-path:inset(0) !important;transform:none !important}
 }
 
 /* ---------------------------------------------------------------------------
@@ -1086,12 +1105,16 @@ body::before{
 <div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Meet the panel</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ SPEAKERS ══════════════════════════════ -->
+<!-- Scene three: paper again, but each portrait is its own ink duotone
+     panel — a spread, not a card grid. Markup below is rendered from the
+     single `speakers` config object in the closing script (search for
+     "SPEAKER DATA"): edit names, bios and image paths there, not here. -->
 <section class="sec" id="speakers">
   <div class="shell speakers-wrap">
-    <span class="ghost-num" aria-hidden="true">04</span>
+    <span class="ghost-num" aria-hidden="true" data-speaker-count>04</span>
 
     <div class="sec__head reveal">
-      <p class="eyebrow">The panel &mdash; 04 confirmed</p>
+      <p class="eyebrow">The panel &mdash; <span data-speaker-count>04</span> confirmed</p>
       <h2>Who you&rsquo;ll hear from.</h2>
       <p class="lede">
         Four founders and operators across fintech, clean energy and consulting.
@@ -1099,130 +1122,7 @@ body::before{
       </p>
     </div>
 
-    <div class="speakers">
-
-      <!-- ── 01 · Jasmin Gupta ── -->
-      <article class="card reveal">
-        <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-          01
-        </span>
-
-        <div class="avatar">
-          <div class="avatar__in" aria-hidden="true">JG</div>
-        </div>
-        <!--
-          TODO: swap the block above for the real headshot —
-          <div class="avatar"><img class="avatar-img" src="assets/jasmin-gupta.jpg" alt="Portrait of Jasmin Gupta" /></div>
-        -->
-
-        <h3>Jasmin Gupta</h3>
-        <p class="card__role">
-          <!-- TODO: replace with the confirmed one-line designation -->
-          Fintech Leader &middot; TEDx Speaker
-        </p>
-        <p class="card__bio">
-          Globally recognised fintech expert and TEDx speaker. Former Co-founder
-          &amp; CEO of LXME, India&rsquo;s first financial platform built for women.
-          Has scaled digital banking products including NiyoX and FreoSave.
-        </p>
-
-        <div class="card__foot">
-          <span class="tag">Fintech</span>
-          <a class="li-link" href="https://linkedin.com/in/jasminbgupta-digitalbank" target="_blank" rel="noopener noreferrer" aria-label="Jasmin Gupta on LinkedIn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.4 2.5 4.4 5.9V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H9z"/></svg>
-          </a>
-        </div>
-      </article>
-
-      <!-- ── 02 · Dhairya Shah ── -->
-      <article class="card reveal" style="--d:90ms">
-        <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-          02
-        </span>
-
-        <div class="avatar">
-          <div class="avatar__in" aria-hidden="true">DS</div>
-        </div>
-
-        <h3>Dhairya Shah</h3>
-        <p class="card__role">
-          <!-- TODO: confirm exact one-line designation -->
-          Founder &amp; CEO, Mindra Group
-        </p>
-        <p class="card__bio">
-          Leads Mindra Group across Mindra EV, Mindra Green Energy and Mindra New
-          Energy. A familiar name on campus &mdash; he recruits at Nirma University,
-          so many of you already know the brand before you know the founder.
-        </p>
-
-        <div class="card__foot">
-          <span class="tag">Home-grown CEO</span>
-          <a class="li-link" href="https://linkedin.com/in/dhairya-shah-5a2ba990" target="_blank" rel="noopener noreferrer" aria-label="Dhairya Shah on LinkedIn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.4 2.5 4.4 5.9V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H9z"/></svg>
-          </a>
-        </div>
-      </article>
-
-      <!-- ── 03 · Devansh Rana ── -->
-      <article class="card reveal" style="--d:180ms">
-        <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-          03
-        </span>
-
-        <div class="avatar">
-          <div class="avatar__in" aria-hidden="true">DR</div>
-        </div>
-
-        <h3>Devansh Rana</h3>
-        <p class="card__role">
-          <!-- TODO: confirm current venture + title -->
-          <span class="ph">TODO &mdash; current title &amp; venture</span>
-        </p>
-        <p class="card__bio">
-          Ex-Deloitte and a Nirma University alumnus.
-          <span class="ph">TODO &mdash; one line on what he is building now.</span>
-        </p>
-
-        <div class="card__foot">
-          <span class="tag">Nirma Alumnus</span>
-          <a class="li-link" href="https://linkedin.com/in/devanshrana" target="_blank" rel="noopener noreferrer" aria-label="Devansh Rana on LinkedIn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.4 2.5 4.4 5.9V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H9z"/></svg>
-          </a>
-        </div>
-      </article>
-
-      <!-- ── 04 · Nikita Lalwani ── -->
-      <article class="card reveal" style="--d:270ms">
-        <span class="card__no" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-          04
-        </span>
-
-        <div class="avatar">
-          <div class="avatar__in" aria-hidden="true">NL</div>
-        </div>
-
-        <h3>Nikita Lalwani</h3>
-        <p class="card__role">
-          <!-- TODO: confirm current title + venture -->
-          <span class="ph">TODO &mdash; current title &amp; venture</span>
-        </p>
-        <p class="card__bio">
-          <span class="ph">TODO &mdash; two to three lines of bio, to be supplied.</span>
-        </p>
-
-        <div class="card__foot">
-          <span class="tag">Panelist</span>
-          <a class="li-link" href="https://linkedin.com/in/nikitalalwani7" target="_blank" rel="noopener noreferrer" aria-label="Nikita Lalwani on LinkedIn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.4 2.5 4.4 5.9V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H9z"/></svg>
-          </a>
-        </div>
-      </article>
-
-    </div>
+    <div class="speakers" data-speakers-list></div>
   </div>
 </section>
 
@@ -1459,6 +1359,98 @@ body::before{
 
   // TODO: exact start time. Format: YYYY-MM-DDTHH:MM:SS+05:30  (IST)
   var EVENT_STARTS_AT = '2026-08-21T10:00:00+05:30';
+
+  /* ═══════════════════════════════════════════════════════════════════
+     SPEAKER DATA — the single source of truth for the panel section.
+     Leave `title` / `bio` empty ('') until confirmed; the render below
+     shows a dotted "TODO" placeholder automatically. Leave `image`
+     empty to show an initials monogram instead of a photo — once you
+     have a headshot, just point it at the file (e.g. "assets/name.jpg").
+     ═══════════════════════════════════════════════════════════════════ */
+  var speakers = [
+    {
+      name: 'Jasmin Gupta',
+      title: 'Fintech Leader · TEDx Speaker',
+      tag: 'Fintech',
+      bio: 'Globally recognised fintech expert and TEDx speaker. Former Co-founder & CEO of LXME, India’s first financial platform built for women. Has scaled digital banking products including NiyoX and FreoSave.',
+      image: '',
+      linkedin: 'https://linkedin.com/in/jasminbgupta-digitalbank'
+    },
+    {
+      name: 'Dhairya Shah',
+      title: 'Founder & CEO, Mindra Group',
+      tag: 'Home-grown CEO',
+      bio: 'Leads Mindra Group across Mindra EV, Mindra Green Energy and Mindra New Energy. A familiar name on campus — he recruits at Nirma University, so many of you already know the brand before you know the founder.',
+      image: '',
+      linkedin: 'https://linkedin.com/in/dhairya-shah-5a2ba990'
+    },
+    {
+      name: 'Devansh Rana',
+      title: '',
+      tag: 'Nirma Alumnus',
+      bio: 'Ex-Deloitte and a Nirma University alumnus.',
+      image: '',
+      linkedin: 'https://linkedin.com/in/devanshrana'
+    },
+    {
+      name: 'Nikita Lalwani',
+      title: '',
+      tag: 'Panelist',
+      bio: '',
+      image: '',
+      linkedin: 'https://linkedin.com/in/nikitalalwani7'
+    }
+  ];
+
+  /* ---- Render speakers ---------------------------------------------- */
+  var speakersList = document.querySelector('[data-speakers-list]');
+
+  var esc = function (s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+
+  var initials = function (name) {
+    return name.split(/\s+/).map(function (w) { return w[0]; }).join('').slice(0, 2).toUpperCase();
+  };
+
+  var field = function (value, placeholder) {
+    return value ? esc(value) : '<span class="ph">' + esc(placeholder) + '</span>';
+  };
+
+  if (speakersList) {
+    speakersList.innerHTML = speakers.map(function (sp, i) {
+      var no = String(i + 1).padStart(2, '0');
+      var portrait = sp.image
+        ? '<img class="portrait__inner portrait__img" src="' + esc(sp.image) + '" alt="Portrait of ' + esc(sp.name) + '" loading="lazy" />'
+        : '<div class="portrait__inner portrait__ph" aria-hidden="true">' + esc(initials(sp.name)) + '</div>';
+
+      return (
+        '<article class="speaker reveal" style="--d:' + (i * 70) + 'ms">' +
+          '<span class="speaker__index" aria-hidden="true">' + no + '</span>' +
+          '<div class="portrait">' + portrait +
+            '<span class="portrait__tag">' + esc(sp.tag) + '</span>' +
+          '</div>' +
+          '<div class="speaker__body">' +
+            '<h3 class="speaker__name">' + esc(sp.name) + '</h3>' +
+            '<p class="speaker__role">' + field(sp.title, 'Title & venture to be confirmed') + '</p>' +
+            '<p class="speaker__bio">' + field(sp.bio, 'Bio to be supplied.') + '</p>' +
+            '<div class="speaker__foot">' +
+              '<span class="tag">' + esc(sp.tag) + '</span>' +
+              '<a class="li-link" href="' + esc(sp.linkedin) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(sp.name) + ' on LinkedIn">' +
+                '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.75-1.95 4 0 4.4 2.5 4.4 5.9V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H9z"/></svg>' +
+              '</a>' +
+            '</div>' +
+          '</div>' +
+        '</article>'
+      );
+    }).join('');
+  }
+
+  document.querySelectorAll('[data-speaker-count]').forEach(function (el) {
+    el.textContent = String(speakers.length).padStart(2, '0');
+  });
 
   /* ═══════════════════════════════════════════════════════════════════
      Nothing below needs editing.
