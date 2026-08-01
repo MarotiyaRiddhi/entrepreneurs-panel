@@ -823,36 +823,56 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 .slot--key h3{color:var(--rust-hi)}
 
 /* ---------------------------------------------------------------------------
-   12. VENUE
+   12. VENUE — scene six. Paper, with the map treated as a surveyor's
+      plate (corner ticks, blueprint linework in ink) rather than a
+      rounded glass tile, and logistics as a plain printed schedule.
    --------------------------------------------------------------------------- */
+#venue{background:var(--paper);color:var(--ink)}
+#venue .eyebrow{color:var(--rust)}
+#venue .eyebrow::before{background:var(--rust);opacity:1}
+#venue h2{color:var(--ink)}
+#venue .ph{color:var(--rust);background:rgba(174,59,36,.08);border-bottom-color:var(--rust)}
+
 .venue{display:grid;gap:clamp(30px,4vw,46px);align-items:start}
 @media (min-width:900px){.venue{grid-template-columns:1fr 1fr}}
 
 .map{
   position:relative;aspect-ratio:4/3;
-  border-radius:var(--radius);overflow:hidden;
-  background:var(--glass);
-  border:1px solid var(--glass-line);
+  border-radius:2px;overflow:hidden;
+  background:var(--paper-deep);
+  border:1px solid var(--line-ink-hi);
   display:grid;place-items:center;
 }
 .map iframe{width:100%;height:100%;border:0;display:block}
 .map__art{position:absolute;inset:0;width:100%;height:100%}
+/* Surveyor's-plate corner ticks — a map plate, not a card */
+.map__frame{position:absolute;inset:14px;z-index:2;pointer-events:none}
+.map__frame i{
+  position:absolute;width:16px;height:16px;
+  border-color:var(--ink);border-style:solid;border-width:0;
+  font-style:normal;
+}
+.map__frame i:nth-child(1){top:0;left:0;border-top-width:2px;border-left-width:2px}
+.map__frame i:nth-child(2){top:0;right:0;border-top-width:2px;border-right-width:2px}
+.map__frame i:nth-child(3){bottom:0;left:0;border-bottom-width:2px;border-left-width:2px}
+.map__frame i:nth-child(4){bottom:0;right:0;border-bottom-width:2px;border-right-width:2px}
+
 .map__tag{
-  position:relative;text-align:center;padding:20px 24px;border-radius:14px;
-  background:rgba(18,14,31,.85);
-  border:1px solid var(--glass-line);
+  position:relative;z-index:1;text-align:center;padding:20px 24px;border-radius:2px;
+  background:var(--paper);
+  border:1px solid var(--line-ink-hi);
   max-width:82%;
 }
-.map__tag b{display:block;font-family:var(--font-display);font-size:.95rem;font-weight:500;color:var(--text);margin-bottom:7px}
-.map__tag span{font-size:.85rem;color:var(--text-muted);line-height:1.6}
+.map__tag b{display:block;font-family:var(--font-display);font-size:.95rem;font-weight:500;color:var(--ink);margin-bottom:7px}
+.map__tag span{font-size:.85rem;color:var(--ink-soft);line-height:1.6}
 
-.dl{display:grid;gap:0;margin-top:8px}
-.dl__row{padding:18px 0;border-bottom:1px solid var(--glass-line);display:grid;gap:5px 20px}
-.dl__row:first-child{padding-top:0}
+.dl{display:grid;gap:0;margin-top:8px;border-top:1px solid var(--line-ink)}
+.dl__row{padding:18px 0;border-bottom:1px solid var(--line-ink);display:grid;gap:5px 20px}
+.dl__row:first-child{padding-top:18px}
 .dl__row:last-child{border-bottom:0}
-.dl__k{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
-.dl__v{font-size:.95rem;color:var(--text-muted);line-height:1.75}
-.dl__v strong{color:var(--text);font-weight:600}
+.dl__k{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--rust)}
+.dl__v{font-size:.95rem;color:var(--ink-soft);line-height:1.75}
+.dl__v strong{color:var(--ink);font-weight:600}
 @media (min-width:560px){.dl__row{grid-template-columns:140px 1fr}}
 
 /* ---------------------------------------------------------------------------
@@ -937,40 +957,44 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 @media (prefers-reduced-motion:reduce){.ticket{transition:none}}
 
 /* ---------------------------------------------------------------------------
-   14. FOOTER
+   14. FOOTER — closing scene, ink. Bookends the nav's solid ink bar at
+      the top of the page.
    --------------------------------------------------------------------------- */
+#contact{background:var(--ink);color:var(--paper)}
+#contact .ph{color:var(--rust-hi);background:rgba(174,59,36,.14);border-bottom-color:var(--rust-hi)}
+
 .foot{padding-block:clamp(56px,7vw,80px) 32px}
 .foot__top{
   display:grid;gap:38px;padding-bottom:38px;
-  border-bottom:1px solid var(--glass-line);
+  border-bottom:1px solid rgba(243,238,226,.16);
 }
 @media (min-width:820px){.foot__top{grid-template-columns:1.6fr 1fr 1fr}}
 .foot h4{
   font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--accent);margin-bottom:18px;
+  color:var(--rust-hi);margin-bottom:18px;
 }
-.foot__blurb{font-size:.9rem;color:var(--text-muted);max-width:42ch;margin-top:16px;line-height:1.75}
+.foot__blurb{font-size:.9rem;color:rgba(243,238,226,.6);max-width:42ch;margin-top:16px;line-height:1.75}
 .foot ul{list-style:none;padding:0;display:grid;gap:12px}
 .foot ul a,.foot address a{
-  font-size:.9rem;color:var(--text-muted);text-decoration:none;
+  font-size:.9rem;color:rgba(243,238,226,.6);text-decoration:none;
   transition:color .2s var(--ease);
 }
-.foot ul a:hover,.foot address a:hover{color:var(--accent)}
-.foot address{font-style:normal;font-size:.9rem;color:var(--text-muted);line-height:1.8}
+.foot ul a:hover,.foot address a:hover{color:var(--rust-hi)}
+.foot address{font-style:normal;font-size:.9rem;color:rgba(243,238,226,.6);line-height:1.8}
 
 .socials{display:flex;gap:10px;margin-top:20px}
 .socials a{
-  width:38px;height:38px;display:grid;place-items:center;border-radius:11px;
-  background:var(--glass);border:1px solid var(--glass-line);color:var(--text-muted);
+  width:38px;height:38px;display:grid;place-items:center;border-radius:999px;
+  background:transparent;border:1px solid rgba(243,238,226,.28);color:rgba(243,238,226,.7);
   transition:all .22s var(--ease);
 }
 .socials svg{width:16px;height:16px}
-.socials a:hover{background:var(--nebula-core);border-color:var(--nebula-hi);color:var(--star);transform:translateY(-2px)}
+.socials a:hover{background:var(--rust-hi);border-color:var(--rust-hi);color:var(--paper);transform:translateY(-2px)}
 
 .foot__base{
   padding-top:28px;display:flex;flex-wrap:wrap;gap:12px 24px;
   justify-content:space-between;align-items:center;
-  font-size:.8rem;color:var(--text-muted);
+  font-size:.8rem;color:rgba(243,238,226,.5);
 }
 
 /* ---------------------------------------------------------------------------
@@ -1280,9 +1304,11 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   </div>
 </section>
 
-<div class="shell waypoint-gap"><div class="waypoint" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Getting there</span></span><span class="waypoint__line"></span></div></div>
+<div class="shell waypoint-gap"><div class="waypoint waypoint--rust" aria-hidden="true"><span class="waypoint__line"></span><span class="waypoint__mark"><svg class="waypoint__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg><span class="waypoint__txt">Getting there</span></span><span class="waypoint__line"></span></div></div>
 
 <!-- ══════════════════════════════ VENUE ══════════════════════════════ -->
+<!-- Scene six: paper. The map placeholder reads as a surveyor's plate
+     (corner ticks + blueprint linework) rather than a rounded glass tile. -->
 <section class="sec" id="venue">
   <div class="shell">
     <div class="sec__head reveal" style="margin-bottom:clamp(36px,5vw,52px)">
@@ -1301,18 +1327,19 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         <svg class="map__art" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <pattern id="mgrid" width="34" height="34" patternUnits="userSpaceOnUse">
-              <path d="M34 0H0v34" fill="none" stroke="rgba(217,140,174,.12)" stroke-width="1"/>
+              <path d="M34 0H0v34" fill="none" stroke="rgba(22,19,13,.08)" stroke-width="1"/>
             </pattern>
           </defs>
           <rect width="400" height="300" fill="url(#mgrid)"/>
-          <path d="M-10 210 L150 150 L260 190 L410 130" fill="none" stroke="rgba(217,140,174,.18)" stroke-width="11" stroke-linecap="round"/>
-          <path d="M70 -10 L110 120 L90 310" fill="none" stroke="rgba(217,140,174,.14)" stroke-width="8" stroke-linecap="round"/>
-          <path d="M300 -10 L285 140 L330 310" fill="none" stroke="rgba(217,140,174,.14)" stroke-width="8" stroke-linecap="round"/>
-          <circle cx="200" cy="128" r="46" fill="rgba(139,30,79,.22)"/>
-          <circle cx="200" cy="128" r="46" fill="none" stroke="rgba(217,140,174,.4)" stroke-width="1" stroke-dasharray="4 5"/>
-          <path d="M200 108a11 11 0 0 1 11 11c0 8-11 21-11 21s-11-13-11-21a11 11 0 0 1 11-11z" fill="#D98CAE"/>
-          <circle cx="200" cy="119" r="4" fill="#120E1F"/>
+          <path d="M-10 210 L150 150 L260 190 L410 130" fill="none" stroke="rgba(22,19,13,.12)" stroke-width="11" stroke-linecap="round"/>
+          <path d="M70 -10 L110 120 L90 310" fill="none" stroke="rgba(22,19,13,.09)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M300 -10 L285 140 L330 310" fill="none" stroke="rgba(22,19,13,.09)" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="200" cy="128" r="46" fill="rgba(174,59,36,.1)"/>
+          <circle cx="200" cy="128" r="46" fill="none" stroke="rgba(174,59,36,.4)" stroke-width="1" stroke-dasharray="4 5"/>
+          <path d="M200 108a11 11 0 0 1 11 11c0 8-11 21-11 21s-11-13-11-21a11 11 0 0 1 11-11z" fill="#AE3B24"/>
+          <circle cx="200" cy="119" r="4" fill="#F3EEE2"/>
         </svg>
+        <span class="map__frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
         <div class="map__tag">
           <b>Map embed placeholder</b>
           <span>Paste the Google Maps <code>&lt;iframe&gt;</code> here &mdash; see the comment just above this block in the HTML.</span>
