@@ -554,7 +554,8 @@ body::before{
 .nav.is-stuck{border-bottom-color:var(--rust)}
 .nav__in{
   display:flex;align-items:center;gap:20px;
-  height:68px;
+  min-height:68px;
+  padding-block:12px;
 }
 
 .brand{
@@ -566,6 +567,7 @@ body::before{
   font-size:1.05rem;
   color:var(--paper);
   margin-right:auto;
+  min-width:0;
 }
 .brand__mark{width:18px;height:18px;flex:none;color:var(--rust-hi)}
 .brand__sub{
@@ -575,6 +577,13 @@ body::before{
   font-size:.72rem;
   letter-spacing:.06em;
   display:block;
+  white-space:normal;
+}
+
+@media (max-width:420px){
+  .brand{font-size:.92rem;gap:8px}
+  .brand__sub{font-size:.64rem;letter-spacing:.04em}
+  .nav__in{gap:12px}
 }
 
 .nav__links{
@@ -1609,7 +1618,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     <h1 class="hero__title" data-parallax>
       <span class="title-mask"><span class="title-line" style="--td:60ms">Stellar</span></span>
       <span class="title-mask"><span class="title-line title-line--accent" style="--td:170ms">panel.</span></span>
-      <span class="title-mask"><span class="title-line title-line--rule" style="--td:280ms"><span class="rule" aria-hidden="true"></span>Voices of Change</span></span>
+      <span class="title-mask"><span class="title-line title-line--rule" style="--td:280ms">Voices of Change</span></span>
     </h1>
 
     <!-- Countdown placed directly below Voices of Change -->
