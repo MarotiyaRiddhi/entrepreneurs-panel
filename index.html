@@ -1091,113 +1091,228 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 @media (min-width:560px){.dl__row{grid-template-columns:140px 1fr}}
 
 /* ---------------------------------------------------------------------------
-   13. CTA BAND — the conversion point. Registration renders as an actual
-      admit-one ticket: an elevated panel with a punched, perforated stub
-      rather than a glass card. It tilts a few degrees toward the cursor
-      (a physical, "hold it up to the light" gesture) and the register
-      button is magnetic.
+   13. CTA BAND — the conversion point: a closed envelope, center stage,
+      that the visitor opens themselves. "Open Your Invitation" asks for
+      a name, then plays a short sequence — the wax seal cracks, the
+      flap folds open, the letter slides up out of the envelope to a
+      partial reveal, pauses, then finishes sliding out and settles
+      centered — before auto-downloading the personalised keepsake.
+      Neither the envelope nor the letter rotates; the envelope is the
+      whole scene, not set dressing behind a card.
    --------------------------------------------------------------------------- */
 .band{position:relative;overflow:hidden;background:var(--ink)}
 .band__in{position:relative;z-index:2;padding-block:clamp(68px,9vw,108px)}
 
-.ticket{
-  position:relative;max-width:920px;margin-inline:auto;
-  display:grid;grid-template-columns:1fr;
-  background:var(--panel);color:var(--paper);
-  border:1px solid var(--line-ink);
-  border-radius:6px;
-  box-shadow:0 40px 100px -30px rgba(0,0,0,.6);
-  transition:transform .5s var(--ease);
-  will-change:transform;
-}
-@media (min-width:760px){
-  .ticket{grid-template-columns:1fr 260px;transform-style:preserve-3d}
-  /* punched notches at the perforation seam, colored to match the page
-     behind the ticket so they read as cut-outs, not decoration */
-  .ticket::before,.ticket::after{
-    content:"";position:absolute;right:246px;
-    width:28px;height:28px;border-radius:50%;
-    background:var(--ink);z-index:3;
-  }
-  .ticket::before{top:-14px}
-  .ticket::after{bottom:-14px}
+.invite-exp{position:relative}
+.invite-exp .sparkle{color:var(--rust-hi)}
+
+.invite-exp__stage{
+  position:relative;
+  width:100%;max-width:640px;margin-inline:auto;
+  min-height:clamp(420px,58vw,540px);
 }
 
-/* Wax-seal monogram — stamped in the top-right corner of the ticket,
-   reads "SBNU" the way an initial mark reads on a wax seal. */
-.ticket__seal{
-  position:absolute;top:24px;right:24px;z-index:4;
-  width:64px;height:64px;border-radius:50%;
+/* -- Closed envelope: cream, landscape, the hero of this interaction -- */
+.envelope{
+  position:absolute;left:50%;top:50%;z-index:2;
+  width:min(520px,88vw);aspect-ratio:3/2;
+  transform:translate(-50%,-50%);
+  perspective:1200px;
+  transition:opacity .9s var(--ease), transform .9s var(--ease);
+}
+[data-state="revealed"] .envelope{
+  opacity:0;transform:translate(-50%,-50%) scale(.94);pointer-events:none;
+}
+
+.envelope__body{
+  position:absolute;inset:0;
+  background:linear-gradient(165deg,#F3E7C9,#E9D8AC);
+  border-radius:8px;
+  box-shadow:0 45px 100px -30px rgba(0,0,0,.7), inset 0 0 0 1px rgba(169,120,46,.25);
+}
+.envelope__body::after{
+  /* faint texture speckle so the paper doesn't read flat */
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  background-image:radial-gradient(rgba(169,120,46,.14) 1px, transparent 1px);
+  background-size:5px 5px;opacity:.5;
+}
+
+.envelope__flap{
+  position:absolute;left:0;right:0;top:0;height:58%;z-index:2;
+  background:linear-gradient(165deg,#EEDFB8,#E3D0A0);
+  clip-path:polygon(0 0,100% 0,50% 82%);
+  transform-origin:top center;
+  transform:rotateX(0deg);
+  transition:transform 1s var(--ease);
+  box-shadow:0 2px 12px rgba(0,0,0,.18);
+}
+[data-state="opening"] .envelope__flap,
+[data-state="peek"] .envelope__flap,
+[data-state="revealed"] .envelope__flap{transform:rotateX(-150deg)}
+
+.envelope__seal{
+  position:absolute;left:50%;top:48%;z-index:4;
+  width:clamp(50px,9vw,62px);height:clamp(50px,9vw,62px);
+  transform:translate(-50%,-50%);
+  border-radius:48% 52% 53% 47% / 47% 53% 48% 52%;
+  background:#7A1E1E;
+  box-shadow:
+    inset -5px -7px 12px rgba(0,0,0,.35),
+    inset 5px 7px 12px rgba(200,120,110,.3),
+    0 12px 22px -8px rgba(0,0,0,.5);
   display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 35% 30%, var(--rust-hi), var(--rust) 70%);
-  box-shadow:0 8px 20px -6px rgba(0,0,0,.55), inset 0 0 0 1px rgba(0,0,0,.12);
 }
-.ticket__seal span{
-  font-family:var(--font-mono);font-size:.68rem;font-weight:700;
-  letter-spacing:.06em;color:var(--ink);line-height:1;
+.envelope__seal span{
+  font-family:var(--font-display);font-weight:700;font-size:.9rem;
+  letter-spacing:.03em;color:rgba(224,160,150,.55);
+  text-shadow:1px 1px 0 rgba(30,6,6,.6);
+}
+[data-state="breaking"] .envelope__seal{animation:sealCrack .55s ease-out forwards}
+[data-state="opening"] .envelope__seal,
+[data-state="peek"] .envelope__seal,
+[data-state="revealed"] .envelope__seal{opacity:0}
+@keyframes sealCrack{
+  0%{transform:translate(-50%,-50%) scale(1) rotate(0deg);opacity:1}
+  35%{transform:translate(-50%,-50%) scale(1.1) rotate(-3deg);opacity:1}
+  100%{transform:translate(-50%,-50%) scale(.8) rotate(10deg);opacity:0}
 }
 
-.ticket__main{position:relative;padding:clamp(40px,6vw,60px);padding-right:calc(clamp(40px,6vw,60px) + 76px);text-align:left;border-radius:6px 0 0 6px}
-.ticket__main h2{margin-block:16px 16px;color:var(--paper)}
-.ticket__main .lede{color:rgba(243,238,226,.62)}
-.ticket__main .btn{margin-top:28px}
-.ticket .eyebrow{color:var(--rust-hi)}
-.ticket .eyebrow::before{background:var(--rust-hi);opacity:1}
-.ticket .ph{color:var(--rust-hi);background:rgba(231,184,96,.14);border-bottom-color:var(--rust-hi)}
+/* -- The invitation: hidden inside the envelope, revealed with a
+   clip-path wipe (so it visibly slides up out of the opening) rather
+   than a plain fade. Reuses the paper/gold/serif system from the
+   downloadable PNG. Never rotated. -- */
+.ticket{
+  --invite-paper:#F7F1E3;
+  --invite-ink:#2A2018;
+  --invite-ink-muted:rgba(42,32,24,.62);
+  --invite-gold:#A9782E;
+  --invite-wax:#7A1E1E;
+
+  position:absolute;left:50%;top:50%;z-index:1;
+  width:100%;max-width:520px;margin-inline:auto;
+  background:var(--invite-paper);color:var(--invite-ink);
+  border-radius:4px;
+  padding:clamp(40px,6vw,60px) clamp(28px,5vw,48px) clamp(48px,7vw,64px);
+  text-align:center;
+  box-shadow:0 50px 120px -30px rgba(0,0,0,.65);
+  opacity:0;
+  clip-path:inset(0 0 100% 0);
+  transform:translate(-50%,-50%) translateY(26px);
+  transition:opacity .5s var(--ease), clip-path 1s var(--ease), transform 1s var(--ease);
+}
+[data-state="peek"] .ticket{
+  z-index:3;opacity:1;
+  clip-path:inset(0 0 22% 0);
+  transform:translate(-50%,-50%) translateY(6px);
+}
+[data-state="revealed"] .ticket{
+  z-index:3;opacity:1;
+  clip-path:inset(0 0 0 0);
+  transform:translate(-50%,-50%) translateY(0);
+}
+.ticket::before{
+  /* thin inset gold frame — the one border this card uses */
+  content:"";position:absolute;inset:16px;
+  border:1px solid rgba(169,120,46,.4);
+  pointer-events:none;
+}
+.ticket::after{
+  /* small diamond ornament, top center */
+  content:"";position:absolute;top:32px;left:50%;
+  width:8px;height:8px;transform:translateX(-50%) rotate(45deg);
+  background:var(--invite-gold);
+}
+
+.ticket__kicker{
+  position:relative;margin-top:22px;
+  font-family:var(--font-display);font-size:.72rem;font-weight:700;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--invite-gold);
+}
+.ticket__kicker::after{
+  content:"";display:block;width:64px;height:1px;
+  background:var(--invite-gold);margin:18px auto 0;
+}
+
+.ticket__main{position:relative;padding:0;margin-top:26px;text-align:center}
+.ticket__main h2{margin-block:16px 6px;color:var(--invite-ink)}
+.ticket__main .lede{color:var(--invite-ink-muted);max-width:44ch;margin-inline:auto}
+.ticket .eyebrow{color:var(--invite-gold)}
+.ticket .eyebrow::before{background:var(--invite-gold);opacity:1}
+.ticket .ph{color:var(--invite-gold);background:rgba(169,120,46,.12);border-bottom-color:var(--invite-gold)}
+
+.invite-card__name{
+  margin-top:6px;
+  font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:700;
+  color:var(--invite-ink);
+}
 
 .ticket__stub{
-  position:relative;
-  background:rgba(243,238,226,.045);
-  padding:clamp(28px,4vw,34px) clamp(28px,4vw,32px);
-  display:flex;flex-direction:column;gap:16px;
-  border-top:2px dashed rgba(243,238,226,.25);
-  border-radius:0 0 6px 6px;
+  position:relative;margin-top:30px;
+  display:flex;justify-content:center;
+  border-block:1px solid rgba(169,120,46,.3);
+  padding-block:20px;
 }
-@media (min-width:760px){
-  .ticket__stub{
-    border-top:0;border-left:2px dashed rgba(243,238,226,.25);
-    border-radius:0 6px 6px 0;justify-content:center;
-  }
-}
-.fact__row{display:flex;flex-direction:column;gap:4px}
+.fact__row{flex:1;max-width:160px;display:flex;flex-direction:column;align-items:center;gap:6px;padding-inline:14px;position:relative}
+.fact__row + .fact__row::before{content:"";position:absolute;left:0;top:12%;bottom:12%;width:1px;background:rgba(169,120,46,.25)}
 .fact__k{
-  font-size:.66rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--rust-hi);display:flex;align-items:center;gap:7px;
+  font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--invite-gold);
 }
-.fact__k svg{width:9px;height:9px;flex:none}
-.fact__v{font-family:var(--font-display);font-size:1.05rem;font-weight:500;color:var(--paper);line-height:1.3}
+.fact__v{font-family:var(--font-display);font-size:.98rem;font-weight:600;color:var(--invite-ink);line-height:1.3}
 
-.ticket__barcode{
-  height:30px;margin-top:8px;opacity:.8;
-  background:repeating-linear-gradient(90deg,
-    var(--paper) 0 2px, transparent 2px 5px,
-    var(--paper) 5px 6px, transparent 6px 12px,
-    var(--paper) 12px 15px, transparent 15px 19px,
-    var(--paper) 19px 20px, transparent 20px 25px);
+.invite-card__qr{
+  display:block;margin:26px auto 0;
+  width:84px;height:84px;
+  border:1px solid rgba(169,120,46,.3);
+  border-radius:4px;
 }
 
-.ticket__closing{margin-top:14px;text-align:center}
-.ticket__closing-line{
+.ticket__seal{
+  position:relative;margin:24px auto 0;
+  width:66px;height:66px;
+  border-radius:48% 52% 53% 47% / 47% 53% 48% 52%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--invite-wax);
+  box-shadow:
+    inset -6px -8px 14px rgba(0,0,0,.35),
+    inset 6px 8px 14px rgba(200,120,110,.3),
+    0 12px 24px -10px rgba(0,0,0,.55);
+}
+.ticket__seal span{
+  font-family:var(--font-display);font-size:.82rem;font-weight:700;
+  letter-spacing:.04em;color:rgba(224,160,150,.55);
+  text-shadow:1px 1px 0 rgba(30,6,6,.6);line-height:1;
+}
+
+/* -- The single CTA that starts the whole sequence -- */
+.invite-exp__cta{
+  position:relative;z-index:5;margin-top:28px;
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+  transition:opacity .4s var(--ease);
+}
+.invite-exp[data-state]:not([data-state="closed"]) .invite-exp__cta{
+  opacity:0;pointer-events:none;
+}
+.invite-exp__hint{
   font-family:var(--font-display);font-style:italic;font-size:.92rem;
-  color:rgba(243,238,226,.62);margin:0 0 6px;
+  color:rgba(243,238,226,.55);
 }
-.ticket__closing-link{
-  display:inline-block;font-family:var(--font-mono);font-size:.72rem;
-  font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--rust-hi);text-decoration:underline;text-underline-offset:3px;
-  transition:color .2s;
+
+/* Ink-filled button — for use on the dark stage */
+.btn--invite{background:#2A2018;color:#F7F1E3;border-radius:999px;position:relative;overflow:hidden}
+.btn--invite span,.btn--invite svg{position:relative;z-index:1}
+.btn--invite::before{content:"";position:absolute;inset:0;background:#A9782E;transform:translateY(101%);transition:transform .4s var(--ease)}
+.btn--invite:hover::before{transform:translateY(0)}
+.btn--invite:hover{color:#2A2018;transform:none;box-shadow:none}
+
+@media (max-width:520px){
+  .envelope{width:92vw}
 }
-.ticket__closing-link:hover{color:var(--paper)}
 
-/* Paper-filled button — for use on the ink ticket, mirrors .btn--ink's
-   fill-sweep but inverted */
-.btn--paper{background:var(--paper);color:var(--ink);border-radius:2px;position:relative;overflow:hidden}
-.btn--paper span,.btn--paper svg{position:relative;z-index:1}
-.btn--paper::before{content:"";position:absolute;inset:0;background:var(--rust-hi);transform:translateY(101%);transition:transform .4s var(--ease)}
-.btn--paper:hover::before{transform:translateY(0)}
-.btn--paper:hover{color:var(--paper);transform:none;box-shadow:none}
-
-@media (prefers-reduced-motion:reduce){.ticket{transition:none}}
+@media (prefers-reduced-motion:reduce){
+  .envelope,.envelope__flap,.ticket,.invite-exp__cta{transition:none}
+  [data-state="breaking"] .envelope__seal{animation:none;opacity:0}
+}
 
 /* ---- Ticket name modal ------------------------------------------------ */
 .ticket-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
@@ -1661,46 +1776,64 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 </section>
 
 <!-- ══════════════════════════════ CTA BAND ══════════════════════════════ -->
-<!-- The conversion point, rendered as an admit-one ticket rather than a
-     glass panel. Tilts toward the cursor (see [data-ticket] in the
-     closing script); the register button reuses the hero's
-     magnetic-button wiring via [data-magnetic]. -->
+<!-- The conversion point: a closed envelope, center stage, that the
+     visitor opens themselves. Clicking "Open Your Invitation" collects
+     a name (see [data-ticket-open] in the closing script), then plays
+     the seal-break / flap-open / slide-out sequence driven by
+     [data-invite-exp]'s data-state attribute, ending in an
+     auto-download of the personalised PNG. Nothing here rotates. -->
 <section class="band" id="register">
   <div class="shell">
-    <div class="ticket reveal" data-ticket>
-      <div class="ticket__main">
-        <div class="ticket__seal" aria-hidden="true"><span>SBNU</span></div>
-        <p class="eyebrow">Registration &middot; Admit one</p>
-        <h2>Seats are limited.<br /><em>Claim yours.</em></h2>
-        <p class="lede">
-          Free for all students and faculty. Register in advance &mdash; entry on
-          the day is subject to seats remaining.
-        </p>
+    <div class="invite-exp" data-invite-exp data-state="closed">
+      <div class="sparkle sparkle--twinkle" style="top:10%;left:12%;width:7px;height:7px;--tw-dur:5s;--tw-delay:.1s;--tw-lo:.15;--tw-hi:.8" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg></div>
+      <div class="sparkle" style="top:20%;right:16%;width:5px;height:5px;opacity:.4" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg></div>
+      <div class="sparkle sparkle--twinkle" style="bottom:16%;left:8%;width:8px;height:8px;--tw-dur:4.6s;--tw-delay:.8s;--tw-lo:.2;--tw-hi:.85" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg></div>
+      <div class="sparkle" style="bottom:22%;right:10%;width:6px;height:6px;opacity:.35" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg></div>
 
-        <button type="button" class="btn btn--paper" data-ticket-open data-magnetic>
-          <span>Download invitation</span>
-          <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
-        </button>
+      <div class="invite-exp__stage">
+        <div class="envelope" aria-hidden="true">
+          <div class="envelope__body"></div>
+          <div class="envelope__flap"></div>
+          <div class="envelope__seal"><span>SP</span></div>
+        </div>
+
+        <div class="ticket" data-invite-card>
+          <p class="ticket__kicker">You are cordially invited</p>
+
+          <div class="ticket__main">
+            <p class="eyebrow">Registration &middot; Admit one</p>
+            <h2>Stellar Panel<br /><em>Voices of Change</em></h2>
+            <p class="lede">Presented to</p>
+            <p class="invite-card__name" data-invite-name>&nbsp;</p>
+          </div>
+
+          <div class="ticket__stub">
+            <div class="fact__row">
+              <span class="fact__k">Date</span>
+              <span class="fact__v">21 Aug 2026</span>
+            </div>
+            <div class="fact__row">
+              <span class="fact__k">Venue</span>
+              <span class="fact__v">Nirma University</span>
+            </div>
+            <div class="fact__row">
+              <span class="fact__k">Reg. No.</span>
+              <span class="fact__v" data-invite-regid>&mdash;</span>
+            </div>
+          </div>
+
+          <canvas class="invite-card__qr" data-invite-qr width="168" height="168" aria-hidden="true"></canvas>
+
+          <div class="ticket__seal" aria-hidden="true"><span>SP</span></div>
+        </div>
       </div>
 
-      <div class="ticket__stub">
-        <div class="fact__row">
-          <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Date</span>
-          <span class="fact__v">21 Aug 2026</span>
-        </div>
-        <div class="fact__row">
-          <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Time</span>
-          <span class="fact__v">TBA</span>
-        </div>
-        <div class="fact__row">
-          <span class="fact__k"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>Access</span>
-          <span class="fact__v">General &middot; Free</span>
-        </div>
-        <div class="ticket__barcode" aria-hidden="true"></div>
-        <div class="ticket__closing">
-          <p class="ticket__closing-line">Dear Dreamer, you&rsquo;re invited to</p>
-          <a class="ticket__closing-link" href="#register" data-ticket-open>Register here to get yours</a>
-        </div>
+      <div class="invite-exp__cta">
+        <p class="invite-exp__hint">A personal invitation has arrived.</p>
+        <button type="button" class="btn btn--invite" data-ticket-open data-magnetic>
+          <span>Open Your Invitation</span>
+          <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -1713,12 +1846,12 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     <button type="button" class="ticket-modal__close" data-ticket-close aria-label="Close">&times;</button>
     <p class="eyebrow">Registration &middot; Admit one</p>
     <h3 id="ticketModalTitle">Who&rsquo;s this invitation for?</h3>
-    <p class="lede">Enter the name to print on your invitation, then download it.</p>
+    <p class="lede">Enter your name, then watch the envelope open.</p>
     <form data-ticket-form novalidate>
       <label class="ticket-modal__label" for="ticketName">Full name</label>
       <input class="ticket-modal__input" type="text" id="ticketName" name="ticketName" placeholder="e.g. Ada Lovelace" maxlength="40" autocomplete="name" required />
       <button type="submit" class="btn btn--primary">
-        <span>Generate &amp; download</span>
+        <span>Open my invitation</span>
         <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
       </button>
     </form>
@@ -1958,6 +2091,55 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
 
+  function hashCode(str) {
+    var h = 0;
+    for (var i = 0; i < str.length; i += 1) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+    return h;
+  }
+
+  /* Shared by the live envelope preview and the downloaded PNG, so the
+     registration number printed on screen always matches the file. */
+  function regIdFor(displayName, date) {
+    return 'SBNU-2026-' + (hashCode(displayName + date) % 90000 + 10000);
+  }
+
+  /* Paints a real, scannable QR straight into the on-page canvas inside
+     the revealed invitation — the same qrcode.js already used for the
+     downloadable PNG, just targeting a live <canvas> instead. */
+  function renderLiveQR(canvasEl, text) {
+    if (!canvasEl || typeof qrcode !== 'function') return;
+    var qr = qrcode(0, 'M');
+    qr.addData(text);
+    qr.make();
+    var count = qr.getModuleCount();
+    var size = canvasEl.width;
+    var cell = size / count;
+    var qctx = canvasEl.getContext('2d');
+    qctx.fillStyle = '#F7F1E3';
+    qctx.fillRect(0, 0, size, size);
+    qctx.fillStyle = '#2A2018';
+    for (var r = 0; r < count; r += 1) {
+      for (var c = 0; c < count; c += 1) {
+        if (qr.isDark(r, c)) qctx.fillRect(c * cell, r * cell, Math.ceil(cell), Math.ceil(cell));
+      }
+    }
+  }
+
+  /* Fills in the name / registration ID / QR on the live invitation
+     card inside the envelope, right before the open sequence starts. */
+  function populateInviteCard(displayName) {
+    var data = readEventData();
+    var regId = regIdFor(displayName, data.date);
+    var nameEl = document.querySelector('[data-invite-name]');
+    var regEl = document.querySelector('[data-invite-regid]');
+    var qrEl = document.querySelector('[data-invite-qr]');
+    if (nameEl) nameEl.textContent = displayName;
+    if (regEl) regEl.textContent = regId;
+    if (qrEl) {
+      renderLiveQR(qrEl, 'INVITATION|' + slugify(data.title) + '|' + displayName + '|' + data.date + '|' + regId);
+    }
+  }
+
   /* Single source of truth for the event facts printed on the ticket —
      read straight from the DOM (the live .ticket__stub rows and the
      page title/venue copy) instead of duplicating the strings here. */
@@ -2080,12 +2262,6 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       }
     }
 
-    function hashCode(str) {
-      var h = 0;
-      for (var i = 0; i < str.length; i += 1) h = (h * 31 + str.charCodeAt(i)) >>> 0;
-      return h;
-    }
-
     /* Realistic wax seal: an irregular (hand-stamped, not perfectly
        round) blob, a soft directional sheen and an embossed monogram —
        the only place in this design gradients are used, and only
@@ -2131,9 +2307,9 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       ctx.font = '700 34px "Playfair Display", Georgia, serif';
       spacing(2);
       ctx.fillStyle = waxDark;
-      ctx.fillText('SBNU', sx + 1, sy + 12);
+      ctx.fillText('SP', sx + 1, sy + 12);
       ctx.fillStyle = 'rgba(220,150,140,.5)';
-      ctx.fillText('SBNU', sx, sy + 11);
+      ctx.fillText('SP', sx, sy + 11);
       spacing(0);
       ctx.textAlign = 'left';
     }
@@ -2249,7 +2425,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     hairline(cy, 60);
 
     cy += 44;
-    var regId = 'SBNU-2026-' + (hashCode(name + data.date) % 90000 + 10000);
+    var regId = regIdFor(name, data.date);
     ctx.fillStyle = inkMuted;
     ctx.font = '700 12px "Playfair Display", Georgia, serif';
     spacing(2.5);
@@ -2278,6 +2454,65 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     return canvas;
   }
 
+  /* Timings for the seal-break / flap-open / slide-out sequence, in ms.
+     Mirrors the transition durations set in CSS for each [data-state] —
+     keep the two in sync if either changes. Slow and deliberate on
+     purpose: this is meant to feel like unwrapping something, not like
+     a UI reveal. */
+  var INVITE_TIMING = { breaking: 550, opening: 800, peek: 900, pause: 700, reveal: 900, settle: 500 };
+
+  function downloadInvitation(rawName) {
+    function run() {
+      var canvas = drawInvitation(rawName);
+      /* toBlob + a blob: URL, not toDataURL — Safari in particular
+         ignores the `download` attribute (or just opens the image)
+         when href is a data: URI; blob: URLs are the reliable
+         cross-browser way to force a save-to-disk. */
+      canvas.toBlob(function (blob) {
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement('a');
+        link.download = 'invitation-' + slugify(rawName) + '.png';
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      }, 'image/png');
+    }
+    if (!document.fonts || document.fonts.status === 'loaded') {
+      run();
+    } else {
+      document.fonts.ready.then(run);
+    }
+  }
+
+  /* Drives [data-invite-exp]'s data-state through the open sequence,
+     then auto-downloads once the invitation has fully settled. Skips
+     straight to the end state for reduced-motion users. */
+  function runInviteSequence(rawName) {
+    var displayName = toTitleCase(rawName);
+    var exp = document.querySelector('[data-invite-exp]');
+    populateInviteCard(displayName);
+
+    if (!exp || reduced) {
+      if (exp) exp.setAttribute('data-state', 'revealed');
+      downloadInvitation(rawName);
+      return;
+    }
+
+    exp.setAttribute('data-state', 'breaking');
+    setTimeout(function () {
+      exp.setAttribute('data-state', 'opening');
+      setTimeout(function () {
+        exp.setAttribute('data-state', 'peek');
+        setTimeout(function () {
+          exp.setAttribute('data-state', 'revealed');
+          setTimeout(function () { downloadInvitation(rawName); }, INVITE_TIMING.reveal + INVITE_TIMING.settle);
+        }, INVITE_TIMING.peek + INVITE_TIMING.pause);
+      }, INVITE_TIMING.opening);
+    }, INVITE_TIMING.breaking);
+  }
+
   if (ticketForm) {
     ticketForm.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -2286,38 +2521,9 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         ticketNameInput.focus();
         return;
       }
-      function download() {
-        var canvas = drawInvitation(name);
-        /* toBlob + a blob: URL, not toDataURL — Safari in particular
-           ignores the `download` attribute (or just opens the image)
-           when href is a data: URI; blob: URLs are the reliable
-           cross-browser way to force a save-to-disk. */
-        canvas.toBlob(function (blob) {
-          var url = URL.createObjectURL(blob);
-          var link = document.createElement('a');
-          link.download = 'invitation-' + slugify(name) + '.png';
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-        }, 'image/png');
-      }
-
-      /* Fire the download synchronously within the click's user-gesture
-         whenever possible — waiting on a promise first (even one that
-         resolves instantly) can lose the gesture and cause some browsers
-         to silently block the download. Fonts are already loaded by the
-         time someone reaches this modal, so this is the common path;
-         the async fallback only kicks in if they genuinely aren't ready. */
-      if (!document.fonts || document.fonts.status === 'loaded') {
-        download();
-      } else {
-        document.fonts.ready.then(download);
-      }
-
       closeTicketModal();
       ticketForm.reset();
+      runInviteSequence(name);
     });
   }
 
@@ -2404,23 +2610,6 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       });
       btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
     });
-  }
-
-  /* ---- Registration: ticket tilt -----------------------------------
-     The admit-one card tilts a few degrees toward the cursor, like
-     picking it up to read it — restrained (a handful of degrees) and
-     only where a persistent pointer makes it feel intentional. */
-  var ticket = document.querySelector('[data-ticket]');
-  if (ticket && !reduced && matchMedia('(hover:hover)').matches) {
-    ticket.addEventListener('mousemove', function (e) {
-      var r = ticket.getBoundingClientRect();
-      var px = (e.clientX - r.left) / r.width - 0.5;
-      var py = (e.clientY - r.top) / r.height - 0.5;
-      ticket.style.transform =
-        'perspective(1400px) rotateX(' + (py * -5).toFixed(2) + 'deg) rotateY(' +
-        (px * 7).toFixed(2) + 'deg) translateY(-4px)';
-    });
-    ticket.addEventListener('mouseleave', function () { ticket.style.transform = ''; });
   }
 
   /* ---- Scroll reveal --------------------------------------------- */
