@@ -36,18 +36,6 @@
   }
 }
 </script>
-<script>
-(function() {
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var seen = sessionStorage.getItem('fs_intro_seen') === 'true';
-  if (reduced || seen) {
-    document.documentElement.classList.add('fs-skip-intro');
-  } else {
-    document.documentElement.classList.add('fs-show-intro');
-  }
-})();
-</script>
-
 <!--
   ============================================================================
   FOUNDERS SPEAK — Entrepreneurs Panel Discussion
@@ -78,105 +66,6 @@
 -->
 
 <style>
-/* ── Black Hole WebGL Overlay (Appear-Then-Vanish Mode) ── */
-#black-hole-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
-  background: #050308;
-  pointer-events: none;
-  overflow: hidden;
-  box-sizing: border-box;
-  will-change: opacity;
-}
-
-.fs-skip-intro #black-hole-wrapper {
-  display: none !important;
-}
-
-#black-hole-wrapper canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover;
-}
-
-/* ── Liquid Ether WebGL Fixed Background (Continuous for non-hero sections) ── */
-#liquid-ether-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-  box-sizing: border-box;
-  opacity: 0;
-  transition: opacity 0.5s ease-out;
-  will-change: opacity;
-}
-
-#liquid-ether-wrapper canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Ensure continuous Liquid Ether background flows uninterrupted behind all non-hero sections */
-#about, #speakers, #agenda, #venue, #register, #contact, footer {
-  background: transparent !important;
-}
-
-html.fs-show-intro,
-html.fs-show-intro body {
-  overflow: hidden !important;
-}
-
-/* ── Staggered Hero Cascade Reveal ── */
-html.fs-show-intro .nav,
-html.fs-show-intro .hero__top,
-html.fs-show-intro .hero__title,
-html.fs-show-intro .hero__lede,
-html.fs-show-intro .hero__count-wrap,
-html.fs-show-intro .hero__cta {
-  opacity: 0;
-  transform: translate3d(0, 16px, 0);
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: var(--cascade-delay, 0ms);
-  will-change: opacity, transform;
-}
-
-/* Staggered delays for flowing cascade sequence */
-.nav { --cascade-delay: 0ms; }
-.hero__top { --cascade-delay: 90ms; }
-.hero__title { --cascade-delay: 180ms; }
-.hero__lede { --cascade-delay: 270ms; }
-.hero__count-wrap { --cascade-delay: 360ms; }
-.hero__cta { --cascade-delay: 450ms; }
-
-/* Active Cascade Reveal State */
-html.fs-show-intro.fs-hero-content-entering .nav,
-html.fs-show-intro.fs-hero-content-entering .hero__top,
-html.fs-show-intro.fs-hero-content-entering .hero__title,
-html.fs-show-intro.fs-hero-content-entering .hero__lede,
-html.fs-show-intro.fs-hero-content-entering .hero__count-wrap,
-html.fs-show-intro.fs-hero-content-entering .hero__cta,
-html.fs-skip-intro .nav,
-html.fs-skip-intro .hero__top,
-html.fs-skip-intro .hero__title,
-html.fs-skip-intro .hero__lede,
-html.fs-skip-intro .hero__count-wrap,
-html.fs-skip-intro .hero__cta {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-  transform: translate3d(0, 0, 0);
-}
-
 /* Center all main section headings for visual hierarchy */
 .sec__head {
   text-align: center;
@@ -575,10 +464,8 @@ body::before{
 .nav{
   position:sticky;top:0;z-index:60;
   background:var(--ink);
-  border-bottom:1px solid transparent;
-  transition:border-color .3s var(--ease);
+  border-bottom:1px solid rgba(231,184,96,.4);
 }
-.nav.is-stuck{border-bottom-color:var(--rust)}
 .nav__in{
   display:flex;align-items:center;gap:20px;
   min-height:68px;
@@ -642,11 +529,25 @@ body::before{
 
 @media (min-width:900px){.nav__links{display:flex}}
 
+.btn--nav-register{
+  flex:none;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;
+  border-radius:999px;
+  border:1.5px solid var(--rust);
+  background:transparent;
+  color:var(--rust-hi);
+  font-family:var(--font-sans);
+  font-size:.82rem;font-weight:600;letter-spacing:.05em;
+  text-decoration:none;text-transform:uppercase;
+  transition:background .2s var(--ease),color .2s var(--ease);
+}
+.btn--nav-register svg{width:12px;height:12px;flex:none}
+.btn--nav-register:hover{background:rgba(231,184,96,.12)}
+
 /* ---------------------------------------------------------------------------
-   7. HERO — the cosmos register: deep void, gold + blue accents, brand
-      reference ieeenirma.org / the Technodyssey orientation site.
-      Asymmetric, not centred; the marquee and the kinetic headline carry
-      the section, alongside a CSS nebula glow and starfield (no WebGL).
+   7. HERO — static two-column layout: copy + CTA on the left, an arched
+      doorway scene on the right. No canvas/WebGL in this section.
    --------------------------------------------------------------------------- */
 .hero{
   position:relative;
@@ -654,279 +555,226 @@ body::before{
   background:var(--ink);
   color:var(--paper);
 }
-.hero::before{
-  /* two faint registration lines — a printer's crop mark, not a "grid bg" */
-  content:"";
-  position:absolute;inset:0;
-  z-index:0;
-  pointer-events:none;
-  background:
-    linear-gradient(var(--line-ink),var(--line-ink)) left 12% top/1px 100% no-repeat,
-    linear-gradient(var(--line-ink),var(--line-ink)) right 12% top/1px 100% no-repeat;
-  opacity:.6;
-}
 .hero__in{
   position:relative;z-index:2;
-  padding-block:clamp(48px,7vw,84px) 0;
+  padding-block:clamp(40px,6vw,72px) 0;
 }
 
-.hero__top{
-  display:flex;
-  flex-wrap:wrap;
+.hero__cols{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:clamp(36px,6vw,56px);
   align-items:center;
-  justify-content:center;
-  gap:10px 24px;
-  padding-bottom:22px;
-  border-bottom:1px solid var(--line-ink);
-  text-align:center;
 }
-.hero__top > *{min-width:0;max-width:100%}
-.hero__top .eyebrow{color:var(--rust)}
-.hero__top .eyebrow::before{background:var(--rust);opacity:1}
-.hero__coord{
+@media (min-width:900px){
+  .hero__cols{grid-template-columns:minmax(0,40%) minmax(0,60%);gap:clamp(32px,4vw,60px);align-items:stretch}
+}
+
+.hero__text{min-width:0}
+
+.hero__eyebrow{
+  display:flex;align-items:center;gap:14px;
   font-family:var(--font-sans);
-  font-size:.72rem;
-  font-weight:500;
-  letter-spacing:.14em;
-  color:var(--ink-soft);
-  font-variant-numeric:tabular-nums;
-  white-space:nowrap;
+  font-size:.72rem;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--rust);
 }
-.hero__coord b{color:var(--rust);font-weight:600;letter-spacing:.18em}
+.hero__eyebrow::before{content:"";width:22px;height:1px;background:var(--rust);flex:none}
 
-@media (max-width:640px){
-  .hero__coord{white-space:normal;text-align:center}
-}
-
-/* Kinetic title — each line masked and raised on load, then given a hair
-   of cursor-parallax depth. Restrained: a few pixels, never more. */
-.hero__title{margin-block:28px 0;text-align:center}
-.title-mask{overflow:hidden;display:block;text-align:center}
-.title-line{
-  display:block;
+.hero__headline{
+  margin-top:22px;
   font-family:var(--font-display);
   font-weight:500;
-  font-size:clamp(2.9rem,10vw,6.6rem);
-  line-height:.98;
-  letter-spacing:-.01em;
+  font-size:clamp(3.2rem,9vw,6.4rem);
+  line-height:.92;
+  letter-spacing:-.005em;
+  text-transform:uppercase;
+}
+.hero__headline span{display:block}
+.hero__headline .is-gold{color:var(--rust-hi)}
+
+.hero__subhead{
+  margin-top:14px;
+  font-family:var(--font-sans);
+  font-size:clamp(.95rem,1.6vw,1.15rem);
+  font-weight:500;
+  letter-spacing:.3em;
+  text-transform:uppercase;
   color:var(--paper);
-  transform:translateY(112%);
-  transition:transform .95s var(--ease);
-  will-change:transform;
-  text-align:center;
-}
-.js .title-line{transition-delay:var(--td,0ms)}
-.hero.is-loaded .title-line{transform:translateY(0)}
-.title-line--accent{color:var(--rust)}
-.title-line--rule{
-  display:flex;align-items:center;justify-content:center;gap:18px;
-  font-size:clamp(2.9rem,10vw,6.6rem);
-  text-align:center;
-}
-.title-line--rule .rule{
-  height:2px;flex:0 1 80px;background:var(--paper);
-  transform-origin:center;transform:scaleX(0);
-  transition:transform 1.1s var(--ease);
-  transition-delay:.5s;
-}
-.hero.is-loaded .title-line--rule .rule{transform:scaleX(1)}
-
-.hero__grid{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
-  gap:clamp(20px,3vw,32px);
-  margin-top:0;
-  padding-bottom:clamp(40px,5vw,56px);
 }
 
-.hero__lede{
-  max-width:58ch;
-  color:var(--ink-soft);
-  text-align:center;
-  margin-left:auto;
-  margin-right:auto;
-  font-size:clamp(1.05rem, 2vw, 1.22rem);
-  line-height:1.65;
-}
-.hero__cta{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:24px}
-.hero__note{font-size:.84rem;color:var(--ink-soft);margin-top:14px;text-align:center}
+.hero__divider{display:flex;align-items:center;gap:10px;margin-top:22px}
+.hero__divider svg{width:14px;height:14px;color:var(--rust);flex:none}
+.hero__divider span{width:26px;height:1px;background:var(--rust);opacity:.6}
 
-/* Architectural buttons — light-filled / light-outlined, for use on the
-   dark cosmic register (there is no light scene left to contrast against). */
-.btn--ink{
-  background:var(--paper);color:var(--ink);
-  border-radius:2px;
-  position:relative;overflow:hidden;
+.hero__body{
+  margin-top:20px;
+  max-width:38ch;
+  color:var(--text-muted);
+  font-size:clamp(1rem,1.4vw,1.1rem);
+  line-height:1.7;
 }
-.btn--ink span,.btn--ink svg{position:relative;z-index:1}
-.btn--ink::before{
-  content:"";position:absolute;inset:0;
-  background:var(--rust);
-  transform:translateY(101%);
-  transition:transform .4s var(--ease);
-}
-.btn--ink:hover::before{transform:translateY(0)}
-.btn--ink:hover{transform:none;box-shadow:none}
-.btn--ink:hover{color:var(--ink)}
 
-.btn--outline{
-  border:1.5px solid var(--paper);
+.hero__date{
+  display:flex;align-items:flex-start;gap:12px;
+  margin-top:32px;
+}
+.hero__date svg{width:20px;height:20px;flex:none;color:var(--rust);margin-top:2px}
+.hero__date strong{
+  display:block;
+  font-family:var(--font-display);
+  font-size:1.15rem;font-weight:600;
   color:var(--paper);
-  border-radius:2px;
-  background:transparent;
 }
-.btn--outline:hover{
-  background:var(--paper);color:var(--ink);
-  transform:none;box-shadow:none;
+.hero__date span{
+  display:block;margin-top:3px;
+  font-family:var(--font-mono);
+  font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-muted);
 }
 
-/* Ledger — the four event facts, as a printed spec sheet, not a glass panel */
-.ledger{border-top:1px solid var(--paper)}
-.ledger__row{
-  display:flex;align-items:baseline;justify-content:space-between;
-  gap:14px;padding:13px 0;border-bottom:1px solid var(--line-ink);
+.hero__cta-btn{
+  margin-top:32px;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 30px;
+  border-radius:999px;
+  background:linear-gradient(180deg,var(--nebula-hi),var(--nebula-core));
+  color:#1A1508;
+  font-family:var(--font-sans);
+  font-weight:700;font-size:.92rem;letter-spacing:.03em;text-transform:uppercase;
+  text-decoration:none;
+  box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 12px 34px -10px rgba(184,134,60,.6);
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease);
 }
-.ledger__k{
-  font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--rust);white-space:nowrap;
-}
-.ledger__v{
-  font-family:var(--font-display);font-size:1rem;font-weight:500;
-  color:var(--paper);text-align:right;line-height:1.3;
-}
-.ledger__v small{display:block;font-family:var(--font-sans);font-size:.72rem;font-weight:500;color:var(--ink-soft);margin-top:2px}
+.hero__cta-btn:hover{transform:translateY(-2px)}
+.hero__cta-btn svg{width:16px;height:16px;transition:transform .22s var(--ease)}
+.hero__cta-btn:hover svg{transform:translateX(3px)}
 
-/* Countdown — Cosmic Neon / Black-Hole Treatment in Hero */
-.hero__count-wrap{
-  background:rgba(18,17,31,0.6);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border:1px solid rgba(231,184,96,0.3);
-  border-radius:16px;
-  padding:clamp(20px,3.5vw,32px) clamp(24px,4vw,40px);
-  box-shadow:0 12px 40px rgba(0,0,0,0.5), 0 0 45px -5px rgba(231,184,96,0.18), inset 0 0 1px rgba(255,255,255,0.15);
-  margin-top:clamp(24px,3vw,36px);
-  margin-bottom:clamp(20px,3vw,32px);
-  margin-left:auto;
-  margin-right:auto;
+.hero__note{font-size:.84rem;color:var(--ink-soft);margin-top:14px}
+
+/* Right column: arched-doorway placeholder scene (CSS/SVG only — swap the
+   background-image on .hero__arch for the real photo when available). */
+.hero__visual{min-width:0}
+.hero__arch{
   position:relative;
-  overflow:hidden;
   width:100%;
-  max-width:960px;
-  text-align:center;
+  aspect-ratio:6/5;
+  min-height:420px;
+  border-radius:28px;
+  overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 50% 30%, rgba(231,184,96,.9) 0%, rgba(184,134,60,.5) 30%, transparent 60%),
+    radial-gradient(160% 120% at 50% 100%, rgba(20,16,10,.9) 0%, transparent 55%),
+    #0B0A14;
 }
-.hero__count-wrap::before{
+.hero__arch::before{
+  /* the arch opening */
   content:"";
   position:absolute;
-  top:-40%;
-  right:-40%;
-  width:180px;
-  height:180px;
-  background:radial-gradient(circle, rgba(231,184,96,0.18) 0%, rgba(124,92,255,0.12) 50%, transparent 70%);
-  pointer-events:none;
-  border-radius:50%;
-  filter:blur(24px);
+  left:50%;bottom:-4%;
+  width:56%;height:88%;
+  transform:translateX(-50%);
+  border-radius:50% 50% 4% 4% / 32% 32% 4% 4%;
+  background:radial-gradient(120% 100% at 50% 0%,#F7E8C6 0%,#E9C57F 42%,#8C6A2E 78%,#241B0C 100%);
+  box-shadow:0 0 90px 20px rgba(231,184,96,.35);
 }
-.count{display:flex;flex-direction:column;align-items:center;gap:16px;margin:0}
-.count__head{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  width:100%;
+.hero__arch::after{
+  /* dark room vignette + faint concrete texture */
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(140% 100% at 50% 100%, transparent 40%, rgba(0,0,0,.55) 100%),
+    radial-gradient(100% 80% at 50% 0%, rgba(0,0,0,.5) 0%, transparent 45%);
 }
-.count__pulse{
-  width:9px;
-  height:9px;
-  background:var(--rust);
-  border-radius:50%;
-  box-shadow:0 0 10px var(--rust), 0 0 18px var(--rust-hi);
-  animation:countPulse 2s infinite ease-in-out;
+.hero__arch-caption{
+  position:absolute;
+  left:50%;top:38%;
+  transform:translate(-50%,-50%);
+  z-index:1;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  text-align:center;
 }
-@keyframes countPulse{
-  0%,100%{transform:scale(1);opacity:.8}
-  50%{transform:scale(1.25);opacity:1;box-shadow:0 0 14px var(--rust-hi), 0 0 24px var(--rust)}
-}
-.count__label{
-  font-size:clamp(11px,1.4vw,13px);
-  font-weight:700;
-  letter-spacing:.22em;
-  text-transform:uppercase;
-  color:#F6D48A;
+.hero__arch-caption svg{width:14px;height:14px;color:#3A2E14;margin-bottom:4px}
+.hero__arch-caption span{
   font-family:var(--font-mono);
-  margin:0;
+  font-size:clamp(.68rem,1vw,.82rem);
+  font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:#241B0C;
+}
+.hero__arch-caption .hero__arch-line{
+  width:1px;height:34px;background:rgba(36,27,12,.4);
+  margin-top:6px;
+}
+
+@media (min-width:900px){
+  .hero__arch{aspect-ratio:auto;height:100%;min-height:600px}
+}
+
+@media (max-width:640px){
+  .hero__headline{font-size:clamp(2.6rem,15vw,3.6rem)}
+  .hero__arch{aspect-ratio:1/1}
+}
+
+/* Countdown bar — inset dark strip beneath both columns */
+.hero__count-wrap{
+  margin-top:clamp(36px,5vw,56px);
+  margin-bottom:clamp(28px,4vw,44px);
+  background:rgba(18,17,31,.6);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(231,184,96,.3);
+  border-radius:18px;
+  padding:clamp(16px,2.4vw,22px) clamp(20px,3vw,32px);
+  box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 45px -5px rgba(231,184,96,.18), inset 0 0 1px rgba(255,255,255,.15);
+}
+.count{
+  display:flex;align-items:center;gap:clamp(10px,2vw,22px);
 }
 .count__grid{
-  display:flex;
-  gap:12px;
-  width:100%;
+  display:flex;flex:1;align-items:center;
 }
 .count__u{
-  flex:1;
-  text-align:center;
-  padding:clamp(14px,2.2vw,22px) clamp(10px,1.8vw,16px);
-  background:rgba(7,7,15,0.75);
-  border:1px solid rgba(231,184,96,0.25);
-  border-radius:12px;
-  box-shadow:0 6px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
-  transition:border-color .3s, box-shadow .3s, transform .3s;
+  flex:1;text-align:center;
+  padding-inline:6px;
+  position:relative;
 }
-.count__u:hover{
-  border-color:rgba(231,184,96,0.5);
-  box-shadow:0 0 24px rgba(231,184,96,0.25);
-  transform:translateY(-3px);
+.count__u + .count__u::before{
+  content:"";
+  position:absolute;left:0;top:8%;bottom:8%;
+  width:1px;background:rgba(231,184,96,.25);
 }
 .count__n{
   display:block;
-  font-family:"Playfair Display", "Fraunces", Georgia, serif;
-  font-size:clamp(2.2rem, 5.5vw, 3.8rem);
-  font-weight:700;
+  font-family:var(--font-display);
+  font-size:clamp(1.7rem,4.5vw,2.7rem);
+  font-weight:600;
   font-variant-numeric:tabular-nums;
-  color:#F5F0E4;
-  text-shadow:0 0 18px rgba(231,184,96,0.55), 0 0 35px rgba(168,85,247,0.3);
-  line-height:1.05;
+  color:var(--rust-hi);
+  line-height:1;
 }
 .count__t{
-  display:block;
-  font-size:clamp(10px,1.2vw,12px);
-  font-weight:700;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:var(--text-muted);
-  margin-top:8px;
+  display:block;margin-top:6px;
   font-family:var(--font-mono);
+  font-size:clamp(9px,1vw,10.5px);
+  font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted);
 }
+.count__mark{
+  flex:none;
+  display:flex;align-items:center;justify-content:center;
+  width:34px;height:34px;
+  border-radius:50%;
+  border:1px solid rgba(231,184,96,.4);
+  color:var(--rust);
+}
+.count__mark svg{width:14px;height:14px}
 
-/* Marquee — continuous, ink-on-paper, the one "always moving" element in
-   the hero. Pure CSS loop; paused under reduced motion. */
-.marquee{
-  position:relative;z-index:2;
-  background:var(--panel);color:var(--paper);
-  overflow:hidden;
-  border-top:1px solid var(--rust);
-}
-.marquee__track{
-  display:flex;width:max-content;
-  animation:marquee 26s linear infinite;
-}
-.marquee__set{display:flex;flex:none;align-items:center}
-.marquee__set span{
-  padding:16px clamp(20px,3vw,36px);
-  font-family:var(--font-display);
-  font-size:clamp(.95rem,1.6vw,1.2rem);
-  font-weight:500;
-  white-space:nowrap;
-  display:flex;align-items:center;gap:clamp(20px,3vw,36px);
-}
-.marquee__set span::after{content:"—";color:var(--rust)}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.hero:hover .marquee__track{animation-play-state:paused}
-
-@media (prefers-reduced-motion:reduce){
-  .marquee__track{animation:none}
-  .title-line,.title-line--rule .rule{transition:none}
+@media (max-width:520px){
+  .count{flex-wrap:wrap}
+  .count__grid{flex-wrap:wrap;row-gap:18px;order:1;width:100%}
+  .count__u{flex:0 0 50%}
+  .count__u:nth-child(3)::before{display:none}
+  .count__mark{order:0;margin-left:auto}
 }
 
 .hero .ph{color:var(--rust);background:rgba(231,184,96,.08);border-bottom-color:var(--rust)}
@@ -1605,8 +1453,6 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 </head>
 
 <body>
-<div id="black-hole-wrapper" class="black-hole-intro-overlay" aria-hidden="true"></div>
-<div id="liquid-ether-wrapper" aria-hidden="true"></div>
 <div class="stars" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 
@@ -1633,97 +1479,82 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       </ul>
     </nav>
 
-    <a class="btn btn--primary btn--sm" href="#register" data-register>Register</a>
+    <a class="btn btn--nav-register" href="#register" data-register>
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
+      <span>Register</span>
+    </a>
   </div>
 </header>
 
 <main id="main">
 
 <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
-<!-- Kinetic title lines rise out of their masks on load and drift a few
-     px with the cursor (JS, .hero__title[data-parallax]); the marquee at
-     the base is the section's one restless element. The nebula/starfield
-     glow is CSS-only (#nebula + .stars), no WebGL. -->
+<!-- Static two-column layout: copy + CTA on the left, an arched-doorway
+     scene on the right (CSS/SVG placeholder — swap in the real photo via
+     .hero__arch's background when available). No canvas/WebGL here. -->
 <section class="hero" id="top" data-hero>
-  <div class="nebula" id="nebula" aria-hidden="true"></div>
-  <div class="sparkle sparkle--twinkle" style="top:12%;left:8%;width:12px;height:12px;--tw-dur:5.2s;--tw-delay:.2s;--tw-lo:.2;--tw-hi:.9" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
-  </div>
-  <div class="sparkle" style="top:20%;left:24%;width:6px;height:6px;opacity:.5" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-  </div>
-  <div class="sparkle sparkle--twinkle" style="top:8%;right:16%;width:9px;height:9px;--tw-dur:4.1s;--tw-delay:1.1s;--tw-lo:.25;--tw-hi:1" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-  </div>
-  <div class="sparkle" style="top:34%;right:8%;width:15px;height:15px;opacity:.3" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
-  </div>
-  <div class="sparkle sparkle--twinkle" style="top:46%;left:4%;width:8px;height:8px;--tw-dur:6s;--tw-delay:.6s;--tw-lo:.2;--tw-hi:.85" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
-  </div>
   <div class="shell hero__in">
-    <div class="hero__top">
-      <p class="eyebrow" style="margin:0">
-        Organising Body &mdash; E-Cell &amp; Student Council
-      </p>
-      <span class="hero__coord">N&nbsp;23.0225&deg; &nbsp;E&nbsp;72.5714&deg; &mdash; <b>AHMEDABAD</b></span>
+    <div class="hero__cols">
+      <div class="hero__text">
+        <p class="hero__eyebrow">Organising Body &mdash; E-Cell &amp; Student Council</p>
+
+        <h1 class="hero__headline">
+          <span>Stellar</span>
+          <span class="is-gold">Panel</span>
+        </h1>
+        <p class="hero__subhead">Voices of Change</p>
+
+        <div class="hero__divider" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c.6 6.2 1.4 9 3.6 10.4C17.8 12 20.6 12.4 24 12c-6.2.6-9 1.4-10.4 3.6C12 17.8 11.6 20.6 12 24c-.6-6.2-1.4-9-3.6-10.4C6.2 12 3.4 11.6 0 12c6.2-.6 9-1.4 10.4-3.6C11.6 6.2 11.6 3.4 12 0z"/></svg>
+          <span></span>
+        </div>
+
+        <p class="hero__body">
+          Four founders. Real stories.<br />
+          Unfiltered conversation on building,<br />
+          scaling and creating impact.
+        </p>
+
+        <div class="hero__date">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          <div>
+            <strong>21 August 2026</strong>
+            <span>Friday &middot; Nirma University, Ahmedabad</span>
+          </div>
+        </div>
+
+        <a class="hero__cta-btn" href="#register" data-register data-magnetic>
+          <span>Register now</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+
+        <p class="hero__note" data-register-note hidden></p>
+      </div>
+
+      <div class="hero__visual" aria-hidden="true">
+        <div class="hero__arch">
+          <div class="hero__arch-caption">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+            <span>Ideas.</span>
+            <span>Leadership.</span>
+            <span>Impact.</span>
+            <span class="hero__arch-line"></span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Event Title: Stellar panel: Voices of Change -->
-    <h1 class="hero__title" data-parallax>
-      <span class="title-mask"><span class="title-line" style="--td:60ms">Stellar</span></span>
-      <span class="title-mask"><span class="title-line title-line--accent" style="--td:170ms">panel.</span></span>
-      <span class="title-mask"><span class="title-line title-line--rule" style="--td:280ms">Voices of Change</span></span>
-    </h1>
-
-    <!-- Countdown placed directly below Voices of Change -->
     <div class="hero__count-wrap" id="countdown" hidden>
       <div class="count">
-        <div class="count__head">
-          <span class="count__pulse" aria-hidden="true"></span>
-          <span class="count__label">Doors open in</span>
-        </div>
         <div class="count__grid">
           <div class="count__u"><span class="count__n" data-cd="d">--</span><span class="count__t">Days</span></div>
           <div class="count__u"><span class="count__n" data-cd="h">--</span><span class="count__t">Hrs</span></div>
           <div class="count__u"><span class="count__n" data-cd="m">--</span><span class="count__t">Min</span></div>
           <div class="count__u"><span class="count__n" data-cd="s">--</span><span class="count__t">Sec</span></div>
         </div>
-      </div>
-    </div>
-
-    <div class="hero__grid">
-      <div class="reveal" style="--d:420ms">
-        <p class="lede hero__lede">
-          Four founders. One stage. An unfiltered conversation<br />
-          on building in fintech, clean energy &amp; electric mobility &mdash;<br />
-          and the leap from a safe career to a company of your own.
-        </p>
-
-        <div class="hero__cta">
-          <a class="btn btn--ink" href="#register" data-register data-magnetic>
-            <span>Register &mdash; free entry</span>
-            <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
-          <a class="btn btn--outline" href="#speakers"><span>Meet the panel</span></a>
-        </div>
-
-        <p class="hero__note" data-register-note hidden></p>
-      </div>
-    </div>
-  </div>
-
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee__track">
-      <div class="marquee__set">
-        <span>Fintech</span><span>EV &amp; Mobility</span><span>Green Energy</span>
-        <span>Entrepreneurship</span><span>Consulting &rarr; Founder</span>
-        <span>Innovation</span><span>Leadership</span><span>Technical Freedom</span>
-      </div>
-      <div class="marquee__set">
-        <span>Fintech</span><span>EV &amp; Mobility</span><span>Green Energy</span>
-        <span>Entrepreneurship</span><span>Consulting &rarr; Founder</span>
-        <span>Innovation</span><span>Leadership</span><span>Technical Freedom</span>
+        <span class="count__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l1.4 6.6L20 12l-6.6 1.4L12 20l-1.4-6.6L4 12l6.6-1.4z"/></svg>
+        </span>
       </div>
     </div>
   </div>
@@ -2511,45 +2342,6 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     window.addEventListener('resize', updateRail);
   }
 
-  /* ---- Hero: kinetic title reveal on load -------------------------
-     Lines rise out of their masks a beat after paint, staggered by the
-     --td custom property set inline on each .title-line. */
-  var hero = document.querySelector('[data-hero]');
-  if (hero) {
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { hero.classList.add('is-loaded'); });
-    });
-  }
-
-  /* ---- Hero: cursor-responsive title parallax ---------------------
-     Each title line drifts a few px toward the pointer, lerped toward
-     target each frame for a calm, weighted feel. Skipped entirely under
-     reduced motion or on touch (no persistent pointer). */
-  var titleWrap = document.querySelector('[data-parallax]');
-  if (titleWrap && !reduced && matchMedia('(hover:hover)').matches) {
-    var lines = Array.prototype.slice.call(titleWrap.querySelectorAll('.title-line'));
-    var tx = 0, ty = 0, cx = 0, cy = 0;
-    var raf = null;
-
-    var loop = function () {
-      cx += (tx - cx) * 0.08;
-      cy += (ty - cy) * 0.08;
-      lines.forEach(function (el, i) {
-        var depth = (i + 1) * 0.35;
-        el.style.transform = 'translate(' + (cx * depth).toFixed(2) + 'px,' + (cy * depth).toFixed(2) + 'px)';
-      });
-      raf = requestAnimationFrame(loop);
-    };
-
-    hero.addEventListener('mousemove', function (e) {
-      var r = hero.getBoundingClientRect();
-      tx = ((e.clientX - r.left) / r.width - 0.5) * 16;
-      ty = ((e.clientY - r.top) / r.height - 0.5) * 10;
-      if (!raf) raf = requestAnimationFrame(loop);
-    });
-    hero.addEventListener('mouseleave', function () { tx = 0; ty = 0; });
-  }
-
   /* ---- Magnetic button ---------------------------------------------
      The primary CTA's label nudges toward the cursor within its own
      bounds — a small tactile detail, not a full magnetic-cursor gimmick. */
@@ -2647,45 +2439,12 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
 </script>
 
 <script type="module">
-  import { BlackHoleIntroManager } from './js/introManager.js';
   import { InfiniteSpeakerMenu } from './js/infiniteMenu.js';
-  import { LiquidEther } from './js/liquidEther.js';
 
   function initApp() {
-    new BlackHoleIntroManager();
-
     const speakersContainer = document.querySelector('[data-speakers-list]');
     if (speakersContainer && window.speakers) {
       new InfiniteSpeakerMenu(speakersContainer, window.speakers);
-    }
-
-    // Liquid Ether Background Manager
-    const etherContainer = document.getElementById('liquid-ether-wrapper');
-    if (etherContainer) {
-      new LiquidEther(etherContainer);
-
-      // Hero -> Liquid Ether Crossfade on Scroll
-      const heroSection = document.querySelector('[data-hero]') || document.getElementById('top');
-
-      const handleScrollCrossfade = () => {
-        if (!heroSection) {
-          etherContainer.style.opacity = '1';
-          return;
-        }
-
-        const heroHeight = heroSection.offsetHeight || window.innerHeight;
-        const scrollY = window.scrollY || window.pageYOffset || 0;
-
-        // Smooth crossfade: starts fading in at 15% hero scroll, reaches 1.0 by 75% hero scroll
-        const fadeStart = heroHeight * 0.15;
-        const fadeEnd = heroHeight * 0.75;
-        const opacity = Math.min(1, Math.max(0, (scrollY - fadeStart) / (fadeEnd - fadeStart)));
-
-        etherContainer.style.opacity = opacity.toFixed(3);
-      };
-
-      window.addEventListener('scroll', handleScrollCrossfade, { passive: true });
-      handleScrollCrossfade();
     }
   }
 
