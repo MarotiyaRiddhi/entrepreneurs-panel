@@ -1317,7 +1317,21 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   .ticket::after{bottom:-14px}
 }
 
-.ticket__main{padding:clamp(40px,6vw,60px);text-align:left;border-radius:6px 0 0 6px}
+/* Wax-seal monogram — stamped in the top-right corner of the ticket,
+   reads "SBNU" the way an initial mark reads on a wax seal. */
+.ticket__seal{
+  position:absolute;top:24px;right:24px;z-index:4;
+  width:64px;height:64px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 35% 30%, var(--rust-hi), var(--rust) 70%);
+  box-shadow:0 8px 20px -6px rgba(0,0,0,.55), inset 0 0 0 1px rgba(0,0,0,.12);
+}
+.ticket__seal span{
+  font-family:var(--font-mono);font-size:.68rem;font-weight:700;
+  letter-spacing:.06em;color:var(--ink);line-height:1;
+}
+
+.ticket__main{position:relative;padding:clamp(40px,6vw,60px);padding-right:calc(clamp(40px,6vw,60px) + 76px);text-align:left;border-radius:6px 0 0 6px}
 .ticket__main h2{margin-block:16px 16px;color:var(--paper)}
 .ticket__main .lede{color:rgba(243,238,226,.62)}
 .ticket__main .btn{margin-top:28px}
@@ -1355,6 +1369,19 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     var(--paper) 12px 15px, transparent 15px 19px,
     var(--paper) 19px 20px, transparent 20px 25px);
 }
+
+.ticket__closing{margin-top:14px;text-align:center}
+.ticket__closing-line{
+  font-family:var(--font-display);font-style:italic;font-size:.92rem;
+  color:rgba(243,238,226,.62);margin:0 0 6px;
+}
+.ticket__closing-link{
+  display:inline-block;font-family:var(--font-mono);font-size:.72rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--rust-hi);text-decoration:underline;text-underline-offset:3px;
+  transition:color .2s;
+}
+.ticket__closing-link:hover{color:var(--paper)}
 
 /* Paper-filled button — for use on the ink ticket, mirrors .btn--ink's
    fill-sweep but inverted */
@@ -1861,6 +1888,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   <div class="shell">
     <div class="ticket reveal" data-ticket>
       <div class="ticket__main">
+        <div class="ticket__seal" aria-hidden="true"><span>SBNU</span></div>
         <p class="eyebrow">Registration &middot; Admit one</p>
         <h2>Seats are limited.<br /><em>Claim yours.</em></h2>
         <p class="lede">
@@ -1888,6 +1916,10 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
           <span class="fact__v">General &middot; Free</span>
         </div>
         <div class="ticket__barcode" aria-hidden="true"></div>
+        <div class="ticket__closing">
+          <p class="ticket__closing-line">Dear Dreamer, you&rsquo;re invited to</p>
+          <a class="ticket__closing-link" href="#register" data-ticket-open>Register here to get yours</a>
+        </div>
       </div>
     </div>
   </div>
@@ -2106,12 +2138,13 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   }
 
   /* ---- Ticket download modal -------------------------------------- */
-  var ticketOpenBtn  = document.querySelector('[data-ticket-open]');
+  var ticketOpenEls  = document.querySelectorAll('[data-ticket-open]');
   var ticketModal    = document.getElementById('ticketModal');
   var ticketForm     = document.querySelector('[data-ticket-form]');
   var ticketNameInput = document.getElementById('ticketName');
 
-  function openTicketModal() {
+  function openTicketModal(e) {
+    if (e) e.preventDefault();
     if (!ticketModal) return;
     ticketModal.hidden = false;
     document.body.style.overflow = 'hidden';
@@ -2124,7 +2157,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     document.body.style.overflow = '';
   }
 
-  if (ticketOpenBtn) ticketOpenBtn.addEventListener('click', openTicketModal);
+  ticketOpenEls.forEach(function (el) { el.addEventListener('click', openTicketModal); });
   if (ticketModal) {
     ticketModal.querySelectorAll('[data-ticket-close]').forEach(function (el) {
       el.addEventListener('click', closeTicketModal);
@@ -2319,6 +2352,33 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     ctx.fillText('SCAN TO VERIFY', stubX, qrY - 14);
     var qrPayload = 'TICKET|' + slugify(data.title) + '|' + name + '|' + data.date;
     drawQR(stubX, qrY, qrSize, qrPayload);
+
+    /* Wax-seal monogram, top-right corner — mirrors .ticket__seal */
+    var sealR = 32, sealCx = ticketX + ticketW - 20 - sealR, sealCy = ticketY + 20 + sealR;
+    var sealGrad = ctx.createRadialGradient(sealCx - 8, sealCy - 10, 4, sealCx, sealCy, sealR);
+    sealGrad.addColorStop(0, '#F6D48A');
+    sealGrad.addColorStop(1, gold);
+    ctx.fillStyle = sealGrad;
+    ctx.beginPath();
+    ctx.arc(sealCx, sealCy, sealR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = panelBg;
+    ctx.font = '700 12px "Space Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('SBNU', sealCx, sealCy + 4);
+    ctx.textAlign = 'left';
+
+    /* Closing flourish + plain-text URL (can't be a live link once
+       rasterized into a PNG, so keep it readable/typeable instead) */
+    var closeCy = ticketY + ticketH - 34;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = muted;
+    ctx.font = 'italic 500 15px "Fraunces", Georgia, serif';
+    ctx.fillText('Dear Dreamer, you’re invited to', mainX + mainContentW / 2, closeCy - 20);
+    ctx.fillStyle = gold;
+    ctx.font = '700 12px "Space Mono", monospace';
+    ctx.fillText('REGISTER HERE TO GET YOURS — ' + window.location.href.split('#')[0], mainX + mainContentW / 2, closeCy);
+    ctx.textAlign = 'left';
 
     ctx.restore();
 
