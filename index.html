@@ -1678,7 +1678,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         </p>
 
         <button type="button" class="btn btn--paper" data-ticket-open data-magnetic>
-          <span>Download ticket</span>
+          <span>Download invitation</span>
           <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
         </button>
       </div>
@@ -1712,8 +1712,8 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
   <div class="ticket-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="ticketModalTitle">
     <button type="button" class="ticket-modal__close" data-ticket-close aria-label="Close">&times;</button>
     <p class="eyebrow">Registration &middot; Admit one</p>
-    <h3 id="ticketModalTitle">Who&rsquo;s this ticket for?</h3>
-    <p class="lede">Enter the name to print on your ticket, then download it.</p>
+    <h3 id="ticketModalTitle">Who&rsquo;s this invitation for?</h3>
+    <p class="lede">Enter the name to print on your invitation, then download it.</p>
     <form data-ticket-form novalidate>
       <label class="ticket-modal__label" for="ticketName">Full name</label>
       <input class="ticket-modal__input" type="text" id="ticketName" name="ticketName" placeholder="e.g. Ada Lovelace" maxlength="40" autocomplete="name" required />
@@ -1978,41 +1978,35 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
     };
   }
 
-  /* Mirrors the live .ticket card: rounded panel, punched circular
-     notches at the perforation seam (real transparent cut-outs via
-     destination-out, so the PNG works on any background), a dashed
-     seam line, and a real scannable QR code. */
-  function drawTicket(rawName) {
+  /* Renders a printable A5-portrait invitation letter — off-white
+     textured paper, serif typography, hairline gold rules and a stamped
+     wax seal — as the downloadable artifact (in place of the old
+     admit-one ticket). Drawn in a 900×1277 logical space (the A5
+     portrait ratio) and scaled up onto a real A5 @ ~300dpi canvas so the
+     PNG is genuinely printable. */
+  function drawInvitation(rawName) {
     var name = toTitleCase(rawName);
     var data = readEventData();
-    var SCALE = 2;
-    var gold = '#E7B860', paper = '#F5F0E4', panelBg = '#12111F';
-    var muted = 'rgba(245,240,228,.65)';
+    var titleParts = data.title.split(':');
+    var mainTitle = (titleParts[0] || data.title).trim();
+    var subTitle = (titleParts[1] || '').trim();
 
-    var outerPad = 30;
-    var ticketW = 1360, ticketH = 460;
-    var stubW = 320, mainW = ticketW - stubW;
-    var radius = 10;
+    var paper = '#F7F1E3', paperFleck = '#E7DCC0';
+    var ink = '#2A2018', inkMuted = 'rgba(42,32,24,.62)';
+    var gold = '#A9782E';
+    var waxMid = '#7A1E1E', waxDark = '#4E1212', waxHi = '#A8453F';
 
-    var W = ticketW + outerPad * 2, H = ticketH + outerPad * 2;
+    var cardW = 900, cardH = 1277;
+    var PXW = 1748, PXH = 2480;
     var canvas = document.createElement('canvas');
-    canvas.width = W * SCALE;
-    canvas.height = H * SCALE;
+    canvas.width = PXW;
+    canvas.height = PXH;
     var ctx = canvas.getContext('2d');
-    ctx.scale(SCALE, SCALE);
+    ctx.scale(PXW / cardW, PXH / cardH);
 
-    var ticketX = outerPad, ticketY = outerPad;
-    var seamX = ticketX + mainW;
-
-    function roundRectPath(x, y, w, h, r) {
-      ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.arcTo(x + w, y, x + w, y + h, r);
-      ctx.arcTo(x + w, y + h, x, y + h, r);
-      ctx.arcTo(x, y + h, x, y, r);
-      ctx.arcTo(x, y, x + w, y, r);
-      ctx.closePath();
-    }
+    var cx = cardW / 2;
+    var supportsSpacing = 'letterSpacing' in ctx;
+    function spacing(px) { if (supportsSpacing) ctx.letterSpacing = px + 'px'; }
 
     function wrapLines(text, maxWidth) {
       var words = text.split(' ');
@@ -2030,6 +2024,44 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       return lines;
     }
 
+    function hairline(y, w) {
+      ctx.strokeStyle = gold;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx - w / 2, y);
+      ctx.lineTo(cx + w / 2, y);
+      ctx.stroke();
+    }
+
+    function ornamentRule(y, w) {
+      ctx.strokeStyle = gold;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx - w / 2, y);
+      ctx.lineTo(cx - 12, y);
+      ctx.moveTo(cx + 12, y);
+      ctx.lineTo(cx + w / 2, y);
+      ctx.stroke();
+      ctx.fillStyle = gold;
+      ctx.beginPath();
+      ctx.moveTo(cx, y - 5);
+      ctx.lineTo(cx + 5, y);
+      ctx.lineTo(cx, y + 5);
+      ctx.lineTo(cx - 5, y);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function roundRectPath(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
     function drawQR(x, y, size, text) {
       var qr = qrcode(0, 'M');
       qr.addData(text);
@@ -2038,7 +2070,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       var cell = size / count;
       ctx.fillStyle = paper;
       ctx.fillRect(x, y, size, size);
-      ctx.fillStyle = panelBg;
+      ctx.fillStyle = ink;
       for (var r = 0; r < count; r += 1) {
         for (var c = 0; c < count; c += 1) {
           if (qr.isDark(r, c)) {
@@ -2048,133 +2080,200 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
       }
     }
 
-    /* 1. Elevated panel — filled + bordered, with the ticket's drop shadow */
-    ctx.shadowColor = 'rgba(0,0,0,.55)';
-    ctx.shadowBlur = 50;
-    ctx.shadowOffsetY = 22;
-    roundRectPath(ticketX, ticketY, ticketW, ticketH, radius);
-    ctx.fillStyle = panelBg;
-    ctx.fill();
-    ctx.shadowColor = 'transparent';
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetY = 0;
+    function hashCode(str) {
+      var h = 0;
+      for (var i = 0; i < str.length; i += 1) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+      return h;
+    }
+
+    /* Realistic wax seal: an irregular (hand-stamped, not perfectly
+       round) blob, a soft directional sheen and an embossed monogram —
+       the only place in this design gradients are used, and only
+       because a flat-red circle can't read as wax. */
+    function drawSeal(sx, sy, r) {
+      var points = 28;
+      ctx.save();
+      ctx.beginPath();
+      for (var i = 0; i < points; i += 1) {
+        var a = (i / points) * Math.PI * 2;
+        var wobble = 1 + (Math.sin(a * 5) * 0.02) + (Math.random() - 0.5) * 0.025;
+        var px = sx + Math.cos(a) * r * wobble;
+        var py = sy + Math.sin(a) * r * wobble;
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+
+      ctx.shadowColor = 'rgba(42,32,24,.35)';
+      ctx.shadowBlur = 14;
+      ctx.shadowOffsetY = 6;
+      ctx.fillStyle = waxMid;
+      ctx.fill();
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+
+      ctx.clip();
+      var sheen = ctx.createRadialGradient(sx - r * 0.35, sy - r * 0.4, r * 0.1, sx, sy, r * 1.15);
+      sheen.addColorStop(0, 'rgba(168,69,63,.55)');
+      sheen.addColorStop(0.55, 'rgba(122,30,30,0)');
+      sheen.addColorStop(1, 'rgba(30,6,6,.4)');
+      ctx.fillStyle = sheen;
+      ctx.fillRect(sx - r * 1.2, sy - r * 1.2, r * 2.4, r * 2.4);
+
+      ctx.strokeStyle = 'rgba(30,6,6,.5)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(sx, sy, r * 0.8, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.textAlign = 'center';
+      ctx.font = '700 34px "Playfair Display", Georgia, serif';
+      spacing(2);
+      ctx.fillStyle = waxDark;
+      ctx.fillText('SBNU', sx + 1, sy + 12);
+      ctx.fillStyle = 'rgba(220,150,140,.5)';
+      ctx.fillText('SBNU', sx, sy + 11);
+      spacing(0);
+      ctx.textAlign = 'left';
+    }
+
+    /* 1. Off-white textured paper base + a fine speckle grain */
+    ctx.fillStyle = paper;
+    ctx.fillRect(0, 0, cardW, cardH);
+    for (var i = 0; i < 900; i += 1) {
+      ctx.fillStyle = paperFleck;
+      ctx.globalAlpha = 0.15 + Math.random() * 0.25;
+      var fx = Math.random() * cardW, fy = Math.random() * cardH;
+      ctx.fillRect(fx, fy, 1, 1);
+    }
+    ctx.globalAlpha = 1;
+
+    /* 2. A single thin inset rule frames the page — the one border this
+       design uses, and it's a hairline, not a box. */
+    ctx.strokeStyle = 'rgba(169,120,46,.4)';
     ctx.lineWidth = 1.5;
-    ctx.strokeStyle = 'rgba(245,240,228,.14)';
-    ctx.stroke();
-
-    /* 2. Stub tint, dashed seam, and all text content — clipped to the panel */
-    ctx.save();
-    roundRectPath(ticketX, ticketY, ticketW, ticketH, radius);
-    ctx.clip();
-
-    ctx.fillStyle = 'rgba(243,238,226,.045)';
-    ctx.fillRect(seamX, ticketY, stubW, ticketH);
-
-    ctx.setLineDash([8, 8]);
-    ctx.strokeStyle = 'rgba(245,240,228,.3)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(seamX, ticketY);
-    ctx.lineTo(seamX, ticketY + ticketH);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    var mainX = ticketX + 50;
-    var mainContentW = mainW - 100;
-    var cy = ticketY + 62;
+    ctx.strokeRect(34, 34, cardW - 68, cardH - 68);
 
     ctx.fillStyle = gold;
-    ctx.font = '700 14px "Space Mono", monospace';
-    ctx.fillText('REGISTRATION  ·  ADMIT ONE', mainX, cy);
-    cy += 50;
+    ctx.beginPath();
+    ctx.moveTo(cx, 92);
+    ctx.lineTo(cx + 6, 100);
+    ctx.lineTo(cx, 108);
+    ctx.lineTo(cx - 6, 100);
+    ctx.closePath();
+    ctx.fill();
 
-    ctx.fillStyle = paper;
-    ctx.font = 'italic 500 40px "Fraunces", Georgia, serif';
-    wrapLines(data.title, mainContentW).forEach(function (l) {
-      ctx.fillText(l, mainX, cy);
-      cy += 46;
-    });
-    cy += 14;
+    var cy = 150;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = gold;
+    ctx.font = '700 15px "Playfair Display", Georgia, serif';
+    spacing(4);
+    ctx.fillText('YOU ARE CORDIALLY INVITED', cx, cy);
+    spacing(0);
 
-    ctx.fillStyle = muted;
-    ctx.font = '400 19px system-ui, sans-serif';
-    ctx.fillText(data.venue, mainX, cy);
+    cy += 36;
+    hairline(cy, 70);
+
     cy += 66;
+    ctx.fillStyle = ink;
+    ctx.font = '800 58px "Playfair Display", Georgia, serif';
+    spacing(3);
+    ctx.fillText(mainTitle.toUpperCase(), cx, cy);
+    spacing(0);
 
-    ctx.fillStyle = gold;
-    ctx.font = '700 13px "Space Mono", monospace';
-    ctx.fillText('ATTENDEE', mainX, cy);
-    cy += 38;
+    if (subTitle) {
+      cy += 46;
+      ctx.fillStyle = inkMuted;
+      ctx.font = 'italic 600 26px "Fraunces", Georgia, serif';
+      ctx.fillText(subTitle, cx, cy);
+    }
 
-    var nameFont = 36;
-    ctx.fillStyle = paper;
-    do {
-      ctx.font = '600 ' + nameFont + 'px "Fraunces", Georgia, serif';
-      nameFont -= 2;
-    } while (ctx.measureText(name).width > mainContentW && nameFont > 18);
-    ctx.fillText(name, mainX, cy);
+    cy += 44;
+    ornamentRule(cy, 220);
 
-    var stubX = seamX + 40;
-    var sy = ticketY + 70;
-    [['DATE', data.date], ['TIME', data.time], ['ACCESS', data.access]].forEach(function (item) {
-      ctx.fillStyle = gold;
-      ctx.font = '700 12px "Space Mono", monospace';
-      ctx.fillText(item[0], stubX, sy);
-      ctx.fillStyle = paper;
-      ctx.font = '500 21px "Fraunces", Georgia, serif';
-      ctx.fillText(item[1], stubX, sy + 28);
-      sy += 62;
+    cy += 54;
+    ctx.fillStyle = inkMuted;
+    ctx.font = 'italic 500 19px "Fraunces", Georgia, serif';
+    var message = 'You are warmly invited to an evening of unfiltered conversation — four founders on building, scaling, and the leap from a career to a company of your own.';
+    wrapLines(message, 620).forEach(function (l) {
+      ctx.fillText(l, cx, cy);
+      cy += 30;
     });
 
-    var qrSize = 132;
-    var qrY = ticketY + ticketH - 40 - qrSize;
+    cy += 44;
     ctx.fillStyle = gold;
-    ctx.font = '700 12px "Space Mono", monospace';
-    ctx.fillText('SCAN TO VERIFY', stubX, qrY - 14);
-    var qrPayload = 'TICKET|' + slugify(data.title) + '|' + name + '|' + data.date;
-    drawQR(stubX, qrY, qrSize, qrPayload);
+    ctx.font = '700 12px "Playfair Display", Georgia, serif';
+    spacing(3);
+    ctx.fillText('PRESENTED TO', cx, cy);
+    spacing(0);
 
-    /* Wax-seal monogram, top-right corner — mirrors .ticket__seal */
-    var sealR = 32, sealCx = ticketX + ticketW - 20 - sealR, sealCy = ticketY + 20 + sealR;
-    var sealGrad = ctx.createRadialGradient(sealCx - 8, sealCy - 10, 4, sealCx, sealCy, sealR);
-    sealGrad.addColorStop(0, '#F6D48A');
-    sealGrad.addColorStop(1, gold);
-    ctx.fillStyle = sealGrad;
-    ctx.beginPath();
-    ctx.arc(sealCx, sealCy, sealR, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = panelBg;
-    ctx.font = '700 12px "Space Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('SBNU', sealCx, sealCy + 4);
+    cy += 48;
+    var nameFont = 44;
+    ctx.fillStyle = ink;
+    do {
+      ctx.font = '700 ' + nameFont + 'px "Playfair Display", Georgia, serif';
+      nameFont -= 2;
+    } while (ctx.measureText(name).width > 640 && nameFont > 22);
+    ctx.fillText(name, cx, cy);
+
+    cy += 50;
+    hairline(cy, 60);
+
+    cy += 56;
+    ctx.fillStyle = gold;
+    ctx.font = '700 11px "Playfair Display", Georgia, serif';
+    spacing(2.5);
+    ctx.fillText('DATE', cx, cy);
+    spacing(0);
+    cy += 32;
+    ctx.fillStyle = ink;
+    ctx.font = '700 21px "Playfair Display", Georgia, serif';
+    ctx.fillText(data.date, cx, cy);
+
+    cy += 46;
+    ctx.fillStyle = gold;
+    ctx.font = '700 11px "Playfair Display", Georgia, serif';
+    spacing(2.5);
+    ctx.fillText('VENUE', cx, cy);
+    spacing(0);
+    cy += 32;
+    ctx.fillStyle = ink;
+    ctx.font = '700 21px "Playfair Display", Georgia, serif';
+    wrapLines(data.venue, 600).forEach(function (l) {
+      ctx.fillText(l, cx, cy);
+      cy += 28;
+    });
+
+    cy += 24;
+    hairline(cy, 60);
+
+    cy += 44;
+    var regId = 'SBNU-2026-' + (hashCode(name + data.date) % 90000 + 10000);
+    ctx.fillStyle = inkMuted;
+    ctx.font = '700 12px "Playfair Display", Georgia, serif';
+    spacing(2.5);
+    ctx.fillText('REG. NO. ' + regId + '   ·   ' + (data.access || 'GENERAL ADMISSION').toUpperCase(), cx, cy);
+    spacing(0);
+
+    cy += 44;
+    ctx.fillStyle = gold;
+    ctx.font = '700 11px "Playfair Display", Georgia, serif';
+    spacing(2.5);
+    ctx.fillText('SCAN TO VERIFY', cx, cy);
+    spacing(0);
     ctx.textAlign = 'left';
 
-    /* Closing flourish + plain-text URL (can't be a live link once
-       rasterized into a PNG, so keep it readable/typeable instead) */
-    var closeCy = ticketY + ticketH - 34;
-    ctx.textAlign = 'center';
-    ctx.fillStyle = muted;
-    ctx.font = 'italic 500 15px "Fraunces", Georgia, serif';
-    ctx.fillText('Dear Dreamer, you’re invited to', mainX + mainContentW / 2, closeCy - 20);
-    ctx.fillStyle = gold;
-    ctx.font = '700 12px "Space Mono", monospace';
-    ctx.fillText('REGISTER HERE TO GET YOURS — ' + window.location.href.split('#')[0], mainX + mainContentW / 2, closeCy);
-    ctx.textAlign = 'left';
+    cy += 22;
+    var qrSize = 108;
+    var qrPayload = 'INVITATION|' + slugify(data.title) + '|' + name + '|' + data.date + '|' + regId;
+    drawQR(cx - qrSize / 2, cy, qrSize, qrPayload);
+    ctx.strokeStyle = 'rgba(42,32,24,.18)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(cx - qrSize / 2 - 10, cy - 10, qrSize + 20, qrSize + 20);
 
-    ctx.restore();
-
-    /* 3. Punch the perforation notches — real transparent cut-outs so the
-       PNG reads correctly against any background it's dropped onto */
-    ctx.save();
-    ctx.globalCompositeOperation = 'destination-out';
-    var notchR = 14;
-    ctx.beginPath();
-    ctx.arc(seamX, ticketY, notchR, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(seamX, ticketY + ticketH, notchR, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
+    var sealCy = cardH - 128;
+    drawSeal(cx, sealCy, 54);
 
     return canvas;
   }
@@ -2188,7 +2287,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         return;
       }
       function download() {
-        var canvas = drawTicket(name);
+        var canvas = drawInvitation(name);
         /* toBlob + a blob: URL, not toDataURL — Safari in particular
            ignores the `download` attribute (or just opens the image)
            when href is a data: URI; blob: URLs are the reliable
@@ -2196,7 +2295,7 @@ img.portrait__inner{object-fit:cover;display:block;font-size:.9rem;color:var(--p
         canvas.toBlob(function (blob) {
           var url = URL.createObjectURL(blob);
           var link = document.createElement('a');
-          link.download = 'ticket-' + slugify(name) + '.png';
+          link.download = 'invitation-' + slugify(name) + '.png';
           link.href = url;
           document.body.appendChild(link);
           link.click();
